@@ -9,7 +9,7 @@ const HomeNavBar = ({signUpRef}) => {
 
   let Links =[
     {name:"HOME",link:"/"},
-    {name:"ABOUT US",link:"/"},
+    {name:"ABOUT US",link:"/AboutUs"},
     {name:"CONTACT US",link:"/"},
   ];
   let [open, setOpen] =useState(false);
