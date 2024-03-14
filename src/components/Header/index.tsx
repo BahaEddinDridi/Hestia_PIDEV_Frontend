@@ -66,7 +66,9 @@ const Header = (props: {
 
           </Link>
         </div>
+        <Link to="/Profile/offer">
         <img src={Logo_PIDEV} className='w-20 h-10' />
+        </Link>
         <SearchBar />
 
         <div className="flex items-center gap-3 2xsm:gap-7">

@@ -1,16 +1,22 @@
-import React from 'react';
+
+import React, {useRef, useState} from 'react';
+
 import DefaultLayout from '../layout/DefaultLayout';
 import Mohsen from "../images/team/Mohsen.jpg"
 import Baha from "../images/team/BahaEddine.jpg"
 import Sarra from "../images/team/Sarrah.jpg"
 import Farah from "../images/team/Farah.jpg"
 import Omayma from "../images/team/Oumaima.jpg"
-
+import HomePageLayout from '../layout/HomePageLayout';
+import HomeNavbar from "../components/Header/HomeNavBar";
 
 import { WavyBackground } from "./wavy-background";
 const AboutUs: React.FC = () => {
+     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const signUpRef = useRef<HTMLDivElement>(null);
     return (
-      <DefaultLayout>
+      <HomePageLayout>
+        
           <WavyBackground className="max-w-4xl mx-auto pb-40">
               <p className="text-2xl md:text-4xl lg:text-7xl text-red-700 font-bold inter-var text-center">
                   About Us
@@ -18,6 +24,7 @@ const AboutUs: React.FC = () => {
               <p className="text-base md:text-lg mt-4 text-black font-normal inter-var text-center">
                   Connect with potential employers, and kick-start their careers through a variety of jobs and internships.
               </p>
+              
           </WavyBackground>
 
 
@@ -81,9 +88,11 @@ const AboutUs: React.FC = () => {
                       </div>
                   </div>
               </section>
+              
           </div>
+           <HomeNavbar signUpRef={signUpRef} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-      </DefaultLayout>
+      </HomePageLayout>
     );
 
 };
