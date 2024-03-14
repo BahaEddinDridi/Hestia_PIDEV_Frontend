@@ -10,10 +10,30 @@ import { jwtDecode } from 'jwt-decode';
 import { setCredentials } from '../../ApiSlices/authSlice';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import { useGoogleCallbackTeacherMutation } from '../../ApiSlices/authApiSlice';
 
 const SignUpStudent: React.FC = () => {
 
+    const [googleCallback, { isLoading }] = useGoogleCallbackTeacherMutation();
 
+    const handleGoogleLoginSuccess = async (credentialResponse) => {
+        try {
+            const cred = jwtDecode(credentialResponse.credential);
+
+            const { data } = await googleCallback({
+                email: cred.email,
+                firstName: cred.given_name,
+                lastName: cred.family_name,
+                role: 'jobSeeker'
+            });
+
+            const { accessToken, currentUser } = data;
+            dispatch(setCredentials({ accessToken: accessToken, currentUser: currentUser }));
+            navigate('/Profile');
+        } catch (error) {
+            console.log('Error occurred during Google login callback:', error);
+        }
+    };
 
 
 
@@ -661,30 +681,14 @@ const SignUpStudent: React.FC = () => {
 
                                         {/* <!-- Google --> */}
                                         <GoogleLogin
-                                            locale="english"
-                                            theme="outline"
-                                            size="large"
-                                            logo_alignment="center"
-                                            onSuccess={credentialResponse => {
-                                                console.log(credentialResponse)
-                                                var cred = jwtDecode(credentialResponse.credential);
-                                                axios.post(`${BASE_URL}/auth/google/callback/student`, {
-                                                    email: cred.email,
-                                                    firstName: cred.family_name,
-                                                    lastName: cred.given_name,
-
-                                                }).then(res => {
-                                                    console.log(res)
-                                                    dispatch(setCredentials({ accessToken: res.data.accessToken, username: res.data.username, role: res.data.role }));
-                                                    navigate(res.data.role === 'admin' ? '/tables' : '/Profile');
-                                                })
-                                                    .catch(error => console.log(error))
-                                            }}
-                                            onError={() => {
-                                                console.log('Login Failed');
-                                            }}
-
-
+                                          locale="english"
+                                          theme="outline"
+                                          size="large"
+                                          logo_alignment="center"
+                                          onSuccess={handleGoogleLoginSuccess}
+                                          onError={() => {
+                                              console.log('Login Failed');
+                                          }}
                                         />
                                     </div>
                                     {/* **********************************************End Sign Up with other acounts********************************************** */}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
@@ -29,7 +29,6 @@ import EmailVerif from './pages/Authentication/Reset_Password/EmailVerif';
 import ResetPasswordPage from './pages/Authentication/Reset_Password/resetpassword';
 import UpdatePassword from './layouts/authentication/components/Security/UpdatePassword/UpdatePassword';
 import AccountSecurity from './layouts/authentication/components/Security/AccountSecurity/AccountSecurity';
-import ChoiceOne from './pages/Authentication/SignUpFiles/choiceOne';
 import SignUpCompany from './pages/Authentication/SignUpCompany';
 import SignUpTeacher from './pages/Authentication/SignUpTeacher';
 import Profiletest from './pages/Profil/profil';
@@ -41,13 +40,37 @@ import AboutUs from './AboutUs/AboutUs';
 import {useSelector} from "react-redux";
 import {selectCurrentUsername} from "./ApiSlices/authSlice";
 import {useGetUserInfoQuery} from "./ApiSlices/userApiSlice";
+import { useRefreshMutation } from './ApiSlices/authApiSlice';
 
 function App() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
+  const [refresh, { isLoading }] = useRefreshMutation();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await refresh();
+      } catch (error) {
+        console.error('Error refreshing credentials:', error);
+        console.log('Error status:', error.status);
+        if (error.status === 401) {
+          // Redirect to the sign-in page if the refresh token fails due to Unauthorized (401) error
+          console.log('Redirecting to sign-in page...');
+          navigate('/auth/signin');
+        } else {
+          // Redirect to the home page for other types of errors
+          console.log('Redirecting to home page...');
+          navigate('/Home');
+        }
+      }
+    };
 
-    const currentUsername = useSelector(selectCurrentUsername);
-    const { data: userInfo = {} } = useGetUserInfoQuery(currentUsername);
+    fetchData();
+  }, []);
+
+  //const currentUsername = useSelector(selectCurrentUsername);
+    //const { data: userInfo = {} } = useGetUserInfoQuery(currentUsername);
 
   useEffect(() => {
     window.scrollTo(0, 0);
