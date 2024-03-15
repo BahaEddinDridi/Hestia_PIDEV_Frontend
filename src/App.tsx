@@ -41,6 +41,9 @@ import {useSelector} from "react-redux";
 import {selectCurrentUsername} from "./ApiSlices/authSlice";
 import {useGetUserInfoQuery} from "./ApiSlices/userApiSlice";
 import { useRefreshMutation } from './ApiSlices/authApiSlice';
+import ProtectedRoute from './pages/Authentication/ProtectedRoute';
+import PersistLoginRoute from './pages/Authentication/PersistLoginRoute';
+import AdminRoute from './pages/Authentication/SignUpFiles/ProtectedRouteAdmin';
 
 function App() {
   const navigate = useNavigate();
@@ -55,13 +58,7 @@ function App() {
         console.error('Error refreshing credentials:', error);
         console.log('Error status:', error.status);
         if (error.status === 401) {
-          // Redirect to the sign-in page if the refresh token fails due to Unauthorized (401) error
-          console.log('Redirecting to sign-in page...');
-          navigate('/auth/signin');
         } else {
-          // Redirect to the home page for other types of errors
-          console.log('Redirecting to home page...');
-          navigate('/Home');
         }
       }
     };
@@ -90,7 +87,7 @@ function App() {
           index
           element={
             <>
-              <PageTitle title="eCommerce Dashboard | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Home" />
               <Home />
             </>
           }
@@ -120,20 +117,21 @@ function App() {
             </>
           }
         />
-        <Route
+          <Route
           path="/Profile"
           element={
             <>
-              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Profiletest />
+            <PageTitle title="Your Profile" />
+            <ProtectedRoute>
+              <Profiletest/>
+              </ProtectedRoute>
             </>
-          }
-        />
+          } />
          <Route
           path="/UserDetails/:id"
           element={
             <>
-              <PageTitle title="UserDetails | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="User Details" />
               <UserDetails />
             </>
           }
@@ -142,8 +140,10 @@ function App() {
           path="/profile/update"
           element={
             <>
-              <PageTitle title="Update Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Update Your Profile" />
+              <ProtectedRoute>
               <UpdateProfile />
+              </ProtectedRoute>
             </>
           }
         />
@@ -151,8 +151,10 @@ function App() {
           path="/Otherprofiles/:username"
           element={
             <>
-              <PageTitle title="Update Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Profile" />
+              <ProtectedRoute>
               <OtherProfile />
+              </ProtectedRoute>
             </>
           }
         /> 
@@ -178,8 +180,10 @@ function App() {
           path="/tables"
           element={
             <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Tables />
+              <PageTitle title="Users List" />
+              <AdminRoute>
+                <Tables />
+              </AdminRoute>
             </>
           }
         />
@@ -187,8 +191,10 @@ function App() {
           path="/Dashboard/ProfileAdmin/:username"
           element={
             <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Admin Profile" />
+              <AdminRoute>
               <ProfileAdmin />
+              </AdminRoute>
             </>
           }
         />
@@ -196,8 +202,10 @@ function App() {
           path="/Dashboard/Statistic"
           element={
             <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Statistics" />
+              <AdminRoute>
               <StatisticPage />
+              </AdminRoute>
             </>
           }
         />
@@ -205,8 +213,10 @@ function App() {
           path="/Dashboard/settings"
           element={
             <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Settings" />
+              <AdminRoute>
               <SettingsAdmin />
+              </AdminRoute>
             </>
           }
         />
@@ -214,8 +224,10 @@ function App() {
           path="/Dashboard/ProfileAdmin/:username/update"
           element={
             <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Update Admin Profile" />
+              <AdminRoute>
               <UpdateProfileAdmin />
+              </AdminRoute>
             </>
           }
         />
@@ -223,8 +235,10 @@ function App() {
           path="/Dashboard/ProfileAdmin/account-security"
           element={
             <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Security Settings" />
+              <AdminRoute>
               <AccountSecurityAdmin />
+              </AdminRoute>
             </>
           }
         />
@@ -233,8 +247,10 @@ function App() {
           path="/tables/AddUser"
           element={
             <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Adding User" />
+              <AdminRoute>
               <AddUser />
+              </AdminRoute>
             </>
           }
         />
@@ -242,8 +258,10 @@ function App() {
           path="/settings"
           element={
             <>
-              <PageTitle title="Settings | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Settings" />
+              <ProtectedRoute>
               <Settings />
+              </ProtectedRoute>
             </>
           }
         />
@@ -278,8 +296,10 @@ function App() {
           path="/auth/signin"
           element={
             <>
-              <PageTitle title="Signin | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <SignIn />
+              <PageTitle title="Sign in" />
+              <PersistLoginRoute>
+                <SignIn />
+              </PersistLoginRoute>
             </>
           }
         />
@@ -287,7 +307,7 @@ function App() {
           path="/auth/signup/Teacher"
           element={
             <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Sign up" />
               <SignUpTeacher />
             </>
           }
@@ -296,7 +316,7 @@ function App() {
           path="/auth/signup/Student"
           element={
             <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Sign up" />
               <SignUpStudent />
             </>
           }
@@ -306,7 +326,7 @@ function App() {
           path="/auth/signUp/Company"
           element={
             <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Sign up" />
               <SignUpCompany />
             </>
           }
@@ -315,7 +335,7 @@ function App() {
         path='/pages/settings'
         element={
           <>
-          <PageTitle title="Settings | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+          <PageTitle title="Settings" />
           <Settings />
           </>
         }
@@ -324,7 +344,7 @@ function App() {
         path='/pages/settings/updatePassword'
         element={
           <>
-          <PageTitle title="update Password  | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+          <PageTitle title="update Password" />
           <UpdatePassword />
           </>
         }
@@ -333,7 +353,7 @@ function App() {
         path='/pages/settings'
         element={
           <>
-          <PageTitle title="Settings | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+          <PageTitle title="Settings" />
           <Settings />
           </>
         }
@@ -342,7 +362,7 @@ function App() {
         path='/pages/settings/updatePassword'
         element={
           <>
-          <PageTitle title="update Password  | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+          <PageTitle title="update Password" />
           <UpdatePassword />
           </>
         }
@@ -351,7 +371,7 @@ function App() {
           path="/auth/EmailVerif"
           element={
             <>
-              <PageTitle title="EmailVerif | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Email Verification" />
               <EmailVerif />
             </>
           }
@@ -360,7 +380,7 @@ function App() {
           path="/auth/reset-password/:_id/:token"
           element={
             <>
-              <PageTitle title="ResetPasswordPage | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Reset Password" />
               <ResetPasswordPage />
             </>
           }
@@ -369,7 +389,7 @@ function App() {
         path='/pages/settings'
         element={
           <>
-          <PageTitle title="Settings | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+          <PageTitle title="Settings" />
           <Settings />
           </>
         }
@@ -378,7 +398,7 @@ function App() {
         path='/pages/settings/updatePassword'
         element={
           <>
-          <PageTitle title="update Password  | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+          <PageTitle title="update Password" />
           <UpdatePassword />
           </>
         }
@@ -387,7 +407,7 @@ function App() {
         path='/pages/settings'
         element={
           <>
-          <PageTitle title="Settings | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+          <PageTitle title="Settings" />
           <Settings />
           </>
         }
@@ -396,7 +416,7 @@ function App() {
         path='/pages/settings/updatePassword'
         element={
           <>
-          <PageTitle title="update Password  | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+          <PageTitle title="Update Password" />
           <UpdatePassword />
           </>
         }
@@ -405,7 +425,7 @@ function App() {
           path="/auth/EmailVerif"
           element={
             <>
-              <PageTitle title="EmailVerif | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Email Verification" />
               <EmailVerif />
             </>
           }
@@ -414,7 +434,7 @@ function App() {
           path="/auth/reset-password/:_id/:token"
           element={
             <>
-              <PageTitle title="ResetPasswordPage | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Reset Password" />
               <ResetPasswordPage />
             </>
           }
@@ -423,7 +443,7 @@ function App() {
           path="/auth/account-security"
           element={
             <>
-              <PageTitle title="Account Security | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Account Security" />
               <AccountSecurity />
             </>
           }
@@ -432,7 +452,7 @@ function App() {
           path="/auth/security-questions"
           element={
             <>
-              <PageTitle title="Security Questions | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Security Questions" />
               <SecurityQuestions />
             </>
           }
@@ -441,8 +461,10 @@ function App() {
           path='Profile/offer'
           element={
             <>
-              <PageTitle title="Offers | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Offers" />
+              <ProtectedRoute>
               <Offers />
+              </ProtectedRoute>
             </>
           }
         />
@@ -450,14 +472,12 @@ function App() {
           path='AboutUs'
           element={
             <>
-              <PageTitle title="AboutUs | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="About Us" />
               <AboutUs />
             </>
           }
         />
       </Routes>
-      
-      
     </>
   );
 }

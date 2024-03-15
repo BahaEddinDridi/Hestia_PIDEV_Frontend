@@ -5,6 +5,7 @@ interface AuthState {
   username: string | null;
   role: string | null;
   currentUser: null;
+  isAuthorized: boolean;
 }
 
 const initialState: AuthState = {
@@ -12,6 +13,7 @@ const initialState: AuthState = {
   username: null,
   role: null,
   currentUser: null,
+  isAuthorized: false,
 };
 
 const authSlice = createSlice({
@@ -24,6 +26,7 @@ const authSlice = createSlice({
       state.currentUser = currentUser;
       state.username = currentUser.username;
       state.role = currentUser.role;
+      state.isAuthorized = true;
       console.log("user: " + currentUser);
       console.log("token: " + accessToken);
     },
@@ -32,6 +35,7 @@ const authSlice = createSlice({
       state.currentUser = null;
       state.username = null;
       state.role = null;
+      state.isAuthorized = false;
     },
   },
 });
@@ -44,3 +48,5 @@ export const selectCurrentToken = (state: { auth: AuthState }) => state.auth.tok
 export const selectCurrentUsername = (state: { auth: AuthState }) => state.auth.username;
 export const selectCurrentRole = (state: { auth: AuthState }) => state.auth.role;
 export const selectCurrentUser = (state: {auth: AuthState}) => state.auth.currentUser;
+
+export const selectIsAuthorized = (state: { auth: AuthState }) => state.auth.isAuthorized;

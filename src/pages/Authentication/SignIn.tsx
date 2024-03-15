@@ -55,6 +55,17 @@ const SignIn: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!email || !password) {
+      setErrorMessage('Please enter both email and password.');
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setErrorMessage('Please enter a valid email address.');
+      return;
+    }
+
     try {
       const { accessToken, currentUser } = await login({ email, password }).unwrap();
       dispatch(setCredentials({ accessToken, currentUser }));
@@ -68,13 +79,13 @@ const SignIn: React.FC = () => {
       }, 3000);
     } catch (err) {
       if (!err.status) {
-        setErrMsg('No Server Response');
+        setErrorMessage('No Server Response');
       } else if (err.status === 400) {
-        setErrMsg('Missing Username or Password');
+        setErrorMessage('Invalid email or password.');
       } else if (err.status === 401) {
-        setErrMsg('Unauthorized');
+        setErrorMessage('Invalid email or password.');
       } else {
-        setErrMsg(err.data?.message);
+        setErrorMessage('An error occurred during login. Please try again.');
       }
       errRef.current?.focus();
     }
@@ -117,7 +128,7 @@ const SignIn: React.FC = () => {
               </h2>
 
               <form>
-                <div className="mb-4">
+                <div className="mb-2">
                   <label className="mb-2 block font-medium text-black dark:text-white">
                     Email
                   </label>
@@ -131,7 +142,6 @@ const SignIn: React.FC = () => {
                       required
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
-
                     <span className="absolute right-4 top-4">
                       <svg
                         className="fill-current"
@@ -165,9 +175,8 @@ const SignIn: React.FC = () => {
                       required
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
-
                     <span className="absolute right-4 top-4 " onClick={() => setShowPassword(!showPassword)}
-                      style={{ cursor: 'pointer' }}>
+                          style={{ cursor: 'pointer' }}>
                       <svg
                         className="fill-current"
                         width="22"
@@ -305,7 +314,7 @@ const SignIn: React.FC = () => {
           className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
           onClick={() => setErrorMessage('')}
         >
-          <div className="bg-red-400 border border-red text-red-700 px-6 py-4 rounded-lg relative z-50"
+          <div className="bg-red-200 border border-red-500 text-red-700 px-6 py-4 rounded-lg relative z-50"
             role="alert">
             <strong className="font-bold">Error!</strong>
             <span className="block sm:inline"> {errorMessage}</span>
