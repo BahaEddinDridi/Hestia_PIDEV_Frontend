@@ -10,10 +10,32 @@ import { jwtDecode } from 'jwt-decode';
 import { setCredentials } from '../../ApiSlices/authSlice';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import { useGoogleCallbackTeacherMutation } from '../../ApiSlices/authApiSlice';
 
 
 
 const SignUpCompany: React.FC = () => {
+
+  const [googleCallback, { isLoading }] = useGoogleCallbackTeacherMutation();
+
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      const cred = jwtDecode(credentialResponse.credential);
+
+      const { data } = await googleCallback({
+        email: cred.email,
+        firstName: cred.given_name,
+        lastName: cred.family_name,
+        role: 'professional'
+      });
+
+      const { accessToken, currentUser } = data;
+      dispatch(setCredentials({ accessToken: accessToken, currentUser: currentUser }));
+      navigate('/Profile');
+    } catch (error) {
+      console.log('Error occurred during Google login callback:', error);
+    }
+  };
 
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -668,26 +690,10 @@ const SignUpCompany: React.FC = () => {
                       theme="outline"
                       size="large"
                       logo_alignment="center"
-                      onSuccess={credentialResponse => {
-                        console.log(credentialResponse)
-                        var cred = jwtDecode(credentialResponse.credential);
-                        axios.post(`${BASE_URL}/auth/google/callback/company`, {
-                          email: cred.email,
-                          firstName: cred.family_name,
-                          lastName: cred.given_name,
-
-                        }).then(res => {
-                          console.log(res)
-                          dispatch(setCredentials({ accessToken: res.data.accessToken, currentUser: res.data.currentUser }));
-                          navigate(res.data.role === 'admin' ? '/tables' : '/Profile');
-                        })
-                          .catch(error => console.log(error))
-                      }}
+                      onSuccess={handleGoogleLoginSuccess}
                       onError={() => {
                         console.log('Login Failed');
                       }}
-
-
                     />
                   </div>
                   {/* **********************************************End Sign Up with other acounts********************************************** */}
