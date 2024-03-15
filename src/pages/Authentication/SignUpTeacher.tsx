@@ -10,6 +10,7 @@ import { setCredentials } from '../../ApiSlices/authSlice';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import PhoneNumberValidation from './SignUpFiles/PhoneNumber';
+import SigninBreadcrumbs from "../../components/Breadcrumbs/SigninBreadcrumbs";
 
 
 
@@ -68,15 +69,15 @@ const SignUpTeacher: React.FC = () => {
 
 
         // Vérification de l'âge avant de soumettre le formulaire
-        const today = new Date();
-        const birthDateObj = new Date(birthDate);
-        const age = today.getFullYear() - birthDateObj.getFullYear();
-        const monthDiff = today.getMonth() - birthDateObj.getMonth();
-        const dayDiff = today.getDate() - birthDateObj.getDate();
-        if (age < 18 || (age === 18 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)))) {
-            setError(true);
-            return;
-        }
+        // const today = new Date();
+        // const birthDateObj = new Date(birthDate);
+        // const age = today.getFullYear() - birthDateObj.getFullYear();
+        // const monthDiff = today.getMonth() - birthDateObj.getMonth();
+        // const dayDiff = today.getDate() - birthDateObj.getDate();
+        // if (age < 18 || (age === 18 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)))) {
+        //     setError(true);
+        //     return;
+        // }
 
         //Terms & Conditions
         if (!isChecked) { // Vérifier si ReCAPTCHA n'est pas cochée
@@ -157,10 +158,11 @@ const SignUpTeacher: React.FC = () => {
 
     return (
         <DefaultLayoutLogin>
-            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark h-200 w-200 ">
+            <SigninBreadcrumbs pageName="Sign Up Teacher" />
+            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark h-full w-full ">
                 <div className="flex flex-wrap items-center">
                     <div className="hidden w-full xl:block xl:w-1/2 ">
-                        <div className="py-17.5 px-26 text-center ">
+                        <div className=" px-26 text-center ">
                             <Link className="mb-5.5  h-80 w-80" to={''}>
                                 <img className="hidden dark:block" src={EspritCareer} alt="Logo" />
                                 <img className="dark:hidden" src={EspritCareer} alt="Logo" />
@@ -351,14 +353,6 @@ const SignUpTeacher: React.FC = () => {
                                                     placeholder="Enter your date of birth"
                                                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-green focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                                                 />
-                                                {error && birthDate.length <= 0 ? (
-                                                    <label className='text-esprit'>La date de naissance ne peut pas être vide</label>
-                                                ) : (
-                                                    // Condition pour afficher un message d'erreur si l'âge est inférieur à 18 ans
-                                                    error && (age < 18 || (age === 18 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)))) && (
-                                                        <label className='text-esprit'>Vous devez avoir au moins 18 ans</label>
-                                                    )
-                                                )}
 
                                                 <span className="absolute right-4 top-4">
                                                     <svg

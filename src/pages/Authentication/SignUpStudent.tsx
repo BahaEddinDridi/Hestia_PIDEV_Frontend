@@ -10,6 +10,7 @@ import { jwtDecode } from 'jwt-decode';
 import { setCredentials } from '../../ApiSlices/authSlice';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import SigninBreadcrumbs from "../../components/Breadcrumbs/SigninBreadcrumbs";
 
 const SignUpStudent: React.FC = () => {
 
@@ -151,10 +152,11 @@ const SignUpStudent: React.FC = () => {
 
     return (
         <DefaultLayoutLogin>
-            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark h-200 w-200 ">
+            <SigninBreadcrumbs pageName="Sign Up Student" />
+            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark h-full w-full ">
                 <div className="flex flex-wrap items-center">
                     <div className="hidden w-full xl:block xl:w-1/2 ">
-                        <div className="py-17.5 px-26 text-center ">
+                        <div className="px-26 text-center ">
                             <Link className="mb-5.5  h-80 w-80" to={''}>
                                 <img className="hidden dark:block" src={EspritCareer} alt="Logo" />
                                 <img className="dark:hidden" src={EspritCareer} alt="Logo" />
