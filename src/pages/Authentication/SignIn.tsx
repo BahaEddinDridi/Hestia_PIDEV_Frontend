@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGoogleCallbackTeacherMutation, useLoginMutation } from '../../ApiSlices/authApiSlice';
-import { setCredentials } from '../../ApiSlices/authSlice';
+import { selectIsAuthorized, setCredentials } from '../../ApiSlices/authSlice';
 import DefaultLayoutLogin from '../../layout/DefaultLayoutLogin';
 import Logo_PIDEV from '../../images/logo/Logo_PIDEV.png';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 import usePersist from "../../hooks/userPersist";
 import userLogin from "../../images/cover/UserLogin.png"
 import userLoginDark from "../../images/cover/UserLoginDark.png"
@@ -18,6 +18,8 @@ const SignIn: React.FC = () => {
   const errRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showMessage, setShowMessage] = useState(false);
+  const [showMessageText, setShowMessageText] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [persist, setPersist] = usePersist();
   const [showPassword, setShowPassword] = useState(false);
@@ -27,6 +29,22 @@ const SignIn: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
   const [login, { isLoading: loginLoading }] = useLoginMutation();
+  const isAuthorized = useSelector(selectIsAuthorized);
+
+
+  useEffect(() => {
+    if (isAuthorized) {
+      setShowMessageText('Redirecting you to your profile...');
+      setShowMessage(true);
+      const timeout = setTimeout(() => {
+        setShowMessage(false);
+        navigate('/Profile', { replace: true });
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isAuthorized, location, navigate]);
+
 
   useEffect(() => {
     userRef.current?.focus();
@@ -107,6 +125,9 @@ const SignIn: React.FC = () => {
       setErrorMessage('Failed to initiate LinkedIn login');
     }
   };
+
+
+
   return (
     <DefaultLayoutLogin>
       <SigninBreadcrumbs pageName="Sign In" />
@@ -296,26 +317,27 @@ const SignIn: React.FC = () => {
           </div>
         </div>
       </div>
-      {successMessage && (
-        <div
-          className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
-          onClick={() => setSuccessMessage('')}
-        >
-          <div className="bg-green-200 border border-green-500 text-green-700 px-6 py-4 rounded-lg relative z-50"
-            role="alert">
-            <strong className="font-bold">Success!</strong>
-            <span className="block sm:inline"> {successMessage}</span>
+      {showMessage && !successMessage &&(
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+          <div className="bg-green-200 border border-green-500 text-green-700 px-6 py-4 rounded-lg relative z-50" role="alert">
+            <strong className="font-bold">You are already signed in.</strong>
+            <span className="block sm:inline">{showMessageText}</span>
           </div>
         </div>
       )}
 
-      {errorMessage && (
-        <div
-          className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
-          onClick={() => setErrorMessage('')}
-        >
-          <div className="bg-red-200 border border-red-500 text-red-700 px-6 py-4 rounded-lg relative z-50"
-            role="alert">
+      {successMessage &&(
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50" onClick={() => setSuccessMessage('')}>
+          <div className="bg-green-200 border border-green-500 text-green-700 px-6 py-4 rounded-lg relative z-50" role="alert">
+            <strong className="font-bold">Success!</strong>
+            <span className="block sm:inline">{successMessage}</span>
+          </div>
+        </div>
+      )}
+
+      {errorMessage !== '' && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50" onClick={() => setErrorMessage('')}>
+          <div className="bg-red-200 border border-red-500 text-red-700 px-6 py-4 rounded-lg relative z-50" role="alert">
             <strong className="font-bold">Error!</strong>
             <span className="block sm:inline"> {errorMessage}</span>
           </div>

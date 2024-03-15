@@ -297,9 +297,9 @@ function App() {
           element={
             <>
               <PageTitle title="Sign in" />
-              <PersistLoginRoute>
+
                 <SignIn />
-              </PersistLoginRoute>
+
             </>
           }
         />
