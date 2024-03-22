@@ -5,6 +5,7 @@ import { useGetUserInfoQuery } from "../../ApiSlices/userApiSlice";
 import { addUserproject } from '../../pages/api';
 import DatePickerOne from '../Forms/DatePicker/DatePickerOne';
 import { projectColors } from '../color/color';
+import { validateFormExperience } from '../../pages/Profil/validation';
 const formatDate = (dateString:any) => {
   const options : Intl.DateTimeFormatOptions ={ year: 'numeric', month: 'short', day: 'numeric'};
   const formattedDate = new Intl.DateTimeFormat('fr-FR', options).format(new Date(dateString));
@@ -31,9 +32,20 @@ const ProjectCard = () => {
       [name]: value,
     }));
   };
+  const [errors, setErrors] = useState({
+    title: '',
+    startDate: '',
+    endDate: '',
+    description: '',
+  });
   const handleSaveModal :React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
     try {
+      const errors = validateFormExperience(projectData);
+      if (Object.keys(errors).length > 0) {
+        setErrors(errors);
+        return;
+      }else{
       const username = userInfo.username;
       const result = await addUserproject(username, projectData);
       console.log('Education added successfully:', result);
@@ -42,7 +54,7 @@ const ProjectCard = () => {
         startDate: '',
         endDate: '',
         description: '',
-      });
+      });}
       setIsModalOpen(false)
     } catch (error) {
       console.error('Error adding experience:', error);
@@ -101,7 +113,7 @@ const ProjectCard = () => {
             value={projectData.title}
             onChange={handleChange}
             className="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:border-red-800 dark:border-gray-500 dark:bg-gray-600 dark:text-white" />
-
+             {errors.title && <p className="text-red-500">{errors.title}</p>}
           <label className="mb-2 text-sm font-medium  uppercase block text-black dark:text-white">
             startDate
           </label>
@@ -109,7 +121,7 @@ const ProjectCard = () => {
                             value={projectData.startDate}
                             onChange={(value) => setprojectData((prevData) => ({ ...prevData, startDate: value }))}
                         />
-
+            {errors.startDate && <p className="text-red-500">{errors.startDate}</p>}
           <label className="mb-2 text-sm font-medium  uppercase block text-black dark:text-white">
             endDate
           </label>
@@ -117,7 +129,7 @@ const ProjectCard = () => {
                             value={projectData.endDate}
                             onChange={(value) => setprojectData((prevData) => ({ ...prevData, endDate: value }))}
                         />
-
+            {errors.endDate && <p className="text-red-500">{errors.endDate}</p>}
           <label className="mb-2 text-sm font-medium block uppercase text-black dark:text-white">
             description
           </label>
@@ -128,7 +140,7 @@ const ProjectCard = () => {
             value={projectData.description}
             onChange={handleChange}
             className="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:border-red-800 dark:border-gray-500 dark:bg-gray-600 dark:text-white" />
-
+             {errors.description && <p className="text-red-500">{errors.description}</p>}
           <div className="flex mt-4 justify-center gap-4.5 mb-5">
 
 

@@ -1,29 +1,30 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {selectCurrentToken, selectCurrentUser, selectCurrentUsername} from '../../ApiSlices/authSlice';
+import { selectCurrentToken, selectCurrentUser, selectCurrentUsername } from '../../ApiSlices/authSlice';
 import { useGetUserInfoQuery } from "../../ApiSlices/userApiSlice";
 import DatePickerOne from '../Forms/DatePicker/DatePickerOne';
-import { addUserEducation } from '../../pages/api';
-
+import { addUserEducation ,deleteEducation} from '../../pages/api';
+import { validateFormEducation } from '../../pages/Profil/validation';
 const formatDate = (dateString: any) => {
   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
   const formattedDate = new Intl.DateTimeFormat('fr-FR', options).format(new Date(dateString));
   return formattedDate;
 };
 
-const ProfileInfo = ({ index }: { index: number }) => {
+const ProfileInfo = () => {
 
   const dispatch = useDispatch();
   const currentUsername = useSelector(selectCurrentUsername);
   //const { data: userInfo = {} } = useGetUserInfoQuery(currentUsername);
-  const currentUser=useSelector(selectCurrentUser);
+  const currentUser = useSelector(selectCurrentUser);
   const [user, setUser] = useState<any>(null);
-
+ 
   const [educationData, setEducationData] = useState({
     school: '',
     degree: '',
     startDate: '',
     endDate: '',
+    
   });
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,12 +38,24 @@ const ProfileInfo = ({ index }: { index: number }) => {
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+  const [errors, setErrors] = useState({
+    degree: '',
+    school: '',
+    startDate: '',
+    endDate: ''
+  });
   const handleSaveModal: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
     try {
+      const errors = validateFormEducation(educationData);
+      if (Object.keys(errors).length > 0) {
+        setErrors(errors);
+        return;
+    }else{
 
       const result = await addUserEducation(currentUsername, educationData);
       console.log('Education added successfully:', result);
@@ -51,30 +64,39 @@ const ProfileInfo = ({ index }: { index: number }) => {
         degree: '',
         startDate: '',
         endDate: '',
-      });
+      });}
       handleCloseModal();
     } catch (error) {
       console.error('Error adding education:', error);
     }
   };
-
-
-
-  //pour la modification et le delete de l'education (les 3point )
-  /*const [dropdownVisible, setDropdownVisible] = useState(Array(educationData.length).fill(false));
-   const toggleDropdown = (index: any) => {
-     const newDropdownVisible = [...dropdownVisible];
-     newDropdownVisible[index] = !newDropdownVisible[index];
-     setDropdownVisible(newDropdownVisible);
-   };*/
-
-
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
-
-  const handleButtonClick = () => {
-    console.log('Button clicked');
-    setDropdownOpen(!isDropdownOpen);
+  const [educationDatat, setEducationDatat] = useState<any[]>([]);
+  const handleDelete = async (educationId: string) => {
+    try {
+      if (!currentUser) {
+        console.error('No user data available');
+        return;
+      }
+      await deleteEducation(currentUsername, educationId);
+      const educationToDelete = currentUser.education.find(edu => edu._id !== educationToDelete._id);
+      if (!educationToDelete) {
+        console.error('Education not found');
+        return;
+      }
+        // Mettre à jour l'état en supprimant l'éducation avec l'ID correspondant
+        setEducationDatat(prevEducationData => prevEducationData.filter(edu => edu._id !== educationId));
+        
+        console.log('Education successfully removed');
+    } catch (error) {
+        console.error('Error deleting education:', error);
+    }
   };
+
+
+
+
+
+
   return (
     <>
       <div className={`mb-10 ${isModalOpen ? 'bg-opacity-50' : ''} mt-2 mr-7 ml-7 rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark`}>
@@ -85,26 +107,26 @@ const ProfileInfo = ({ index }: { index: number }) => {
 
             <div className="absolute peer-hover:-top-20 peer-hover:-left-16 peer-hover:w-[140%] peer-hover:h-[140%] -top-32 -left-16 w-32 h-44 rounded-full bg-red-700 transition-all duration-500"></div>
 
-              <div className="absolute flex text-xl text-center items-end justify-end peer-hover:right-0 peer-hover:rounded-b-none peer-hover:bottom-0 peer-hover:items-center peer-hover:justify-center peer-hover:w-full peer-hover:h-full -bottom-32 -right-90 w-36 h-44 rounded-full bg-red-600 transition-all duration-500">
-                <div className="flex flex-col gap-5.5 p-6.5">
-                  <div className="flex flex-col">
-                    <span className="text-sm text-white dark:text-black">Full Name</span>
-                    <label className="text-lg font-semibold text-black dark:text-white">{currentUser && `${currentUser.firstName} ${currentUser.lastName}`}</label>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm text-white dark:text-black">Mobile</span>
-                    <label className="text-lg font-semibold text-black dark:text-white">{currentUser && `${currentUser.phoneNumber}`}</label>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm text-white dark:text-black">Email</span>
-                    <label className="text-lg font-semibold text-black dark:text-white"> {currentUser && `${currentUser.email}`} </label>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm text-white dark:text-black">Location</span>
-                    <label className="text-lg font-semibold text-black dark:text-white">{currentUser && `${currentUser.location}`}</label>
-                  </div>
+            <div className="absolute flex text-xl text-center items-end justify-end peer-hover:right-0 peer-hover:rounded-b-none peer-hover:bottom-0 peer-hover:items-center peer-hover:justify-center peer-hover:w-full peer-hover:h-full -bottom-32 -right-90 w-36 h-44 rounded-full bg-red-600 transition-all duration-500">
+              <div className="flex flex-col gap-5.5 p-6.5">
+                <div className="flex flex-col">
+                  <span className="text-sm text-white dark:text-black">Full Name</span>
+                  <label className="text-lg font-semibold text-black dark:text-white">{currentUser && `${currentUser.firstName} ${currentUser.lastName}`}</label>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm text-white dark:text-black">Mobile</span>
+                  <label className="text-lg font-semibold text-black dark:text-white">{currentUser && `${currentUser.phoneNumber} `}</label>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm text-white dark:text-black">Email</span>
+                  <label className="text-lg font-semibold text-black dark:text-white"> {currentUser && `${currentUser.email}`} </label>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm text-white dark:text-black">Location</span>
+                  <label className="text-lg font-semibold text-black dark:text-white">{currentUser && `${currentUser.location}`}</label>
                 </div>
               </div>
+            </div>
 
             <div className="w-full h-full items-center justify-center flex uppercase text-white">
               Profil Information
@@ -156,6 +178,7 @@ const ProfileInfo = ({ index }: { index: number }) => {
                 className="fixed inset-0 z-50 overflow-y-auto"
               >
                 <div className="flex items-center justify-center min-h-screen">
+                  <div className="absolute inset-0 bg-black bg-opacity-50"></div>
                   <div className="relative p-4 w-full max-w-md">
                     <div className="relative bg-white rounded-lg shadow">
                       {/* Modal header */}
@@ -200,6 +223,7 @@ const ProfileInfo = ({ index }: { index: number }) => {
                           value={educationData.degree}
                           onChange={handleChange}
                           className="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:border-red-800 dark:border-gray-500 dark:bg-gray-600 dark:text-black" />
+                          {errors.degree && <p className="text-red-500">{errors.degree}</p>}
                         <label className="mb-2 text-sm font-medium block uppercase text-black dark:text-black">
                           school
                         </label>
@@ -210,6 +234,7 @@ const ProfileInfo = ({ index }: { index: number }) => {
                           value={educationData.school}
                           onChange={handleChange}
                           className="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:border-red-800 dark:border-gray-500 dark:bg-gray-600 dark:text-black" />
+                          {errors.school && <p className="text-red-500">{errors.school}</p>}
                         <label className="mb-2 text-sm font-medium  uppercase block text-black dark:text-black">
                           startDate
                         </label>
@@ -217,6 +242,7 @@ const ProfileInfo = ({ index }: { index: number }) => {
                           value={educationData.startDate}
                           onChange={(value) => setEducationData((prevData) => ({ ...prevData, startDate: value }))}
                         />
+                         {errors.startDate && <p className="text-red-500">{errors.startDate}</p>}
                         <label className="mb-2 text-sm font-medium  uppercase block text-black dark:text-black">
                           endDate
                         </label>
@@ -224,6 +250,7 @@ const ProfileInfo = ({ index }: { index: number }) => {
                           value={educationData.endDate}
                           onChange={(value) => setEducationData((prevData) => ({ ...prevData, endDate: value }))}
                         />
+                        {errors.endDate && <p className="text-red-500">{errors.endDate}</p>}
 
 
                         <div className="flex mt-4 justify-center gap-4.5 mb-5">
@@ -258,31 +285,13 @@ const ProfileInfo = ({ index }: { index: number }) => {
             <ul className="grid gap-4">
               {currentUser.education && currentUser.education.length > 0 && currentUser.education.map((edu: any, index: number) => (
                 <li key={index} className=" relative p-4 border border-gray-200 dark:bg-white dark:text-black rounded-md w-full md:w-100 transition-transform transform hover:scale-105 cursor-pointer">
-                    <div className="relative inline-block ">
-                  <button id="dropdownMenuIconButton"
-                   onClick={handleButtonClick} 
-                   data-dropdown-toggle="dropdownDots"
-                    className="inline-flex ml-80 items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" 
-                    type="button">
-                    <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
-                      <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
+                  <div className='ml-80 flex'>
+                    <svg  className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
                     </svg>
-                  </button>
-                  {isDropdownOpen && (
-                  <div id="dropdownDots" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                    <ul className="py-2 text-sm text-black bg-black dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
-                      <li>
-                        <a href="#" className="block px-4 py-2 text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
-                      </li>
-                      <li>
-                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-                      </li>
-
-                    </ul>
-
-                  </div>
-                        )}
-
+                    <svg onClick={() => handleDelete(edu._id)}  className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H15V6H20V8H4V6H9V5ZM5 8V20C5 20.2652 5.10536 20.5196 5.29289 20.7071C5.48043 20.8946 5.73478 21 6 21H18C18.2652 21 18.5196 20.8946 18.7071 20.7071C18.8946 20.5196 19 20.2652 19 20V8H5ZM8 10V18H10V10H8ZM14 10V18H16V10H14Z"></path>
+                    </svg>
                   </div>
                   <h4 className="text-lg font-semibold text-black dark:text-black ">{edu.degree}</h4>
                   <p className="text-sm text-gray-500 dark:text-gray-300"> {`${edu.school} - ${formatDate(edu.startDate)} to ${formatDate(edu.endDate)}`}</p>
@@ -294,6 +303,7 @@ const ProfileInfo = ({ index }: { index: number }) => {
           </div>
 
         </div>
+    
       </div >
     </>);
 }

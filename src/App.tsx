@@ -29,7 +29,6 @@ import EmailVerif from './pages/Authentication/Reset_Password/EmailVerif';
 import ResetPasswordPage from './pages/Authentication/Reset_Password/resetpassword';
 import UpdatePassword from './layouts/authentication/components/Security/UpdatePassword/UpdatePassword';
 import AccountSecurity from './layouts/authentication/components/Security/AccountSecurity/AccountSecurity';
-import ChoiceOne from './pages/Authentication/SignUpFiles/choiceOne';
 import SignUpCompany from './pages/Authentication/SignUpCompany';
 import SignUpTeacher from './pages/Authentication/SignUpTeacher';
 import Profiletest from './pages/Profil/profil';
@@ -41,6 +40,8 @@ import AboutUs from './AboutUs/AboutUs';
 import {useSelector} from "react-redux";
 import {selectCurrentUsername} from "./ApiSlices/authSlice";
 import {useGetUserInfoQuery} from "./ApiSlices/userApiSlice";
+import DesactiveAccount from './pages/Profil/desactiveaccoun';
+import ProfileCompany from './pages/Profil/profilcompany';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -106,6 +107,15 @@ function App() {
             </>
           }
         />
+            <Route
+          path="/Profilecompany"
+          element={
+            <>
+              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <ProfileCompany/>
+            </>
+          }
+        />
          <Route
           path="/UserDetails/:id"
           element={
@@ -121,6 +131,15 @@ function App() {
             <>
               <PageTitle title="Update Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <UpdateProfile />
+            </>
+          }
+        />
+        <Route 
+          path="/desactiveAccount"
+          element={
+            <>
+              <PageTitle title="Update Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <DesactiveAccount/>
             </>
           }
         />
