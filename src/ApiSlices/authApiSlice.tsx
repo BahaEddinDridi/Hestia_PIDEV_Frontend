@@ -58,6 +58,22 @@ export const authApiSlice = apiSlice.injectEndpoints({
         }
       }
     }),
+    githubCallback: builder.mutation({
+      query: () => ({
+        url: '/auth/google/callback',
+        method: 'GET',
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled
+          console.log(data)
+          const { accessToken, currentUser } = data
+          dispatch(setCredentials({ accessToken, currentUser: currentUser }))
+        } catch (err) {
+          console.log(err)
+        }
+      }
+    }),
   })
 })
 
@@ -66,4 +82,5 @@ export const {
   useSendLogoutMutation,
   useRefreshMutation,
   useGoogleCallbackTeacherMutation,
+  useGithubCallbackMutation
 } = authApiSlice

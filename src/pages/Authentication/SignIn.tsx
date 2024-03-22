@@ -1,27 +1,31 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useGoogleCallbackTeacherMutation, useLoginMutation } from '../../ApiSlices/authApiSlice';
+import {
+  useGithubCallbackMutation,
+  useGoogleCallbackTeacherMutation,
+  useLoginMutation
+} from '../../ApiSlices/authApiSlice';
 import { selectIsAuthorized, setCredentials } from '../../ApiSlices/authSlice';
 import DefaultLayoutLogin from '../../layout/DefaultLayoutLogin';
-import Logo_PIDEV from '../../images/logo/Logo_PIDEV.png';
 import { useDispatch, useSelector } from 'react-redux';
-import usePersist from "../../hooks/userPersist";
-import userLogin from "../../images/cover/UserLogin.png"
-import userLoginDark from "../../images/cover/UserLoginDark.png"
-import Breadcrumb from "../../components/Breadcrumbs/Breadcrumb";
-import DarkModeSwitcher from "../../components/Header/DarkModeSwitcher";
+import usePersist from '../../hooks/userPersist';
+import userLogin from '../../images/cover/UserLogin.png';
+import userLoginDark from '../../images/cover/UserLoginDark.png';
 import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from "jwt-decode";import SigninBreadcrumbs from "../../components/Breadcrumbs/SigninBreadcrumbs";
+import { jwtDecode } from 'jwt-decode';
+import SigninBreadcrumbs from '../../components/Breadcrumbs/SigninBreadcrumbs';
+import Reaptcha from 'reaptcha';
+
 
 const SignIn: React.FC = () => {
+  const [captchaToken, setCaptchaToken] = useState(null);
+  const captchaRef = useRef(null);
   const userRef = useRef<HTMLInputElement>(null);
   const errRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showMessage, setShowMessage] = useState(false);
   const [showMessageText, setShowMessageText] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
-  const [persist, setPersist] = usePersist();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [errMsg, setErrMsg] = useState('');
@@ -30,7 +34,9 @@ const SignIn: React.FC = () => {
   const dispatch = useDispatch();
   const [login, { isLoading: loginLoading }] = useLoginMutation();
   const isAuthorized = useSelector(selectIsAuthorized);
-
+  const [loginAttempts, setLoginAttempts] = useState(0);
+  const [showLoginLimitMessage, setShowLoginLimitMessage] = useState(false);
+  const [countdown, setCountdown] = useState(60);
 
   useEffect(() => {
     if (isAuthorized) {
@@ -50,12 +56,34 @@ const SignIn: React.FC = () => {
     userRef.current?.focus();
   }, []);
 
-  const [googleCallback, { isLoading: googleCallbackLoading }] = useGoogleCallbackTeacherMutation();
+  useEffect(() => {
+    if (showLoginLimitMessage) {
+      const timer = setInterval(() => {
+        setCountdown(prevCountdown => prevCountdown - 1);
+      }, 1000);
 
+      return () => clearInterval(timer);
+    } else if (countdown === 0) {
+      setShowLoginLimitMessage(false);
+    }
+  }, [showLoginLimitMessage, countdown]);
+
+  const [googleCallback, { isLoading: googleCallbackLoading }] = useGoogleCallbackTeacherMutation();
+  const [githubCallback, { isLoading: githubCallbackLoading }] = useGithubCallbackMutation();
+  const initiateGitHubLogin = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    try {
+      console.log('Initiating GitHub login...');
+      window.location.href = `https://github.com/login/oauth/authorize?client_id=7ca6d0248ea91f703c9e`; // Replace with your GitHub OAuth URL
+      navigate('/Profile');
+    } catch (error) {
+      console.error('GitHub login initiation failed', error);
+      setErrorMessage('Failed to initiate GitHub login');
+    }
+  };
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
       const cred = jwtDecode(credentialResponse.credential);
-
       const { data } = await googleCallback({
         email: cred.email,
         firstName: cred.given_name,
@@ -71,11 +99,36 @@ const SignIn: React.FC = () => {
     }
   };
 
+  const verify = () => {
+    captchaRef.current.getResponse().then(res => {
+      setCaptchaToken(res);
+    });
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoginAttempts(prevAttempts => prevAttempts + 1);
+
+
+    if (loginAttempts >= 5) {
+      setShowLoginLimitMessage(true);
+      const countdownInterval = setInterval(() => {
+        setCountdown(prevCountdown => prevCountdown - 1);
+      }, 1000);
+      setTimeout(() => {
+        setShowLoginLimitMessage(false);
+        setLoginAttempts(0);
+        setCountdown(60);
+        clearInterval(countdownInterval);
+      }, 43000);
+      return;
+    }
 
     if (!email || !password) {
       setErrorMessage('Please enter both email and password.');
+      return;
+    }
+    if (!captchaToken) {
+      setErrorMessage('Please complete the reCAPTCHA.');
       return;
     }
 
@@ -110,7 +163,6 @@ const SignIn: React.FC = () => {
   };
   const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
   const handlePwdInput = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
-  const handlePersist = () => setPersist((prev: boolean) => !prev);
   const errClass = errMsg ? 'errmsg' : 'offscreen';
   if (loginLoading) return <span className="loading loading-dots loading-lg"></span>;
 
@@ -127,22 +179,21 @@ const SignIn: React.FC = () => {
   };
 
 
-
   return (
     <DefaultLayoutLogin>
       <SigninBreadcrumbs pageName="Sign In" />
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ">
 
         <div className="flex py-1">
-          <div className="hidden w-full xl:block xl:w-1/2">
-            <div className="py-5 px-26 text-center">
-                <img className="dark:hidden" src={userLogin} alt="Logo" />
-                <img className="hidden dark:block" src={userLoginDark} alt="Logo" />
+          <div className="hidden xl:block xl:w-1/2">
+            <div className="py-5 px-16 text-center">
+              <img className="dark:hidden" src={userLogin} alt="Logo" />
+              <img className="hidden dark:block" src={userLoginDark} alt="Logo" />
             </div>
           </div>
 
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
-            <div className="w-full p-1 sm:p-12.5 xl:p-10">
+            <div className="w-full p-1 sm:p-6 xl:p-4">
               <span className="mb-1.5 block font-medium text-center">Welcome</span>
               <h2 className="mb-2 text-2xl font-bold text-black dark:text-white sm:text-title-xl2 text-center">
                 Sign In
@@ -225,23 +276,14 @@ const SignIn: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center mb-5">
-                  <input
-                    type="checkbox"
-                    className="appearance-none w-9 focus:outline-none
-                     h-5 bg-gray-300 dark:bg-graydark
-                    rounded-full before:inline-block before:rounded-full
-                    before:bg-red-800 before:h-4 before:w-4
-                    checked:before:translate-x-full shadow-inner transition-all
-                    duration-300 before:ml-0.5 dark:before:bg-cyan-800
-                    dark:checked:bg-cyan-300"
-                    onChange={handlePersist}
-                    checked={persist}
+                <div className="mb-3">
+                  <Reaptcha
+                    sitekey="6LfCb54pAAAAAIZXklwFBaumrf_3ASn14XiD0agR"
+                    ref={captchaRef}
+                    onVerify={verify}
+
                   />
-                  <label className="text-black dark:text-white ml-2">Remember Me</label>
                 </div>
-
-
                 <div className="mb-5">
                   <input
                     type="submit"
@@ -253,49 +295,40 @@ const SignIn: React.FC = () => {
                dark:hover:bg-cyan-700 dark:focus:ring-cyan-400 dark:border-cyan-900"
                   />
                 </div>
-
                 <div className="flex gap-4">
                   <div className="flex w-full items-center justify-center
                     gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark
                     dark:bg-meta-4 dark:hover:bg-opacity-50">
                     <GoogleLogin
-                    locale="english"
-                    theme="outline"
-                    size="large"
-                    logo_alignment="center"
-                    onSuccess={handleGoogleLoginSuccess}
-                    onError={() => {
-                      console.log('Login Failed');
-                    }}
-                  >
-                    <span>Sign in with Google</span>
-                  </GoogleLogin></div>
+                      locale="english"
+                      theme="outline"
+                      size="large"
+                      logo_alignment="center"
+                      onSuccess={handleGoogleLoginSuccess}
+                      onError={() => {
+                        console.log('Login Failed');
+                      }}
+                    >
+                      <span>Sign in with Google</span>
+                    </GoogleLogin></div>
 
                   <button
                     className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50"
-                    onClick={initiateLinkedInLogin}
+                    onClick={initiateGitHubLogin}
                   >
-                    <span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="20"
-
-                        viewBox="0 0 72 72"
-                        width="20"
-                      >
-                        <g fill="none" fillRule="evenodd">
-                          <path
-                            d="M8,72 L64,72 C68.418278,72 72,68.418278 72,64 L72,8 C72,3.581722 68.418278,-8.11624501e-16 64,0 L8,0 C3.581722,8.11624501e-16 -5.41083001e-16,3.581722 0,8 L0,64 C5.41083001e-16,68.418278 3.581722,72 8,72 Z"
-                            fill="#007EBB"
-                          />
-                          <path
-                            d="M62,62 L51.315625,62 L51.315625,43.8021149 C51.315625,38.8127542 49.4197917,36.0245323 45.4707031,36.0245323 C41.1746094,36.0245323 38.9300781,38.9261103 38.9300781,43.8021149 L38.9300781,62 L28.6333333,62 L28.6333333,27.3333333 L38.9300781,27.3333333 L38.9300781,32.0029283 C38.9300781,32.0029283 42.0260417,26.2742151 49.3825521,26.2742151 C56.7356771,26.2742151 62,30.7644705 62,40.051212 L62,62 Z M16.349349,22.7940133 C12.8420573,22.7940133 10,19.9296567 10,16.3970067 C10,12.8643566 12.8420573,10 16.349349,10 C19.8566406,10 22.6970052,12.8643566 22.6970052,16.3970067 C22.6970052,19.9296567 19.8566406,22.7940133 16.349349,22.7940133 Z M11.0325521,62 L21.769401,62 L21.769401,27.3333333 L11.0325521,27.3333333 L11.0325521,62 Z"
-                            fill="#FFF"
-                          />
-                        </g>
-                      </svg>
-                    </span>
-                    Sign in with LinkedIn
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 72 72" width="20">
+          <g fill="none" fillRule="evenodd">
+            <path
+              d="M8,72 L64,72 C68.418278,72 72,68.418278 72,64 L72,8 C72,3.581722 68.418278,0 64,0 L8,0 C3.581722,0 0,3.581722 0,8 L0,64 C0,68.418278 3.581722,72 8,72 Z"
+              fill="#24292e" />
+            <path
+              d="M62,62 L51.315625,62 L51.315625,43.8021149 C51.315625,38.8127542 49.4197917,36.0245323 45.4707031,36.0245323 C41.1746094,36.0245323 38.9300781,38.9261103 38.9300781,43.8021149 L38.9300781,62 L28.6333333,62 L28.6333333,27.3333333 L38.9300781,27.3333333 L38.9300781,32.0029283 C38.9300781,32.0029283 42.0260417,26.2742151 49.3825521,26.2742151 C56.7356771,26.2742151 62,30.7644705 62,40.051212 L62,62 Z M16.349349,22.7940133 C12.8420573,22.7940133 10,19.9296567 10,16.3970067 C10,12.8643566 12.8420573,10 16.349349,10 C19.8566406,10 22.6970052,12.8643566 22.6970052,16.3970067 C22.6970052,19.9296567 19.8566406,22.7940133 16.349349,22.7940133 Z M11.0325521,62 L21.769401,62 L21.769401,27.3333333 L11.0325521,27.3333333 L11.0325521,62 Z"
+              fill="#FFFFFF" />
+          </g>
+        </svg>
+      </span>
+                    Sign in with GitHub
                   </button>
 
                 </div>
@@ -308,36 +341,50 @@ const SignIn: React.FC = () => {
                   </p>
                 </div>
                 <div className="mt-4 text-center">
-                    <Link to="/auth/EmailVerif" className="text-red-900 dark:text-cyan-500">
-                      Forgot your password?
-                    </Link>
+                  <Link to="/auth/EmailVerif" className="text-red-900 dark:text-cyan-500">
+                    Forgot your password?
+                  </Link>
                 </div>
               </form>
             </div>
           </div>
         </div>
       </div>
-      {showMessage && !successMessage &&(
+      {showMessage && !successMessage && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
-          <div className="bg-green-200 border border-green-500 text-green-700 px-6 py-4 rounded-lg relative z-50" role="alert">
+          <div className="bg-green-200 border border-green-500 text-green-700 px-6 py-4 rounded-lg relative z-50"
+               role="alert">
             <strong className="font-bold">You are already signed in.</strong>
             <span className="block sm:inline">{showMessageText}</span>
           </div>
         </div>
       )}
 
-      {successMessage &&(
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50" onClick={() => setSuccessMessage('')}>
-          <div className="bg-green-200 border border-green-500 text-green-700 px-6 py-4 rounded-lg relative z-50" role="alert">
+      {successMessage && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
+             onClick={() => setSuccessMessage('')}>
+          <div className="bg-green-200 border border-green-500 text-green-700 px-6 py-4 rounded-lg relative z-50"
+               role="alert">
             <strong className="font-bold">Success!</strong>
             <span className="block sm:inline">{successMessage}</span>
           </div>
         </div>
       )}
-
+      {showLoginLimitMessage && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+          <div className="bg-red-200 border border-red-500 text-red-700 px-6 py-4 rounded-lg relative z-50"
+               role="alert">
+            <strong className="font-bold">Error!</strong>
+            <span
+              className="block sm:inline"> Too many login attempts. Please try again after {countdown} seconds.</span>
+          </div>
+        </div>
+      )}
       {errorMessage !== '' && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50" onClick={() => setErrorMessage('')}>
-          <div className="bg-red-200 border border-red-500 text-red-700 px-6 py-4 rounded-lg relative z-50" role="alert">
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
+             onClick={() => setErrorMessage('')}>
+          <div className="bg-red-200 border border-red-500 text-red-700 px-6 py-4 rounded-lg relative z-50"
+               role="alert">
             <strong className="font-bold">Error!</strong>
             <span className="block sm:inline"> {errorMessage}</span>
           </div>

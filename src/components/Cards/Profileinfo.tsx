@@ -132,9 +132,9 @@ const ProfileInfo = ({ index }: { index: number }) => {
                     fill="none"
                     height="24"
                     stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     viewBox="0 0 24 24"
                     width="24"
                     xmlns="http://www.w3.org/2000/svg"
@@ -178,9 +178,9 @@ const ProfileInfo = ({ index }: { index: number }) => {
                           >
                             <path
                               stroke="currentColor"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
                               d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                             />
                           </svg>
