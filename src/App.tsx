@@ -44,6 +44,7 @@ import { useRefreshMutation } from './ApiSlices/authApiSlice';
 import ProtectedRoute from './pages/Authentication/ProtectedRoute';
 import PersistLoginRoute from './pages/Authentication/PersistLoginRoute';
 import AdminRoute from './pages/Authentication/SignUpFiles/ProtectedRouteAdmin';
+import OfferBrowsePage from './pages/Browsing/OfferBrowsing';
 
 function App() {
   const navigate = useNavigate();
@@ -117,6 +118,16 @@ function App() {
             </>
           }
         />
+        <Route
+          path="/Offers"
+          element={
+            <>
+              <PageTitle title="Your Profile" />
+              <ProtectedRoute>
+                <OfferBrowsePage/>
+              </ProtectedRoute>
+            </>
+          } />
           <Route
           path="/Profile"
           element={
