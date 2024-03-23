@@ -35,6 +35,8 @@ import Profiletest from './pages/Profil/profil';
 import SecurityQuestions from './pages/Authentication/Reset_Password/SecurityQuestions/SecurityQuestions';
 import SignUpStudent from './pages/Authentication/SignUpStudent';
 import Offers from './Offers/Offers';
+import JobOpp from '../src/pages/Opportunity/AddOpp/JobOpp'
+import IntershipOpp from '../src/pages/Opportunity/AddOpp/IntershipOpp'
 
 import AboutUs from './AboutUs/AboutUs';
 import {useSelector} from "react-redux";
@@ -318,7 +320,7 @@ function App() {
           path="/auth/signup/Teacher"
           element={
             <>
-              <PageTitle title="Sign up" />
+              <PageTitle title="Sign up Teacher" />
               <SignUpTeacher />
             </>
           }
@@ -327,7 +329,7 @@ function App() {
           path="/auth/signup/Student"
           element={
             <>
-              <PageTitle title="Sign up" />
+              <PageTitle title="Sign up Student" />
               <SignUpStudent />
             </>
           }
@@ -337,7 +339,7 @@ function App() {
           path="/auth/signUp/Company"
           element={
             <>
-              <PageTitle title="Sign up" />
+              <PageTitle title="Sign up Company" />
               <SignUpCompany />
             </>
           }
@@ -485,6 +487,24 @@ function App() {
             <>
               <PageTitle title="About Us" />
               <AboutUs />
+            </>
+          }
+        />
+        <Route
+          path='Opportunity/job'
+          element={
+            <>
+              <PageTitle title="Add A Job Opportunity" />
+              <JobOpp />
+            </>
+          }
+        />
+        <Route
+          path='Opportunity/intership'
+          element={
+            <>
+              <PageTitle title="Add An Intership Opportunity" />
+              <IntershipOpp />
             </>
           }
         />

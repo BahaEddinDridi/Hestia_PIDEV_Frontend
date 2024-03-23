@@ -16,6 +16,9 @@ module.exports = {
     },
     extend: {
       colors: {
+        OppSarra1:'#f5f3f4',
+        OppSarra2R:'#bf4342',
+        OppSarra3R:'#b2675e',
         esprit: '#C62828',
         espritLightRed:"#bf4342",
         espritGray:'#CBC7C1',
