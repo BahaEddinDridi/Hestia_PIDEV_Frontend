@@ -26,40 +26,27 @@ const ProfileCardAdmin =() => {
   const { username } = useParams<{ username: string }>();
   const [adminProfile, setAdminProfile] = useState<UserProfile | null>(null);
 
-  // useEffect(() => {
-  //   const fetchProfile = async () => {
-  //     try {
-  //       if (username) { // Vérifiez si username est défini
-  //         const profile = await fetchAdminByUsername(username);
-  //         setAdminProfile(profile);
-  //       } else {
-  //         console.error('Username is undefined');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching admin profile:', error);
-  //     }
-  //   };
-  //
-  //   fetchProfile();
-  // }, [username]);
+  
 
   const currentUser=useSelector(selectCurrentUser);
 /////////////////////////////////////////////////
     const [user, setUser] = useState<any>(null);
     const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  
+    const [selectedCoverImage, setSelectedCoverImage] = useState<string | null>(null)
+
+  //modifier le photo de profil Admin
     const handleImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
       const selectedFile = event.target.files?.[0];
     
-      if (selectedFile && adminProfile) { 
+      if (selectedFile) { 
         const data = new FormData();
         data.append('file', selectedFile);
-        data.append('upload_preset', 'hestia');
-        data.append('username', user.username);
+        data.append('upload_preset', 'OmaymaPI');
+        data.append('username', currentUser.username);
     
         try {
           const response = await fetch(
-            `https://api.cloudinary.com/v1_1/dasrakdbi/image/upload`,
+            `https://api.cloudinary.com/v1_1/dc31jcevz/upload`,
             {
               method: 'POST',
               body: data,
@@ -68,14 +55,14 @@ const ProfileCardAdmin =() => {
           if (response.ok) {
             const result = await response.json();
             setSelectedImage(result.secure_url);
-            localStorage.setItem(`userImage_${adminProfile.username}`, result.secure_url);
+            localStorage.setItem(`userImage_${currentUser.username}`, result.secure_url);
             await fetch('http://localhost:3001/user/upload-image', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                username: adminProfile.username,
+                username: currentUser.username,
                 imageUrl: result.secure_url,
               }),
             });
@@ -90,16 +77,75 @@ const ProfileCardAdmin =() => {
         console.error('Admin profile is not defined or selected file is missing.');
       }
     };
+
+    //modifier coverture image 
+    const handlecoverImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
+      const selectedFile = event.target.files?.[0];
+  
+      if (selectedFile) {
+        const data = new FormData();
+        data.append('file', selectedFile);
+        data.append('upload_preset', 'OmaymaPI');
+        data.append('username', currentUser.username);
+  
+        try {
+          const response = await fetch(
+            `https://api.cloudinary.com/v1_1/dc31jcevz/upload`,
+            {
+              method: 'POST',
+              body: data,
+            }
+          );
+          if (response.ok) {
+            const result = await response.json();
+            setSelectedCoverImage(result.secure_url);
+            localStorage.setItem(`userImage_${currentUser.username}`, result.secure_url);
+            await fetch('http://localhost:3001/user/upload-coverimage', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                username: currentUser.username,
+                coverimageUrl: result.secure_url,
+              }),
+            });
+            console.error('Image URL saved successfully:', result.message);
+          } else {
+            console.error('Failed to upload image to Cloudinary.');
+          }
+        } catch (error) {
+          console.error('Error uploading image:', error);
+        }
+      }
+    };
+
     
     return (  
       <>
         <div className="relative overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="relative z-20  h-48 md:h-80 lg:h-96 overflow-hidden rounded-t-lg">
-            <img
-              src={CoverOne}
-              alt="profile cover"
-              className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
-            />
+          {currentUser.coverimage ? (
+              <img
+                  src={currentUser.coverimage}
+                  alt="profile cover"
+                  className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
+              />
+          ) : selectedCoverImage ? (
+              <img
+                  src={selectedCoverImage}
+                  alt="profile cover"
+                  className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
+              />
+          ) : (
+              <img
+                  src={CoverOne}
+                  alt="profile cover"
+                  className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
+              />
+          )}
+
+
 
             {/* Edit cover photo button */}
             <div className="absolute bottom-4 right-4 z-30 xsm:bottom-8 xsm:right-8">
@@ -107,7 +153,7 @@ const ProfileCardAdmin =() => {
                 htmlFor="cover"
                 className="flex cursor-pointer items-center justify-center gap-2 rounded bg-black py-1 px-2 text-sm font-medium text-white hover:bg-opacity-90 xsm:px-4"
               >
-                <input type="file" name="cover" id="cover" className="sr-only" />
+                <input type="file" name="cover" id="cover" className="sr-only" onChange={handlecoverImageChange} />
                 <span>
                   <svg
                     className="fill-current"
@@ -141,11 +187,14 @@ const ProfileCardAdmin =() => {
           <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
             <div className="relative z-30 ml-10 -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
               <div className="relative drop-shadow-2">
-                {adminProfile && adminProfile.image  ? (
-                  <img src={adminProfile.image} alt="profile" className='w-50 h-40 rounded-full overflow-hidden object-cover'/>
-                ) : (
+              {currentUser.image ? (
+                  <img src={currentUser.image} alt="profile" className='w-50 h-40 rounded-full overflow-hidden object-cover' />
+              ) : selectedImage ? (
+                  <img src={selectedImage} alt="profile" className='w-50 h-40 rounded-full overflow-hidden object-cover' />
+              ) : (
                   <img src={userSix} alt="profile" />
-                )}
+              )
+              }
                 <label
                   htmlFor="profile"
                   className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-black text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"

@@ -137,6 +137,35 @@ export const deactivateAccount = async (userId: string, newStatus: string) => {
     throw error; // Re-lancer l'erreur pour que la fonction appelante puisse la gérer
   }
 };
+//desactivation le compte automatiquement
+// export const desactiveProfilByIdAuto = async (userId: string, newStatus: string, customDeactivation: any) => {
+//   try {
+//     const response = await axios.put(`http://localhost:3001/dashboard/${userId}/deactivate`, { newStatus, customDeactivation });
+//     console.log(response.data); // Afficher la réponse de l'API backend
+//   } catch (error) {
+//     console.error('Erreur lors de la désactivation du profil :', error);
+//     throw error; // Re-lancer l'erreur pour que la fonction appelante puisse la gérer
+//   }
+// };
+
+export const desactiveProfilByIdAuto = async (userId:string, newStatus:string, customDeactivation:any) => {
+  try {
+      const response = await fetch(`http://localhost:3001/dashboard/${userId}/deactivate`, {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ newStatus, customDeactivation }),
+      });
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error('Erreur lors de la désactivation du profil :', error);
+      throw error;
+  }
+};
+
+
 
 //get profilAdmin 
 export const fetchAdminByUsername = async (username: string) => {
@@ -176,6 +205,77 @@ export const updateByUsernameAdmin = async (username, updatedAdminData) => {
   }
 };
 
+//ajout experience 
+export const addUserExperienceAdmin = async (username:String, experienceData:any) => {
+  try {
+    const response = await fetch(`http://localhost:3001/user/newexperience/${username}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(experienceData),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error('Error adding user experience:', response.statusText);
+      throw new Error('Error adding user experience');
+    }
+  } catch (error) {
+    console.error('Error adding user experience:', error);
+    throw new Error('Error adding userexperience');
+  }
+};
+
+//delete education
+export const deleteEducation = async (username, educationId) => {
+  try {
+      const response = await axios.delete(`http://localhost:3001/user/deleteEducation/${username}/${educationId}`);
+      return response.data;
+  } catch (error) {
+      console.error('Error:', error.message);
+      throw error;
+  }
+};
+
+//update education 
+export const updateEducation = async (username: string, educationId: string, newData: any) => {
+  try {
+    const response = await axios.put(`http://localhost:3001/user/updateEducation/${username}/${educationId}`, newData);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to update education. Server responded with:', error.response.data);
+    throw new Error('Failed to update education');
+  }
+};
+//delete Experience 
+export const deleteExperience = async (username, experienceId) => {
+  try {
+    const response = await axios.delete(`http://localhost:3001/user/deleteExperiences/${username}/${experienceId}`);
+    console.log('Experience deleted successfully:', response.data);
+  } catch (error) {
+    console.error('Error deleting experience:', error.message);
+    throw new Error('Failed to delete experience');
+  }
+};
+//update Experience 
+export const updateExperience = async (username:string , experienceId:string, updatedExperience:any) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:3001/user/updateExperiences/${username}/${experienceId}`,
+      updatedExperience
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error updating experience:', error.response.data.error);
+    throw error;
+  }
+};
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //statistiques
@@ -214,6 +314,63 @@ export const fetchUserRoleStats = async () => {
     return data;
   } catch (error) {
     console.error('Error:', error);
+    return null;
+  }
+};
+//total uers par ages 
+export const fetchUserAgeGroupStats = async () => {
+  try {
+    const response = await axios.get('http://localhost:3001/stats/user-age-group');
+    const stats = response.data;
+    console.log('User age group statistics:', stats);
+    return stats;
+  } catch (error) {
+    console.error('Error fetching user age group statistics:', error.message);
+    return null;
+  }
+};
+//total users par gender 
+export const fetchUserGenderStats = async () => {
+  try {
+    const response = await fetch('http://localhost:3001/stats/user-gender', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+      const stats = await response.json();
+      console.log('User gender statistics:', stats);
+      return stats;
+    } else {
+      console.error('Failed to fetch user gender statistics');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching user gender statistics:', error.message);
+    return null;
+  }
+};
+
+//get all uers by status
+export const getUserStatusStats = async () => {
+  try {
+    const response = await fetch('http://localhost:3001/stats/user-status', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+      const stats = await response.json();
+      console.log('User status statistics:', stats);
+      return stats;
+    } else {
+      console.error('Failed to fetch user status statistics');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching user status statistics:', error.message);
     return null;
   }
 };
