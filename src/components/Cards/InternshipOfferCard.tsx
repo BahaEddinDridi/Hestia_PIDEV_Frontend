@@ -1,6 +1,12 @@
 import React from 'react';
 
-const InternshipOfferCard = () => {
+const InternshipOfferCard = ({internship}) => {
+  const {
+    interTitle,
+    interPost,
+    interfield,
+    interLocation,
+  } = internship;
   return (
     <div
       className="block rounded-lg bg-white  text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white">
@@ -17,20 +23,20 @@ const InternshipOfferCard = () => {
           />
           <span className="mb-5 text-sm font-medium text-gray-600">Company Name</span>
         </div>
-        <h5 className="mb-2 text-xl font-medium leading-tight">Special title treatment</h5>
+        <h5 className="mb-2 text-xl font-medium leading-tight">{interTitle}</h5>
         <p className="mb-4 text-base">
-          With supporting text below as a natural lead-in to additional content.
+          {interPost}
         </p>
         <div className="flex space-x-2 mb-2">
+         <span
+           className="rounded-[6px] flex  flex-wrap justify-center items-center bg-neutral-700 px-2 py-2
+    font-bold leading-none text-white dark:bg-[#2c0f14] dark:text-danger-500 text-center">{interfield}</span>
           <span
-            className="rounded-[6px] items-center bg-neutral-700 px-2 py-2
-            font-bold leading-none text-white dark:bg-[#2c0f14] dark:text-danger-500">Internship Type</span>
+            className="rounded-[6px] flex-wrap justify-center items-center bg-neutral-700 px-2 py-2
+    font-bold leading-none flex  text-white dark:bg-[#2c0f14] dark:text-danger-500 text-center">{interfield}</span>
           <span
-            className="rounded-[6px] items-center bg-neutral-700 px-2 py-2
-            font-bold leading-none text-white dark:bg-[#2c0f14] dark:text-danger-500">Industry</span>
-          <span
-            className="rounded-[6px] items-center bg-neutral-700 px-2 py-2
-            font-bold leading-none text-white dark:bg-[#2c0f14] dark:text-danger-500">Location</span>
+            className="rounded-[6px] flex-wrap justify-center items-center bg-neutral-700 px-2 py-2
+    font-bold leading-none text-white flex  dark:bg-[#2c0f14] dark:text-danger-500 text-center">{interLocation}</span>
         </div>
         <div className="text-right">
           <button

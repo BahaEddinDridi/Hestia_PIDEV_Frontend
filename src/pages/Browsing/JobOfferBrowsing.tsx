@@ -1,63 +1,88 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import {Job} from './API/Services';
 import DefaultLayout from '../../layout/DefaultLayout';
 import JobOfferCard from '../../components/Cards/JobOfferCard';
 import BrowsingHeader from './BrowsingHeader';
 import InternshipOfferCard from '../../components/Cards/InternshipOfferCard';
-import { getAllJobs } from './API/Services'; // Assuming you're using React Router for navigation
+import jobService from './API/Services';
+import FiltersSidebar from '../../components/Sidebar/BrowsingSideBar';
 
 const OfferBrowsePage = () => {
   const [isJobs, setIsJobs] = useState(true);
   const [jobs, setJobs] = useState([]);
-  const [filteredJobs, setFilteredJobs] = useState([]);
-
-  useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const jobsData = await getAllJobs();
-        setJobs(jobsData);
-        setFilteredJobs(jobsData);
-      } catch (error) {
-        console.error('Error fetching jobs:', error);
-      }
-    };
-
-    fetchJobs();
-  }, []);
-  const filterJobsByLocation = (location) => {
-    if (location === '') {
-      setFilteredJobs(jobs);
-    } else {
-      const filteredListings = jobs.filter(job => job.jobLocation === location);
-      setFilteredJobs(filteredListings);
+  const [appliedFilters, setAppliedFilters] = useState({
+    locations: [],
+    experience: '',
+    industry: '',
+  });
+  const [searchQuery, setSearchQuery] = useState('');
+  const fetchJobs = async () => {
+    try {
+      const fetchedJobs = await jobService.getAllJobs(
+        appliedFilters.locations.join(','), // Convert locations array to comma-separated string
+        appliedFilters.experience,
+        appliedFilters.industry
+      );
+      setJobs(fetchedJobs);
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
+    }
+  };
+  const handleSearch = async (query) => {
+    try {
+      const filteredJobs = await jobService.searchJobs(query);
+      setJobs(filteredJobs);
+    } catch (error) {
+      console.error('Error searching jobs:', error);
     }
   };
 
+
+  useEffect(() => {
+    fetchJobs();
+  }, [appliedFilters]);
+
+  useEffect(() => {
+    if (searchQuery.trim() !== '') {
+      handleSearch(searchQuery);
+    } else {
+      fetchJobs();
+    }
+  }, [searchQuery]);
+  const handleFilterChange = (filters) => {
+    setAppliedFilters(filters);
+  };
   const handleTabChange = () => {
     setIsJobs(!isJobs);
   };
-
-  const jobListings = [
-    { title: "Software Engineer Intern", company: "ABC Corp", location: "New York", type: "Internship", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum aliquam mi, vel fringilla lacus vestibulum et." },
-    { title: "Marketing Specialist", company: "XYZ Inc", location: "San Francisco", type: "Full-time", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum aliquam mi, vel fringilla lacus vestibulum et." },
-    { title: "Marketing Specialist", company: "XYZ Inc", location: "San Francisco", type: "Full-time", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum aliquam mi, vel fringilla lacus vestibulum et." },
-    { title: "Marketing Specialist", company: "XYZ Inc", location: "San Francisco", type: "Full-time", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum aliquam mi, vel fringilla lacus vestibulum et." },
-    { title: "Marketing Specialist", company: "XYZ Inc", location: "San Francisco", type: "Full-time", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum aliquam mi, vel fringilla lacus vestibulum et." },
-    { title: "Marketing Specialist", company: "XYZ Inc", location: "San Francisco", type: "Full-time", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum aliquam mi, vel fringilla lacus vestibulum et." },
-  ];
+  const handleInputChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
     <DefaultLayout>
-      <BrowsingHeader activeTab={isJobs} onTabChange={handleTabChange} />
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid gap-10 mt-10 px-30 grid-cols-1 sm:grid-cols-2">
-          {jobs.map((job, index) => (
-            isJobs ? (
-              <JobOfferCard key={index} job={job} />
-            ) : (
-              <InternshipOfferCard key={index} job={job} />
-            )
-          ))}
+      <div className="grid grid-cols-4 ">
+        <div className="col-span-1">
+          <FiltersSidebar onFilterChange={handleFilterChange} isJobs={isJobs}/>
+        </div>
+        <div className="col-span-3">
+          <BrowsingHeader
+            activeTab={isJobs}
+            onTabChange={handleTabChange}
+            onSearch={handleSearch}
+            searchQuery={searchQuery}
+            onInputChange={handleInputChange}/>
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="grid gap-10 mt-10 grid-cols-1 sm:grid-cols-2">
+              {jobs.map((job, index) => (
+                isJobs ? (
+                  <JobOfferCard key={index} job={job} />
+                ) : (
+                  <InternshipOfferCard key={index} job={job} />
+                )
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </DefaultLayout>

@@ -1,58 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button } from '@material-tailwind/react';
 
 
 
-const BrowsingHeader = ({ activeTab, onTabChange }) => {
-  const [dropdown1Open, setDropdown1Open] = useState(false);
-  const [dropdown20pen, setDropdown20pen] = useState(false);
-  const [dropdown30pen, setDropdown30pen] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState('');
-  const dropdownRef = useRef(null);
+const BrowsingHeader = ({ activeTab, onTabChange, onSearch, searchQuery, onInputChange  }) => {
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdown1Open(false);
-        setDropdown20pen(false);
-        setDropdown30pen(false);
-      }
-    };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const locations = [
-    "Ariana","Beja","Ben Arous","Bizerte","Gabes","Gafsa","Jendouba","Kairouan","Kasserine",
-    "Kebili","Kef","Mahdia","Manouba","Medenine","Monastir","Nabeul","Sfax",
-    "Sidi Bouzid","Siliana","Sousse","Tataouine","Tozeur","Tunis","Zaghouan","Other"
-  ];
-
-  const experienceLevels = ['Junior', 'Intermediate','Senior','Entry-level','Mid-level','Experienced','Expert','Lead'];
-  const industries = ['Computer Science', 'Mechanical Engineering','Electromechanical Engineering','Civil Engineering','Business'];
-  const toggleDropdown1 = () => {
-    setDropdown1Open(!dropdown1Open);
-    setDropdown20pen(false);
-    setDropdown30pen(false);
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    onSearch(searchQuery);
   };
-  const toggleDropdown2 = () => {
-    setDropdown20pen(!dropdown20pen);
-    setDropdown1Open(false);
-    setDropdown30pen(false);
-  };
-  const toggleDropdown3 = () => {
-    setDropdown30pen(!dropdown30pen);
-    setDropdown1Open(false);
-    setDropdown20pen(false);
-  };
-
-
   return (
     <div className="max-w-7xl mx-auto px-4">
-      <header className="bg-white shadow-lg rounded-lg items-center">
+      <header className=" bg-white shadow-lg rounded-lg items-center">
         <div className="p-4">
           <div className="flex items-center justify-between">
             <div className="relative pr-5">
@@ -89,66 +48,8 @@ const BrowsingHeader = ({ activeTab, onTabChange }) => {
               <div
                 className="h-10 absolute w-full -top-px bg-transparent border-gray-300 border-t-0 rounded-md"></div>
             </div>
-            <div className="inline-block mr-4" ref={dropdownRef}>
-              <button
-                className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md"
-                onClick={toggleDropdown1}
-              >
-                Location
-              </button>
-              {dropdown1Open && (
-                <div
-                  className="absolute mt-2 w-56 h-36 overflow-y-auto rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
-                >
-                  <div className="py-1">
-                    {locations.sort().map((option, index) => (
-                      <button key={index} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        {option}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="inline-block mr-4" ref={dropdownRef}>
-              <button className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md"
-                      onClick={toggleDropdown2}>
-                Experience Level
-              </button>
-              {dropdown20pen && (
-                <div
-                  className="absolute mt-2 w-56 h-36 overflow-y-auto rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  <div className="py-1">
-                    {locations.sort().map((option, index) => (
-                      <button key={index} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        {option}
-                      </button>
-                    ))}
-                    <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Option 1</button>
-                    <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Option 2</button>
-                    <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Option 3</button>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="inline-block mr-4" ref={dropdownRef}>
-              <button className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md"
-                      onClick={toggleDropdown3}>
-                Industry
-              </button>
-              {dropdown30pen && (
-                <div
-                  className="absolute mt-2 w-56 h-36 overflow-y-auto rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  <div className="py-1">
-                    <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Option 1</button>
-                    <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Option 2</button>
-                    <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Option 3</button>
-                  </div>
-                </div>
-              )}
-            </div>
             <div className="max-w-lg mx-auto">
-              <form className="flex items-center">
+              <form className="flex items-center"onSubmit={handleSearchSubmit} >
                 <div className="relative w-150 mr-4">
                   <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
@@ -158,6 +59,8 @@ const BrowsingHeader = ({ activeTab, onTabChange }) => {
                     </svg>
                   </div>
                   <input type="text"
+                         value={searchQuery}
+                         onChange={onInputChange}
                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                          placeholder="Search Offers..." required />
                 </div>
