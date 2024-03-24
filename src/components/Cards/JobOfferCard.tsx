@@ -1,14 +1,15 @@
 import React from 'react';
 
-const OfferCard = () => {
+const JobOfferCard = () => {
   return (
     <div
-      className="block rounded-lg bg-white  text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white">
+      className="block rounded-lg bg-white  text-surface shadow-secondary-1
+      dark:bg-surface-dark dark:text-white">
       <div
         className="border-b-2 text-center border-neutral-100 px-6 py-3 dark:border-white/10">
-        Job/Internship
+        Job
       </div>
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         <div className="mb-5 flex items-left text-right justify-start space-x-2">
           <img
             src=""
@@ -57,4 +58,4 @@ const OfferCard = () => {
   );
 };
 
-export default OfferCard;
+export default JobOfferCard;
