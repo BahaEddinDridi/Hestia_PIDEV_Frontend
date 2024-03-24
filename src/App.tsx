@@ -205,7 +205,7 @@ function App() {
             <>
               <PageTitle title="Update Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <ProtectedRoute>
-              <UpdateProfile />
+              <DesactiveAccount/>
               </ProtectedRoute>
             </>
           }
