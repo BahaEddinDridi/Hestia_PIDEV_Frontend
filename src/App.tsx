@@ -42,7 +42,11 @@ import AboutUs from './AboutUs/AboutUs';
 import {useSelector} from "react-redux";
 import {selectCurrentUsername} from "./ApiSlices/authSlice";
 import {useGetUserInfoQuery} from "./ApiSlices/userApiSlice";
-import { useRefreshMutation } from './ApiSlices/authApiSlice';
+import DesactiveAccount from './pages/Profil/desactiveaccoun';
+import ProfileCompany from './pages/Profil/profilcompany';
+import RederactionRoute from './pages/Profil/rederection';
+import ViewCompany from './pages/Profil/viewCompany';
+import Detailsjoboffer from './pages/Detailsjoboffer';import { useRefreshMutation } from './ApiSlices/authApiSlice';
 import ProtectedRoute from './pages/Authentication/ProtectedRoute';
 import PersistLoginRoute from './pages/Authentication/PersistLoginRoute';
 import AdminRoute from './pages/Authentication/SignUpFiles/ProtectedRouteAdmin';
@@ -135,8 +139,47 @@ function App() {
           element={
             <>
             <PageTitle title="Your Profile" />
+         
             <ProtectedRoute>
               <Profiletest/>
+             
+            
+            </>
+          }
+        />
+            <Route
+          path="/Profilecompany"
+          element={
+            <>
+              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+         
+              <ProfileCompany/>
+           
+              
+            </>
+          }
+        />
+          <Route
+          path="/company/:username"
+          element={
+            <>
+              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+         
+              <ViewCompany/>
+           
+              
+            </>
+          }
+        />
+          <Route
+          path="/detailsoffer"
+          element={
+            <>
+              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            <Detailsjoboffer/>
+             
+           
+              
               </ProtectedRoute>
             </>
           } />
@@ -157,6 +200,25 @@ function App() {
               <ProtectedRoute>
               <UpdateProfile />
               </ProtectedRoute>
+            </>
+          }
+        />
+        <Route 
+          path="/desactiveAccount"
+          element={
+            <>
+              <PageTitle title="Update Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <UpdateProfile />
+              </ProtectedRoute>
+            </>
+          }
+        />
+        <Route 
+          path="/desactiveAccount"
+          element={
+            <>
+              <PageTitle title="Update Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <DesactiveAccount/>
             </>
           }
         />

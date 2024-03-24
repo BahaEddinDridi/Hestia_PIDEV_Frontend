@@ -44,3 +44,55 @@ export const validateFirstName = (value:string) => {
       }
      return '';   
   }
+
+
+  export const validateFormEducation = (data: any) => {
+    const errors: any = {};
+
+   
+    if (!data.degree) {
+        errors.degree = "The field is required.";
+    }
+    if (!data.school) {
+        errors.school = "The field is required.";
+    }
+    if (!data.startDate) {
+        errors.startDate = "The field is required.";
+    }
+    if (!data.endDate) {
+        errors.endDate = "The field is required.";
+    }
+
+    
+    if (data.startDate && data.endDate && data.startDate >= data.endDate) {
+        errors.endDate = "The end date must be after the start date.";
+    }
+
+    return errors;
+};
+export const validateFormExperience = (data: any) => {
+  const errors: any = {};
+
+ 
+  if (!data.title) {
+      errors.title = "The field is required.";
+  }
+  if (!data.company) {
+      errors.company = "The field is required.";
+  }
+  if (!data.startDate) {
+      errors.startDate = "The field is required.";
+  }
+  if (!data.endDate) {
+      errors.endDate = "The field is required.";
+  }
+  if (!data.description) {
+    errors.description = "The field is required.";
+}
+  
+  if (data.startDate && data.endDate && data.startDate >= data.endDate) {
+      errors.endDate = "The end date must be after the start date.";
+  }
+
+  return errors;
+};

@@ -73,13 +73,13 @@ const DropdownUser = () => {
           <span className="block text-sm font-medium text-black dark:text-white">
             {userInfo && `${userInfo.firstName} ${userInfo.lastName}`}
           </span>
-          <span className="block text-xs">UX Designer</span>
+          <span className="block text-xs">{userInfo.title}</span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
 
           {userInfo.image ? (
-            <img src={userInfo.image} alt="profile" className='w-12 h-12 rounded-full overflow-hidden object-cover'/>
+            <img src={userInfo.image} alt="profile" className='w-12 h-12 rounded-full overflow-hidden object-cover' />
           ) : (
             <img src={UserOne} alt="profile" />
           )
@@ -113,8 +113,8 @@ const DropdownUser = () => {
           }`}
       >
         <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
-        <li>
-          <DarkModeSwitcher /> Dark Mode
+          <li>
+            <DarkModeSwitcher /> Dark Mode
           </li>
           <li>
             <Link
@@ -192,7 +192,19 @@ const DropdownUser = () => {
               to="/Profile/offer"
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base text-red-700"
             >
-            
+             <li>
+            <Link
+              to="/desactiveAccount"
+              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+            >
+              <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M10 5a2 2 0 0 0-2 2v3h2.4A7.48 7.48 0 0 0 8 15.5a7.48 7.48 0 0 0 2.4 5.5H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1V7a4 4 0 1 1 8 0v1.15a7.446 7.446 0 0 0-1.943.685A.999.999 0 0 1 12 8.5V7a2 2 0 0 0-2-2Z" clip-rule="evenodd" />
+                <path fill-rule="evenodd" d="M10 15.5a5.5 5.5 0 1 1 11 0 5.5 5.5 0 0 1-11 0Zm6.5-1.5a1 1 0 1 0-2 0v1.5a1 1 0 0 0 .293.707l1 1a1 1 0 0 0 1.414-1.414l-.707-.707V14Z" clip-rule="evenodd" />
+              </svg>
+
+              Deactivate account
+            </Link>
+          </li>
               My Offers
             </Link>
           </li>

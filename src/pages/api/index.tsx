@@ -261,6 +261,24 @@ export const addUserEducation = async (username:any, educationData:any) => {
     throw new Error('Error adding user education');
   }
 };
+export const deleteEducation = async (username:any, educationId:any) => {
+  try {
+      const response = await fetch(`${BASE_URL}/user/deleteeducation/${username}/${educationId}`, {
+          method: 'DELETE',
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      });
+      if (response.ok) {
+          console.log('Education successfully removed');
+          // Mettre à jour votre interface utilisateur ou votre état local après la suppression
+      } else {
+          console.error('Error deleting education');
+      }
+  } catch (error) {
+      console.error('Erreur  :', error);
+  }
+};
 //////////////////////////////////////experience
 export const addUserExperience = async (username:any, experienceData:any) => {
   try {
@@ -305,5 +323,28 @@ export const addUserproject = async (username:any, projectData:any) => {
   } catch (error) {
     console.error('Error adding user project:', error);
     throw new Error('Error adding user project');
+  }
+};
+/////////////desactive account 
+export const deactivateAccount = async (username:any, duration:any,password:string) => {
+  try {
+    const response = await fetch(`${BASE_URL}/user/deactivateAccoun`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, duration,password})
+    });
+    const data = await response.json();
+    if (response.ok) {
+      return { success: true, message: data.message };
+    
+    } else {
+      return { success: false, error: data.error };
+     
+    }
+  } catch (error) {
+    console.error('Error:', error);
+   
   }
 };
