@@ -142,8 +142,7 @@ function App() {
          
             <ProtectedRoute>
               <Profiletest/>
-             
-            
+            </ProtectedRoute>
             </>
           }
         />
@@ -152,10 +151,9 @@ function App() {
           element={
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-         
+              <ProtectedRoute>
               <ProfileCompany/>
-           
-              
+              </ProtectedRoute>
             </>
           }
         />
@@ -164,10 +162,9 @@ function App() {
           element={
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-         
+              <ProtectedRoute>
               <ViewCompany/>
-           
-              
+                </ProtectedRoute>
             </>
           }
         />
@@ -176,10 +173,8 @@ function App() {
           element={
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <ProtectedRoute>
             <Detailsjoboffer/>
-             
-           
-              
               </ProtectedRoute>
             </>
           } />
@@ -188,7 +183,9 @@ function App() {
           element={
             <>
               <PageTitle title="User Details" />
+              <ProtectedRoute>
               <UserDetails />
+              </ProtectedRoute>
             </>
           }
         />
