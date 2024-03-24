@@ -1,118 +1,17 @@
 import DefaultLayout from "../../layout/DefaultLayout";
 import { useSelector } from 'react-redux';
-import { selectCurrentUser } from '../../ApiSlices/authSlice';
-import { ChangeEvent, useState } from 'react';
+import {selectCurrentUser } from '../../ApiSlices/authSlice';
+import {  useState } from 'react';
 import CoverOne from '../../images/cover/cover-01.png';
 import userSix from '../../images/user/user-06.png';
-import { Link } from "react-router-dom";
 
-const ProfileCompany = () => {
- const currentUser = useSelector(selectCurrentUser);
+const ViewCompany = () => {
 
-  const [selectedCoverImage, setSelectedCoverImage] = useState<string | null>(null)
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
-
-  const handlecoverImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0];
-
-    if (selectedFile) {
-      const data = new FormData();
-      data.append('file', selectedFile);
-      data.append('upload_preset', 'hestia');
-      data.append('username', currentUser.username);
-
-      try {
-        const response = await fetch(
-          `https://api.cloudinary.com/v1_1/dasrakdbi/image/upload`,
-          {
-            method: 'POST',
-            body: data,
-          }
-        );
-        if (response.ok) {
-          const result = await response.json();
-          setSelectedCoverImage(result.secure_url);
-          localStorage.setItem(`userImage_${currentUser.username}`, result.secure_url);
-          await fetch('http://localhost:3001/user/upload-coverimage', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              username: currentUser.username,
-              coverimageUrl: result.secure_url,
-            }),
-          });
-          console.error('Image URL saved successfully:', result.message);
-        } else {
-          console.error('Failed to upload image to Cloudinary.');
-        }
-      } catch (error) {
-        console.error('Error uploading image:', error);
-      }
-    }
-  };
-
-  const handleImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0];
-
-    if (selectedFile) {
-      const data = new FormData();
-      data.append('file', selectedFile);
-      data.append('upload_preset', 'hestia');
-      data.append('username', currentUser.username);
-
-      try {
-        const response = await fetch(
-          `https://api.cloudinary.com/v1_1/dasrakdbi/image/upload`,
-          {
-            method: 'POST',
-            body: data,
-          }
-        );
-        if (response.ok) {
-          const result = await response.json();
-          setSelectedImage(result.secure_url);
-          localStorage.setItem(`userImage_${currentUser.username}`, result.secure_url);
-          await fetch('http://localhost:3001/user/upload-image', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              username: currentUser.username,
-              imageUrl: result.secure_url,
-            }),
-          });
-          console.error('Image URL saved successfully:', result.message);
-        } else {
-          console.error('Failed to upload image to Cloudinary.');
-        }
-      } catch (error) {
-        console.error('Error uploading image:', error);
-      }
-    }
-  };
-  //////////////////
+  const currentUser = useSelector(selectCurrentUser);
   const [activeTab, setActiveTab] = useState('info');
   const handleTabChange = (tabName: any) => {
     setActiveTab(tabName);
   };
-  ///////////////
-  const [currentPage, setCurrentPage] = useState(1);
-  const cardsPerPage = 3;
-
-  const nextPage = () => {
-    setCurrentPage(prevPage => prevPage + 1);
-  };
-
-  const prevPage = () => {
-    setCurrentPage(prevPage => prevPage - 1);
-  };
-
-  const indexOfLastCard = currentPage * cardsPerPage;
-  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = currentUser.job.slice(indexOfFirstCard, indexOfLastCard);
   return (
     <>
       <DefaultLayout>
@@ -125,12 +24,6 @@ const ProfileCompany = () => {
                   alt="profile cover"
                   className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
                 />
-              ) : selectedCoverImage ? (
-                <img
-                  src={selectedCoverImage}
-                  alt="profile cover"
-                  className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
-                />
               ) : (
                 <img
                   src={CoverOne}
@@ -138,45 +31,6 @@ const ProfileCompany = () => {
                   className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
                 />
               )}
-
-
-              {/* Edit cover photo button */}
-              <div className="absolute bottom-4 right-4 z-30 xsm:bottom-8 xsm:right-8">
-                <label
-                  htmlFor="cover"
-                  className="flex cursor-pointer items-center justify-center gap-2 rounded bg-black py-1 px-2 text-sm font-medium text-white hover:bg-opacity-90 xsm:px-4"
-                >
-                  <input type="file" name="cover" id="cover" className="sr-only" onChange={handlecoverImageChange} />
-                  <span>
-                    <svg
-                      className="fill-current"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 14 14"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      {/* Your SVG path */}
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M4.76464 1.42638C4.87283 1.2641 5.05496 1.16663 5.25 1.16663H8.75C8.94504 1.16663 9.12717 1.2641 9.23536 1.42638L10.2289 2.91663H12.25C12.7141 2.91663 13.1592 3.101 13.4874 3.42919C13.8156 3.75738 14 4.2025 14 4.66663V11.0833C14 11.5474 13.8156 11.9925 13.4874 12.3207C13.1592 12.6489 12.7141 12.8333 12.25 12.8333H1.75C1.28587 12.8333 0.840752 12.6489 0.512563 12.3207C0.184375 11.9925 0 11.5474 0 11.0833V4.66663C0 4.2025 0.184374 3.75738 0.512563 3.42919C0.840752 3.101 1.28587 2.91663 1.75 2.91663H3.77114L4.76464 1.42638ZM5.56219 2.33329L4.5687 3.82353C4.46051 3.98582 4.27837 4.08329 4.08333 4.08329H1.75C1.59529 4.08329 1.44692 4.14475 1.33752 4.25415C1.22812 4.36354 1.16667 4.51192 1.16667 4.66663V11.0833C1.16667 11.238 1.22812 11.3864 1.33752 11.4958C1.44692 11.6052 1.59529 11.6666 1.75 11.6666H12.25C12.4047 11.6666 12.5531 11.6052 12.6625 11.4958C12.7719 11.3864 12.8333 11.238 12.8333 11.0833V4.66663C12.8333 4.51192 12.7719 4.36354 12.6625 4.25415C12.5531 4.14475 12.4047 4.08329 12.25 4.08329H9.91667C9.72163 4.08329 9.53949 3.98582 9.4313 3.82353L8.43781 2.33329H5.56219Z"
-                        fill="white"
-                      />
-                      {/* Your SVG path */}
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M6.99992 5.83329C6.03342 5.83329 5.24992 6.61679 5.24992 7.58329C5.24992 8.54979 6.03342 9.33329 6.99992 9.33329C7.96642 9.33329 8.74992 8.54979 8.74992 7.58329C8.74992 6.61679 7.96642 5.83329 6.99992 5.83329ZM4.08325 7.58329C4.08325 5.97246 5.38909 4.66663 6.99992 4.66663C8.61075 4.66663 9.91659 5.97246 9.91659 7.58329C9.91659 9.19412 8.61075 10.5 6.99992 10.5C5.38909 10.5 4.08325 9.19412 4.08325 7.58329Z"
-                        fill="white"
-                      />
-                    </svg>
-                  </span>
-                  <span>Edit</span>
-                </label>
-
-              </div>
-
             </div>
 
           </div>
@@ -186,45 +40,11 @@ const ProfileCompany = () => {
               <div className="relative drop-shadow-2">
                 {currentUser.image ? (
                   <img src={currentUser.image} alt="profile" className='w-50 h-40 rounded-full overflow-hidden object-cover' />
-                ) : selectedImage ? (
-                  <img src={selectedImage} alt="profile" className='w-50 h-40 rounded-full overflow-hidden object-cover' />
                 ) : (
                   <img src={userSix} alt="profile" />
                 )
                 }
-                <label
-                  htmlFor="profile"
-                  className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-black text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
-                >
-                  <svg
-                    className="fill-current"
-                    width="14"
-                    height="14"
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M4.76464 1.42638C4.87283 1.2641 5.05496 1.16663 5.25 1.16663H8.75C8.94504 1.16663 9.12717 1.2641 9.23536 1.42638L10.2289 2.91663H12.25C12.7141 2.91663 13.1592 3.101 13.4874 3.42919C13.8156 3.75738 14 4.2025 14 4.66663V11.0833C14 11.5474 13.8156 11.9925 13.4874 12.3207C13.1592 12.6489 12.7141 12.8333 12.25 12.8333H1.75C1.28587 12.8333 0.840752 12.6489 0.512563 12.3207C0.184375 11.9925 0 11.5474 0 11.0833V4.66663C0 4.2025 0.184374 3.75738 0.512563 3.42919C0.840752 3.101 1.28587 2.91663 1.75 2.91663H3.77114L4.76464 1.42638ZM5.56219 2.33329L4.5687 3.82353C4.46051 3.98582 4.27837 4.08329 4.08333 4.08329H1.75C1.59529 4.08329 1.44692 4.14475 1.33752 4.25415C1.22812 4.36354 1.16667 4.51192 1.16667 4.66663V11.0833C1.16667 11.238 1.22812 11.3864 1.33752 11.4958C1.44692 11.6052 1.59529 11.6666 1.75 11.6666H12.25C12.4047 11.6666 12.5531 11.6052 12.6625 11.4958C12.7719 11.3864 12.8333 11.238 12.8333 11.0833V4.66663C12.8333 4.51192 12.7719 4.36354 12.6625 4.25415C12.5531 4.14475 12.4047 4.08329 12.25 4.08329H9.91667C9.72163 4.08329 9.53949 3.98582 9.4313 3.82353L8.43781 2.33329H5.56219Z"
-                      fill=""
-                    />
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M7.00004 5.83329C6.03354 5.83329 5.25004 6.61679 5.25004 7.58329C5.25004 8.54979 6.03354 9.33329 7.00004 9.33329C7.96654 9.33329 8.75004 8.54979 8.75004 7.58329C8.75004 6.61679 7.96654 5.83329 7.00004 5.83329ZM4.08337 7.58329C4.08337 5.97246 5.38921 4.66663 7.00004 4.66663C8.61087 4.66663 9.91671 5.97246 9.91671 7.58329C9.91671 9.19412 8.61087 10.5 7.00004 10.5C5.38921 10.5 4.08337 9.19412 4.08337 7.58329Z"
-                      fill=""
-                    />
-                  </svg>
-                  <input
-                    type="file"
-                    name="profile"
-                    id="profile"
-                    className="sr-only"
-                    onChange={handleImageChange}
-                  />
-                </label>
+               
 
               </div>
             </div>
@@ -375,34 +195,41 @@ const ProfileCompany = () => {
               <div className="bg-white border border-stroke shadow-md dark:border-strokedark dark:bg-boxdark p-6 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-medium text-lg text-black uppercase">Job Offers</h3>
-                  <button className="px-4 py-2 bg-red-800 text-white hover:bg-red-700 focus:outline-none focus:bg-red-700 rounded-md">Add New Offer</button>
                 </div>
                 {/* Liste des offres existantes */}
                 <div className="col-span-full flex justify-center mt-8">
-                  <button className="mr-2 px-3 py-1 bg-gray-200 rounded-md" onClick={prevPage}>
+                  <button className="mr-2 px-3 py-1 bg-gray-200 rounded-md">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600 transform rotate-180" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M9.293 4.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L13.586 11H4a1 1 0 110-2h9.586L9.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </button>
-                  <span className="px-3 py-1 bg-gray-200 rounded-md">{currentPage}</span>
-                  <button className="ml-2 px-3 py-1 bg-gray-200 rounded-md"  onClick={nextPage}>
+                  <span className="px-3 py-1 bg-gray-200 rounded-md">1</span>
+                  <button className="ml-2 px-3 py-1 bg-gray-200 rounded-md">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M10.707 4.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L15.586 11H6a1 1 0 110-2h9.586L10.707 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </button>
                 </div>
                 <div className="flex flex-wrap justify-center ">
-                {currentCards.map((job) => (
+                  {/* Insérer ici le contenu pour afficher les offres existantes */}
+                  {/* Exemple de carte pour une offre */}
                   <div className="w-80 h-60 mr-4 bg-companybgfarah rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
-                    <div className="w-52 h-30 bg-cardfarah text-white text-center rounded-2xl"><b>{job.jobTitle}</b></div>
+                    <div className="w-52 h-30 bg-cardfarah text-white text-center rounded-2xl"><b>Software Developer</b></div>
                     <div className="">
-                      <p className="text-black"> {job.jobDescription}</p>
+                      <p className="text-black">We are hiring a Software Developer with experience in React.js and Node.js. Competitive salary offered.</p>
                     </div>
-                    <Link to="/detailsoffer" >
                     <button className="bg-cardfarah font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
-                    </Link>
                   </div>
-                   ))}
+                  {/* Exemple de carte pour une autre offre */}
+                  <div className="w-80 h-60 bg-companybgfarah rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
+                    <div className="w-52 h-40 bg-cardfarah text-white  text-center rounded-2xl"><b>Product Manager</b></div>
+                    <div className="">
+
+                      <p className="text-black">We are seeking an experienced Product Manager to join our team. Competitive compensation package.</p>
+                    </div>
+                    <button className="bg-cardfarah  font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton  transition-colors">See more</button>
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -436,7 +263,6 @@ const ProfileCompany = () => {
               <div className="bg-white border border-stroke shadow-md dark:border-strokedark dark:bg-boxdark p-6 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-medium text-lg text-black uppercase">Internship Offers</h3>
-                  <button className="px-4 py-2 bg-red-800 text-white hover:bg-red-700 focus:outline-none focus:bg-red-700 rounded-md">Add New Offer</button>
                 </div>
                 {/* Liste des offres existantes */}
                 <div className="col-span-full flex justify-center mt-8">
@@ -483,4 +309,4 @@ const ProfileCompany = () => {
     </>);
 }
 
-export default ProfileCompany;
+export default ViewCompany;

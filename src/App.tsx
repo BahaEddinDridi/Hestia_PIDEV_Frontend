@@ -42,7 +42,9 @@ import {selectCurrentUsername} from "./ApiSlices/authSlice";
 import {useGetUserInfoQuery} from "./ApiSlices/userApiSlice";
 import DesactiveAccount from './pages/Profil/desactiveaccoun';
 import ProfileCompany from './pages/Profil/profilcompany';
-
+import RederactionRoute from './pages/Profil/rederection';
+import ViewCompany from './pages/Profil/viewCompany';
+import Detailsjoboffer from './pages/Detailsjoboffer';
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
@@ -103,7 +105,10 @@ function App() {
           element={
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+         
               <Profiletest />
+             
+            
             </>
           }
         />
@@ -112,7 +117,34 @@ function App() {
           element={
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+         
               <ProfileCompany/>
+           
+              
+            </>
+          }
+        />
+          <Route
+          path="/company/:username"
+          element={
+            <>
+              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+         
+              <ViewCompany/>
+           
+              
+            </>
+          }
+        />
+          <Route
+          path="/detailsoffer"
+          element={
+            <>
+              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            <Detailsjoboffer/>
+             
+           
+              
             </>
           }
         />

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCurrentToken, selectCurrentUsername } from '../../ApiSlices/authSlice';
+import { selectCurrentToken, selectCurrentUser, selectCurrentUsername } from '../../ApiSlices/authSlice';
 import { useGetUserInfoQuery } from "../../ApiSlices/userApiSlice";
 import { addUserExperience } from '../../pages/api';
 import DatePickerOne from '../Forms/DatePicker/DatePickerOne';
@@ -13,8 +13,8 @@ const formatDate = (dateString:any) => {
 
 const ExperienceCard = () => {
   const dispatch = useDispatch();
-  const currentUsername = useSelector(selectCurrentUsername);
-  const { data: userInfo = {} } = useGetUserInfoQuery(currentUsername);
+  const currentUser = useSelector(selectCurrentUser);
+  //const { data: userInfo = {} } = useGetUserInfoQuery(currentUsername);
   const [experienceData, setexperienceData] = useState({
     title: '',
     company: '',
@@ -44,7 +44,7 @@ const ExperienceCard = () => {
         setErrors(errors);
         return;
       }else{
-      const username = userInfo.username;
+      const username = currentUser.username;
       const result = await addUserExperience(username, experienceData);
       console.log('Education added successfully:', result);
       setexperienceData({
@@ -60,7 +60,7 @@ const ExperienceCard = () => {
     }
   };
 
-  const [selectedExperience, setSelectedExperience] = useState(userInfo.experience && userInfo.experience.length > 0 ? userInfo.experience[0] : null);
+  const [selectedExperience, setSelectedExperience] = useState(currentUser.experience && currentUser.experience.length > 0 ? currentUser.experience[0] : null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <>
@@ -92,7 +92,7 @@ const ExperienceCard = () => {
         <div className="flex p-4">
           <div className="w-1/4">
             <ul className="flex flex-col">
-            {userInfo.experience && userInfo.experience.length > 0 && userInfo.experience.map((edu:any, index:number) => (
+            {currentUser.experience && currentUser.experience.length > 0 && currentUser.experience.map((edu:any, index:number) => (
                 <li key={index} className={`cursor-pointer p-2 hover:bg-gray-100 ${edu === selectedExperience ? 'bg-gray-100' : ''}`} onClick={() => setSelectedExperience(edu)}>
                   <span className="text-sm font-semibold text-black dark:text-red-600">{edu.title}</span>
                   <span className="text-xs text-gray-500 dark:text-white">{edu.company}</span>
