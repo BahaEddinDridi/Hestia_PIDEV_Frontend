@@ -35,12 +35,18 @@ import Profiletest from './pages/Profil/profil';
 import SecurityQuestions from './pages/Authentication/Reset_Password/SecurityQuestions/SecurityQuestions';
 import SignUpStudent from './pages/Authentication/SignUpStudent';
 import Offers from './Offers/Offers';
+import JobOpp from '../src/pages/Opportunity/AddOpp/JobOpp'
+import IntershipOpp from '../src/pages/Opportunity/AddOpp/IntershipOpp'
 
 import AboutUs from './AboutUs/AboutUs';
 import {useSelector} from "react-redux";
 import {selectCurrentUsername} from "./ApiSlices/authSlice";
 import {useGetUserInfoQuery} from "./ApiSlices/userApiSlice";
-import { useRefreshMutation } from './ApiSlices/authApiSlice';
+import DesactiveAccount from './pages/Profil/desactiveaccoun';
+import ProfileCompany from './pages/Profil/profilcompany';
+import RederactionRoute from './pages/Profil/rederection';
+import ViewCompany from './pages/Profil/viewCompany';
+import Detailsjoboffer from './pages/Detailsjoboffer';import { useRefreshMutation } from './ApiSlices/authApiSlice';
 import ProtectedRoute from './pages/Authentication/ProtectedRoute';
 import PersistLoginRoute from './pages/Authentication/PersistLoginRoute';
 import AdminRoute from './pages/Authentication/SignUpFiles/ProtectedRouteAdmin';
@@ -135,6 +141,39 @@ function App() {
             <PageTitle title="Your Profile" />
             <ProtectedRoute>
               <Profiletest/>
+            </ProtectedRoute>
+            </>
+          }
+        />
+            <Route
+          path="/Profilecompany"
+          element={
+            <>
+              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <ProtectedRoute>
+              <ProfileCompany/>
+              </ProtectedRoute>
+            </>
+          }
+        />
+          <Route
+          path="/company/:username"
+          element={
+            <>
+              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <ProtectedRoute>
+              <ViewCompany/>
+              </ProtectedRoute>
+            </>
+          }
+        />
+          <Route
+          path="/detailsoffer"
+          element={
+            <>
+              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <ProtectedRoute>
+            <Detailsjoboffer/>
               </ProtectedRoute>
             </>
           } />
@@ -143,7 +182,9 @@ function App() {
           element={
             <>
               <PageTitle title="User Details" />
+              <ProtectedRoute>
               <UserDetails />
+              </ProtectedRoute>
             </>
           }
         />
@@ -155,6 +196,26 @@ function App() {
               <ProtectedRoute>
               <UpdateProfile />
               </ProtectedRoute>
+            </>
+          }
+        />
+        <Route 
+          path="/desactiveAccount"
+          element={
+            <>
+              <PageTitle title="Update Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <ProtectedRoute>
+              <DesactiveAccount/>
+              </ProtectedRoute>
+            </>
+          }
+        />
+        <Route 
+          path="/desactiveAccount"
+          element={
+            <>
+              <PageTitle title="Update Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <DesactiveAccount/>
             </>
           }
         />
@@ -318,7 +379,7 @@ function App() {
           path="/auth/signup/Teacher"
           element={
             <>
-              <PageTitle title="Sign up" />
+              <PageTitle title="Sign up Teacher" />
               <SignUpTeacher />
             </>
           }
@@ -327,7 +388,7 @@ function App() {
           path="/auth/signup/Student"
           element={
             <>
-              <PageTitle title="Sign up" />
+              <PageTitle title="Sign up Student" />
               <SignUpStudent />
             </>
           }
@@ -337,7 +398,7 @@ function App() {
           path="/auth/signUp/Company"
           element={
             <>
-              <PageTitle title="Sign up" />
+              <PageTitle title="Sign up Company" />
               <SignUpCompany />
             </>
           }
@@ -485,6 +546,24 @@ function App() {
             <>
               <PageTitle title="About Us" />
               <AboutUs />
+            </>
+          }
+        />
+        <Route
+          path='Opportunity/job'
+          element={
+            <>
+              <PageTitle title="Add A Job Opportunity" />
+              <JobOpp />
+            </>
+          }
+        />
+        <Route
+          path='Opportunity/intership'
+          element={
+            <>
+              <PageTitle title="Add An Intership Opportunity" />
+              <IntershipOpp />
             </>
           }
         />

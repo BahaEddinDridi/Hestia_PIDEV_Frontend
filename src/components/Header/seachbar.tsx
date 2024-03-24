@@ -45,6 +45,7 @@ const SearchBar = () => {
     if (filteredUsers.length > 0) {
       setSearchTerm(username);
       navigate(`/Otherprofiles/${username}`);
+      
     }
   };
   
