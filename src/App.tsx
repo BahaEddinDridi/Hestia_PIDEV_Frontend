@@ -139,7 +139,6 @@ function App() {
           element={
             <>
             <PageTitle title="Your Profile" />
-         
             <ProtectedRoute>
               <Profiletest/>
             </ProtectedRoute>
@@ -164,7 +163,7 @@ function App() {
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <ProtectedRoute>
               <ViewCompany/>
-                </ProtectedRoute>
+              </ProtectedRoute>
             </>
           }
         />
@@ -205,6 +204,7 @@ function App() {
           element={
             <>
               <PageTitle title="Update Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <ProtectedRoute>
               <UpdateProfile />
               </ProtectedRoute>
             </>
