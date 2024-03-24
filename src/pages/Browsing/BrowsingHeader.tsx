@@ -7,6 +7,7 @@ const BrowsingHeader = ({ activeTab, onTabChange }) => {
   const [dropdown1Open, setDropdown1Open] = useState(false);
   const [dropdown20pen, setDropdown20pen] = useState(false);
   const [dropdown30pen, setDropdown30pen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState('');
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -25,10 +26,13 @@ const BrowsingHeader = ({ activeTab, onTabChange }) => {
   }, []);
 
   const locations = [
-    'Tunis', 'Ariana', 'Ben Arous', 'Mannouba', 'Bizerte', 'Nabeul', 'Béja', 'Jendouba',
-    'Zaghouan', 'Siliana', 'Le Kef', 'Sousse', 'Monastir', 'Mahdia', 'Kasserine',
-    'Sidi Bouzid', 'Kairouan', 'Gafsa', 'Sfax', 'Gabès', 'Médenine', 'Tozeur', 'Kebili', 'Ttataouine'
+    "Ariana","Beja","Ben Arous","Bizerte","Gabes","Gafsa","Jendouba","Kairouan","Kasserine",
+    "Kebili","Kef","Mahdia","Manouba","Medenine","Monastir","Nabeul","Sfax",
+    "Sidi Bouzid","Siliana","Sousse","Tataouine","Tozeur","Tunis","Zaghouan","Other"
   ];
+
+  const experienceLevels = ['Junior', 'Intermediate','Senior','Entry-level','Mid-level','Experienced','Expert','Lead'];
+  const industries = ['Computer Science', 'Mechanical Engineering','Electromechanical Engineering','Civil Engineering','Business'];
   const toggleDropdown1 = () => {
     setDropdown1Open(!dropdown1Open);
     setDropdown20pen(false);
@@ -115,6 +119,11 @@ const BrowsingHeader = ({ activeTab, onTabChange }) => {
                 <div
                   className="absolute mt-2 w-56 h-36 overflow-y-auto rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                   <div className="py-1">
+                    {locations.sort().map((option, index) => (
+                      <button key={index} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        {option}
+                      </button>
+                    ))}
                     <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Option 1</button>
                     <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Option 2</button>
                     <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Option 3</button>
