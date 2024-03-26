@@ -5,16 +5,19 @@ import { Alert, input } from '@material-tailwind/react';
 import { AddIntership } from '../../api/opportunity';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../../ApiSlices/authSlice';
+import { Link } from 'react-router-dom';
 
 //Essai avant de lié avec un compte user
-const defaultUser = {
-    username: 'testuser',
-};
+// const defaultUser = {
+//     username: 'testuser',
+// };
 
 const IntershipOpp: React.FC = () => {
-
+    
+    const [interCommpanyName, setinterCommpanyName] = useState('')
     const [interTitle, setinterTitle] = useState('')
     const [interAdress, setinterAdress] = useState('')
+    const [interType, setinterType] = useState('')
     const [interLocation, setinterLocation] = useState('Tunis')
     const [interDescription, setinterDescription] = useState('')
     const [interPost, setinterPost] = useState('')
@@ -25,9 +28,11 @@ const IntershipOpp: React.FC = () => {
     const [interRequiredEducation, setinterRequiredEducation] = useState('')
     const [contactNumber, setcontactNumber] = useState('')
     const [interOtherInformation, setinterOtherInformation] = useState('')
+    const [interImage, setinterImage] = useState('')
     const [error, setError] = useState(false)
-    //const currentUser = useSelector(selectCurrentUser);
-    const currentUser = useSelector(selectCurrentUser) || defaultUser;
+    const currentUser = useSelector(selectCurrentUser);
+    
+    //const currentUser = useSelector(selectCurrentUser) || defaultUser;
 
 
 
@@ -37,20 +42,28 @@ const IntershipOpp: React.FC = () => {
             console.warn('Aucun utilisateur connecté. L\'ajout de l\'opportunité ne peut pas être effectué.');
             return;
         }
-        if (interTitle.length === 0 || interAdress.length === 0 || interDescription.length === 0 || interPost.length === 0 ||
-            interfield.length === 0 || interStartDate.length === 0 || interApplicationDeadline.length === 0 || interRequiredSkills.length === 0 || interRequiredEducation.length === 0
+        if (interTitle.length === 0 || interAdress.length === 0 || interDescription.length === 0 || interType.length===0 || interPost.length === 0 ||
+            interfield.length === 0  || interApplicationDeadline.length === 0 || interRequiredSkills.length === 0 || interRequiredEducation.length === 0
             || contactNumber.length === 0 || interLocation.length === 0) {
             setError(true);
             return;
         }
+
+        // Obtenir la date actuelle
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString();
+
         const intershipData = {
+            interCommpanyName: currentUser.username,
+            interImage: currentUser.image,
             interTitle: interTitle,
             interAdress: interAdress,
+            interType : interType,
             interLocation: interLocation,
             interDescription: interDescription,
             interPost: interPost,
             interfield: interfield,
-            interStartDate: interStartDate,
+            interStartDate: formattedDate,
             interApplicationDeadline: interApplicationDeadline,
             interRequiredSkills: interRequiredSkills,
             interRequiredEducation: interRequiredEducation,
@@ -61,8 +74,8 @@ const IntershipOpp: React.FC = () => {
 
         try {
             const response = await AddIntership(currentUser.username, intershipData);
-            console.log(response); 
-            //window.location.href = '/auth/signin';
+            console.log("intership added", response);
+            window.location.href = '/Profilecompany';
         } catch (error: any) {
             if (error instanceof Error) {
                 console.error('Registration failed:', error.message);
@@ -114,6 +127,14 @@ const IntershipOpp: React.FC = () => {
                                             </select>
                                         </div>
                                         <div className="mb-4">
+                                            <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Intership Type</label>
+                                            <select className="w-full shadow-4 p-4 border-0" name="jobType" value={interType}
+                                                onChange={e => setinterType(e.target.value)}>
+                                                <option value="Summer Internship">Summer Internship</option>
+                                                <option value="PFE Internship">PFE Internship</option>
+                                            </select>
+                                        </div>
+                                        <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Reference Contact</label>
                                             <input className="w-full shadow-4 p-4 border-0" type="tel" name="lon" placeholder="(555) 555-5555" onChange={e => setcontactNumber(e.target.value)} />
                                         </div>
@@ -121,18 +142,11 @@ const IntershipOpp: React.FC = () => {
                                             <label className="block uppercase tracking-wide text-xs font-bold text-OppSarra2R">Post</label>
                                             <input className="w-full shadow-4 p-4 border-0 xs" type="text" name="name" placeholder=" Acme Mfg. Co." onChange={e => setinterPost(e.target.value)} />
                                         </div>
-                                        <div className="md:flex mb-4">
-                                            <div className="md:flex-1 md:pr-3">
-                                                <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Application Start Date</label>
-                                                <input className="w-full shadow-4 p-4 border-0" type="date" name="address_street" placeholder="555 Roadrunner Lane" onChange={e => setinterStartDate(e.target.value)} />
-                                            </div>
-                                            <div className="md:flex-1 md:pl-3">
+                                            <div className="mb-4">
                                                 <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Application Deadline</label>
                                                 <input className="w-full shadow-4 p-4 border-0" type="date" name="address_number" placeholder="#3" onChange={e => setinterApplicationDeadline(e.target.value)} />
                                                 {/* <span className="text-xs mb-4 font-thin">We lied, this isn't required.</span> */}
                                             </div>
-
-                                        </div>
                                     </div>
                                 </div>
                                 <hr className="w-full border-t border-graydouble mb-10"></hr>
@@ -198,9 +212,12 @@ const IntershipOpp: React.FC = () => {
                                 <hr className="w-full border-t border-gray-100 mb-1"></hr>
                                 <div className="md:flex mb-6 border border-t-1 border-b-0 border-x-0 border-cream-dark">
                                     <div className="md:flex-1 px-3 text-center md:text-left">
-                                        <button className="bg-red-300 hover:bg-esprit text-white font-bold py-3 px-6 mt-6 rounded-full shadow-lg hover:text-white shadow-white transform transition-all duration-500 ease-in-out hover:scale-110 hover:brightness-110 hover:animate-pulse active:animate-bounce">
-                                            Back to Profile
-                                        </button>
+                                        <Link to="/Profilecompany">
+                                            <button
+                                                className="bg-red-300 hover:bg-esprit text-white font-bold py-3 px-6 mt-6 rounded-full shadow-lg hover:text-white shadow-white transform transition-all duration-500 ease-in-out hover:scale-110 hover:brightness-110 hover:animate-pulse active:animate-bounce">
+                                                Back to Profile
+                                            </button>
+                                        </Link>
                                     </div>
                                     <div className="md:flex-1 px-3 text-center md:text-right">
                                         <button

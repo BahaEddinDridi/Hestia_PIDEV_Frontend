@@ -5,14 +5,16 @@ import { input } from '@material-tailwind/react';
 import { AddJob } from '../../api/opportunity';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../../ApiSlices/authSlice';
+import { Link } from 'react-router-dom';
 
-//Essai avant de lié avec un compte user
-const defaultUser = {
-    username: 'testuser',
-};
+// //Essai avant de lié avec un compte user
+// const defaultUser = {
+//     username: 'testuser',
+// };
 
 const JobOpp: React.FC = () => {
 
+    const [jobCommpanyName, setjobCommpanyName] = useState('')
     const [jobTitle, setjobTitle] = useState('')
     const [jobAdress, setjobAdress] = useState('')
     const [jobLocation, setjobLocation] = useState('Tunis')
@@ -27,9 +29,11 @@ const JobOpp: React.FC = () => {
     const [jobRequiredExperience, setjobRequiredExperience] = useState('Junior')
     const [contactNumber, setcontactNumber] = useState('')
     const [jobOtherInformation, setjobOtherInformation] = useState('')
+    const [jobImage, setjobImage] = useState('')
+    
     const [error, setError] = useState(false)
-    //const currentUser = useSelector(selectCurrentUser);
-    const currentUser = useSelector(selectCurrentUser) || defaultUser;
+    const currentUser = useSelector(selectCurrentUser);
+    //const currentUser = useSelector(selectCurrentUser) || defaultUser;
 
 
 
@@ -40,12 +44,18 @@ const JobOpp: React.FC = () => {
             return;
         }
         if (jobTitle.length === 0 || jobAdress.length === 0 || jobDescription.length === 0 || salary.length === 0 || jobPost.length === 0 ||
-            jobfield.length === 0 || jobStartDate.length === 0 || jobApplicationDeadline.length === 0 || jobRequiredSkills.length === 0 || jobRequiredEducation.length === 0
+            jobfield.length === 0 || jobApplicationDeadline.length === 0 || jobRequiredSkills.length === 0 || jobRequiredEducation.length === 0
             || jobRequiredExperience.length === 0 || contactNumber.length === 0 || jobLocation.length === 0) {
             setError(true);
             return;
         }
+        // Obtenir la date actuelle
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString();
+
         const jobData = {
+            jobCommpanyName: currentUser.username,
+            jobImage:currentUser.image,
             jobTitle: jobTitle,
             jobAdress: jobAdress,
             jobLocation: jobLocation,
@@ -53,7 +63,7 @@ const JobOpp: React.FC = () => {
             salary: salary,
             jobPost: jobPost,
             jobfield: jobfield,
-            jobStartDate: jobStartDate,
+            jobStartDate: formattedDate,
             jobApplicationDeadline: jobApplicationDeadline,
             jobRequiredSkills: jobRequiredSkills,
             jobRequiredEducation: jobRequiredEducation,
@@ -65,8 +75,8 @@ const JobOpp: React.FC = () => {
 
         try {
             const response = await AddJob(currentUser.username, jobData);
-            console.log(response);
-            //window.location.href = '/auth/signin';
+            console.log("job added", response);
+            window.location.href = '/Profilecompany';
         } catch (error: any) {
             if (error instanceof Error) {
                 console.error('Registration failed:', error.message);
@@ -75,7 +85,6 @@ const JobOpp: React.FC = () => {
             }
         }
     }
-
 
 
 
@@ -121,16 +130,10 @@ const JobOpp: React.FC = () => {
                                             <label className="block uppercase tracking-wide text-xs font-bold text-OppSarra2R">Post</label>
                                             <input className="w-full shadow-4 p-4 border-0 xs" type="text" name="name" placeholder=" Acme Mfg. Co." onChange={e => setjobPost(e.target.value)} />
                                         </div>
-                                        <div className="md:flex mb-4">
-                                            <div className="md:flex-1 md:pr-3">
-                                                <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Application Start Date</label>
-                                                <input className="w-full shadow-4 p-4 border-0" type="date" name="address_street" placeholder="555 Roadrunner Lane" onChange={e => setjobStartDate(e.target.value)} />
-                                            </div>
-                                            <div className="md:flex-1 md:pl-3">
-                                                <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Application Deadline</label>
-                                                <input className="w-full shadow-4 p-4 border-0" type="date" name="address_number" placeholder="#3" onChange={e => setjobApplicationDeadline(e.target.value)} />
-                                                {/* <span className="text-xs mb-4 font-thin">We lied, this isn't required.</span> */}
-                                            </div>
+                                        <div className="mb-4">
+                                            <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Application Deadline</label>
+                                            <input className="w-full shadow-4 p-4 border-0" type="date" name="address_number" placeholder="#3" onChange={e => setjobApplicationDeadline(e.target.value)} />
+                                            {/* <span className="text-xs mb-4 font-thin">We lied, this isn't required.</span> */}
                                         </div>
                                         <div className="md:flex mb-4">
                                             <div className="md:flex-1 md:pr-3">
@@ -189,13 +192,8 @@ const JobOpp: React.FC = () => {
                                             <select className="w-full shadow-4 p-4 border-0" name="jobType" value={jobRequiredExperience}
                                                 onChange={e => setjobRequiredExperience(e.target.value)}>
                                                 <option value="Junior">Junior</option>
-                                                <option value="Intermediate">Intermediate</option>
                                                 <option value="Senior">Senior</option>
-                                                <option value="Entry-level">Entry-level</option>
-                                                <option value="Mid-level">Mid-level</option>
                                                 <option value="Experienced">Experienced</option>
-                                                <option value="Expert">Expert</option>
-                                                <option value="Lead">Lead</option>
                                             </select>
                                         </div>
                                     </div>
@@ -215,9 +213,12 @@ const JobOpp: React.FC = () => {
                                 <hr className="w-full border-t border-gray-100 mb-1"></hr>
                                 <div className="md:flex mb-6 border border-t-1 border-b-0 border-x-0 border-cream-dark">
                                     <div className="md:flex-1 px-3 text-center md:text-left">
-                                        <button className="bg-red-300 hover:bg-esprit text-white font-bold py-3 px-6 mt-6 rounded-full shadow-lg hover:text-white shadow-white transform transition-all duration-500 ease-in-out hover:scale-110 hover:brightness-110 hover:animate-pulse active:animate-bounce">
-                                            Back to Profile
-                                        </button>
+                                        <Link to="/Profilecompany">
+                                            <button
+                                                className="bg-red-300 hover:bg-esprit text-white font-bold py-3 px-6 mt-6 rounded-full shadow-lg hover:text-white shadow-white transform transition-all duration-500 ease-in-out hover:scale-110 hover:brightness-110 hover:animate-pulse active:animate-bounce">
+                                                Back to Profile
+                                            </button>
+                                        </Link>
                                     </div>
                                     <div className="md:flex-1 px-3 text-center md:text-right">
                                         <button

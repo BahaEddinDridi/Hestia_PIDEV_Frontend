@@ -113,6 +113,16 @@ const ProfileCompany = () => {
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   const currentCards = currentUser.job.slice(indexOfFirstCard, indexOfLastCard);
+
+
+  const handleButtonAddJob = () =>{
+    window.location.href = `Profilecompany/${currentUser.username}/Opportunity/job`;
+  };
+
+  const handleButtonAddIntership = () =>{
+    window.location.href = `Profilecompany/${currentUser.username}/Opportunity/intership`;
+  };
+
   return (
     <>
       <DefaultLayout>
@@ -375,7 +385,7 @@ const ProfileCompany = () => {
               <div className="bg-white border border-stroke shadow-md dark:border-strokedark dark:bg-boxdark p-6 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-medium text-lg text-black uppercase">Job Offers</h3>
-                  <button className="px-4 py-2 bg-red-800 text-white hover:bg-red-700 focus:outline-none focus:bg-red-700 rounded-md">Add New Offer</button>
+                  <button className="px-4 py-2 bg-red-800 text-white hover:bg-red-700 focus:outline-none focus:bg-red-700 rounded-md" onClick={handleButtonAddJob}>Add New Offer</button>
                 </div>
                 {/* Liste des offres existantes */}
                 <div className="col-span-full flex justify-center mt-8">
@@ -436,7 +446,7 @@ const ProfileCompany = () => {
               <div className="bg-white border border-stroke shadow-md dark:border-strokedark dark:bg-boxdark p-6 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-medium text-lg text-black uppercase">Internship Offers</h3>
-                  <button className="px-4 py-2 bg-red-800 text-white hover:bg-red-700 focus:outline-none focus:bg-red-700 rounded-md">Add New Offer</button>
+                  <button className="px-4 py-2 bg-red-800 text-white hover:bg-red-700 focus:outline-none focus:bg-red-700 rounded-md" onClick={handleButtonAddIntership}>Add New Offer</button>
                 </div>
                 {/* Liste des offres existantes */}
                 <div className="col-span-full flex justify-center mt-8">
