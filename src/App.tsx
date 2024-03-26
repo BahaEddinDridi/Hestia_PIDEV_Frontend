@@ -550,7 +550,7 @@ function App() {
           }
         />
         <Route
-          path='Opportunity/job'
+          path='Profilecompany/:username/Opportunity/job'
           element={
             <>
               <PageTitle title="Add A Job Opportunity" />
@@ -559,7 +559,7 @@ function App() {
           }
         />
         <Route
-          path='Opportunity/intership'
+          path='Profilecompany/:username/Opportunity/intership'
           element={
             <>
               <PageTitle title="Add An Intership Opportunity" />
