@@ -26,7 +26,7 @@ const formatDate = (dateString: string) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('fr-FR', options);
 }
-const Detailsjoboffer = () => {
+const Detailsintership = () => {
     const currentUser = useSelector(selectCurrentUser);
     const acceptApplication = (candidateId) => {
         // Implémentez ici la logique pour accepter la candidature avec l'ID du candidat
@@ -42,7 +42,7 @@ const Detailsjoboffer = () => {
     const { id } = useParams();
     console.log(id);
 
-    const offer = currentUser?.job.find(job => job._id === id);
+    const offer = currentUser?.intership.find(intership => intership._id === id);
     console.log(offer);
     if (!offer) {
         return <div>Loading...</div>;
@@ -59,27 +59,27 @@ const Detailsjoboffer = () => {
                         <div key={offer._id} className="p-6 bg-white shadow-md rounded-lg mb-4">
                             <div className="flex items-center mb-4">
                                 <img src={currentUser.image} className="w-20 h-20 rounded-full overflow-hidden object-cover" />
-                                <h2 className="text-xl font-semibold ml-4">{offer.jobTitle}</h2>
+                                <h2 className="text-xl font-semibold ml-4">{offer.interTitle}</h2>
                             </div>
                             <div className="flex items-center mb-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-6 h-6 text-red-800 mr-2">
                                     <path d="M21 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 0 1 18 0z"></path>
                                     <circle cx="12" cy="10" r="3"></circle>
                                 </svg>
-                                <span className="text-gray-600">{offer.jobLocation}</span>
+                                <span className="text-gray-600">{offer.interLocation}</span>
                             </div>
                             <div className="flex items-center mb-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-6 h-6 text-red-800 mr-2">
                                     <path d="M21 6h-4V4a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v2H3a1 1 0 0 0-1 1v13a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a1 1 0 0 0-1-1zm-9-2h2v2h-2V4zM5 8h14M3 12h18M6 16h12"></path>
                                 </svg>
-                                <div className="text-sm text-gray-600">{offer.jobPost}</div>
+                                <div className="text-sm text-gray-600">{offer.interPost}</div>
                             </div>
                             <div className="flex items-center mb-2">
                                 <svg className="w-6 h-6 text-red-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                     <path fill-rule="evenodd" d="M7 2a2 2 0 0 0-2 2v1a1 1 0 0 0 0 2v1a1 1 0 0 0 0 2v1a1 1 0 1 0 0 2v1a1 1 0 1 0 0 2v1a1 1 0 1 0 0 2v1a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H7Zm3 8a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm-1 7a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3 1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1Z" clip-rule="evenodd" />
                                 </svg>
 
-                                <div className="text-sm text-gray-600 mb-2">{offer.jobfield}</div>
+                                <div className="text-sm text-gray-600 mb-2">{offer.interfield}</div>
                             </div>
                             <div className="flex items-center text-sm text-gray-600 mb-2">
                                 <svg className="w-6 h-6 text-red-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24  ">
@@ -87,17 +87,17 @@ const Detailsjoboffer = () => {
                                 </svg>
 
 
-                                <b className="text-black">Job Start Date:</b> <span className="mr-4">{formatDate(offer.jobStartDate)}</span>
+                                <b className="text-black">Intership Start Date:</b> <span className="mr-4">{formatDate(offer.interStartDate)}</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-6 h-6 text-red-800 mr-2">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <line x1="12" y1="8" x2="12" y2="12"></line>
                                     <line x1="12" y1="16" x2="12" y2="16"></line>
                                 </svg>
-                                <b className="text-black">Job Application Deadline:</b> <span>{formatDate(offer.jobApplicationDeadline)}</span>
+                                <b className="text-black">Intership Application Deadline:</b> <span>{formatDate(offer.interApplicationDeadline)}</span>
                             </div>
                             <div className="border-t border-gray-200 pt-4">
-                                <h3 className="text- text-black font-semibold mb-2">About the Job Offer</h3>
-                                <p className="text-gray-800">{offer.jobDescription}</p>
+                                <h3 className="text- text-black font-semibold mb-2">About the Intership Offer</h3>
+                                <p className="text-gray-800">{offer.interDescription}</p>
                             </div>
 
 
@@ -106,15 +106,15 @@ const Detailsjoboffer = () => {
                                 <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                                     <div className="mb-4">
                                         <h4 className="text-red-800 font-semibold mb-1">Required Skills</h4>
-                                        <p className="text-gray-800">{offer.jobRequiredSkills}</p>
+                                        <p className="text-gray-800">{offer.interRequiredSkills}</p>
                                     </div>
                                     <div className="mb-4">
                                         <h4 className="text-red-800 font-semibold mb-1">Required Education</h4>
-                                        <p className="text-gray-800">{offer.jobRequiredEducation}</p>
+                                        <p className="text-gray-800">{offer.interRequiredEducation}</p>
                                     </div>
                                     <div className="mb-4">
-                                        <h4 className="text-red-800 font-semibold mb-1">Required Experience</h4>
-                                        <p className="text-gray-800">{offer.jobRequiredExperience}</p>
+                                        <h4 className="text-red-800 font-semibold mb-1">Other Information</h4>
+                                        <p className="text-gray-800">{offer.interOtherInformation}</p>
                                     </div>
                                 </div>
                             </div>
@@ -195,4 +195,4 @@ const Detailsjoboffer = () => {
         </>);
 }
 
-export default Detailsjoboffer;
+export default Detailsintership;

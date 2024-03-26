@@ -5,9 +5,12 @@ import { ChangeEvent, useState } from 'react';
 import CoverOne from '../../images/cover/cover-01.png';
 import userSix from '../../images/user/user-06.png';
 import { Link } from "react-router-dom";
-
+const formatDate = (dateString: string) => {
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString('fr-FR', options);
+}
 const ProfileCompany = () => {
- const currentUser = useSelector(selectCurrentUser);
+  const currentUser = useSelector(selectCurrentUser);
 
   const [selectedCoverImage, setSelectedCoverImage] = useState<string | null>(null)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
@@ -112,7 +115,32 @@ const ProfileCompany = () => {
 
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = currentUser.job.slice(indexOfFirstCard, indexOfLastCard);
+   //trie le tableau de intership 
+   
+   const sortedintership = [...currentUser.intership].sort((a, b) => {
+    const dateA = new Date(a.interStartDate);
+    const dateB = new Date(b.interStartDate);
+    const currentDate = new Date();
+    const differenceA = Math.abs(dateA - currentDate);
+    const differenceB = Math.abs(dateB - currentDate);
+    return differenceA - differenceB;
+  });
+  //trie le tableau de job 
+  const filteredJobs = currentUser.job.filter(job => job && job.jobStartDate);
+  const sortedJobs = filteredJobs.sort((a, b) => {
+    const dateA = new Date(a.jobStartDate);
+    const dateB = new Date(b.jobStartDate);
+    const currentDate = new Date();
+    const differenceA = Math.abs(dateA - currentDate);
+    const differenceB = Math.abs(dateB - currentDate);
+    return differenceA - differenceB;
+  });
+  
+ 
+  const currentCards = sortedJobs.slice(indexOfFirstCard, indexOfLastCard);
+  const currentCardstwo = sortedintership.slice(indexOfFirstCard, indexOfLastCard);
+  
+ 
   return (
     <>
       <DefaultLayout>
@@ -385,24 +413,33 @@ const ProfileCompany = () => {
                     </svg>
                   </button>
                   <span className="px-3 py-1 bg-gray-200 rounded-md">{currentPage}</span>
-                  <button className="ml-2 px-3 py-1 bg-gray-200 rounded-md"  onClick={nextPage}>
+                  <button className="ml-2 px-3 py-1 bg-gray-200 rounded-md" onClick={nextPage}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M10.707 4.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L15.586 11H6a1 1 0 110-2h9.586L10.707 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </button>
                 </div>
                 <div className="flex flex-wrap justify-center ">
-                {currentCards.map((job) => (
-                  <div className="w-80 h-60 mr-4 bg-companybgfarah rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
-                    <div className="w-52 h-30 bg-cardfarah text-white text-center rounded-2xl"><b>{job.jobTitle}</b></div>
-                    <div className="">
-                      <p className="text-black"> {job.jobDescription}</p>
+                  {currentCards.map((job) => (
+                    <div className="w-66 h-66 mr-4 bg-red-800 rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
+                      <div className="w-52 h-30 bg-white text-black text-center rounded-2xl"><b>{job.jobTitle}</b></div>
+                      <div className="">
+                        <div className="  felex items-center">
+                      <h2  className="font-bold text-white text-base mr-1">Post:</h2>
+                       <p className="text-sm  text-neutral-400">{job.jobPost}</p>
+                       </div>
+                       <div  className=" felex items-center">
+                       <h2 className="font-bold  text-white text-base mr-1">Field:</h2>
+                       <p className="text-sm text-neutral-400">{job.jobfield}</p></div>
+                       <div  className=" text-black felex items-center">
+                       <h2 className="font-bold  text-white text-base mr-1">Application Deadline:</h2>
+                       <p className="text-sm text-neutral-400 ">{formatDate(job.jobApplicationDeadline)}</p></div>
+                      </div>
+                      <Link to={`/detailsoffer/${job._id}`} >
+                        <button className="bg-gray text-black font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
+                      </Link>
                     </div>
-                    <Link to="/detailsoffer" >
-                    <button className="bg-cardfarah font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
-                    </Link>
-                  </div>
-                   ))}
+                  ))}
                 </div>
               </div>
             </div>
@@ -440,37 +477,42 @@ const ProfileCompany = () => {
                 </div>
                 {/* Liste des offres existantes */}
                 <div className="col-span-full flex justify-center mt-8">
-                  <button className="mr-2 px-3 py-1 bg-gray-200 rounded-md">
+                  <button className="mr-2 px-3 py-1 bg-gray-200 rounded-md" onClick={prevPage}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600 transform rotate-180" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M9.293 4.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L13.586 11H4a1 1 0 110-2h9.586L9.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </button>
-                  <span className="px-3 py-1 bg-gray-200 rounded-md">1</span>
-                  <button className="ml-2 px-3 py-1 bg-gray-200 rounded-md">
+                  <span className="px-3 py-1 bg-gray-200 rounded-md">{currentPage}</span>
+                  <button className="ml-2 px-3 py-1 bg-gray-200 rounded-md" onClick={nextPage}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M10.707 4.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L15.586 11H6a1 1 0 110-2h9.586L10.707 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </button>
                 </div>
                 <div className="flex flex-wrap justify-center ">
-                  {/* Insérer ici le contenu pour afficher les offres existantes */}
-                  {/* Exemple de carte pour une offre */}
-                  <div className="w-80 h-60 mr-4 bg-cardfarah  rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
-                    <div className="w-52 h-30  bg-companybgfarah  text-black text-center rounded-2xl"><b>Software Developer</b></div>
-                    <div className="">
-                      <p className="text-white">We are hiring a Software Developer with experience in React.js and Node.js. Competitive salary offered.</p>
-                    </div>
-                    <button className="bg-companybgfarah  text-black font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
-                  </div>
-                  {/* Exemple de carte pour une autre offre */}
-                  <div className="w-80 h-60 bg-cardfarah rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
-                    <div className="w-52 h-40 bg-companybgfarah text-black  text-center rounded-2xl"><b>Product Manager</b></div>
-                    <div className="">
 
-                      <p className="text-white">We are seeking an experienced Product Manager to join our team. Competitive compensation package.</p>
+                  {currentCardstwo.map((internship) => (
+                    <div className="w-66 h-66 mr-4  bg-companybgfarah rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
+                      <div className="w-52 h-30   bg-red-800 text-white text-center rounded-2xl"><b>{internship.interTitle}</b></div>
+                      <div className="">
+                      <div className="  felex items-center">
+                      <h2  className="font-bold text-black text-base mr-1">Post:</h2>
+                       <p className="text-sm text-neutral-500">{internship.interPost}</p>
+                       </div>
+                       <div  className="  felex items-center">
+                       <h2 className="font-bold text-base text-black  mr-1">Field:</h2>
+                       <p className="text-sm text-neutral-500">{internship.interfield}</p></div>
+                       <div  className="  felex items-center">
+                       <h2 className="font-bold text-black  text-base mr-1">Application Deadline:</h2>
+                       <p className="text-sm text-neutral-500">{formatDate(internship.interApplicationDeadline)}</p></div>
+                  
+                      </div>
+                      <Link to={`/detailsintership/${internship._id}`} >
+
+                      <button className="bg-red-800  text-white font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
+                     </Link>
                     </div>
-                    <button className="bg-companybgfarah  text-black font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton  transition-colors">See more</button>
-                  </div>
+                  ))}
 
                 </div>
               </div>
