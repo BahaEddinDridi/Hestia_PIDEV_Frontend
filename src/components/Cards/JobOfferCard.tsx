@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const JobOfferCard = ({ job }) => {
+  const navigate = useNavigate();
   const {
     jobTitle,
     jobPost,
@@ -9,7 +11,10 @@ const JobOfferCard = ({ job }) => {
     jobfield,
     jobLocation,
   } = job;
-
+  const handleApplyNow = () => {
+    // Redirect to the job offer details page
+    navigate(`/Offers/${job._id}`);
+  };
   return (
     <div
       className="block rounded-lg bg-white  text-surface shadow-secondary-1
@@ -55,6 +60,7 @@ const JobOfferCard = ({ job }) => {
           focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2
           dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong
           dark:active:shadow-dark-strong"
+            onClick={handleApplyNow}
           >
             Apply Now
           </button>

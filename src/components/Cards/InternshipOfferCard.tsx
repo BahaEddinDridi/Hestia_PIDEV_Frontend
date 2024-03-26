@@ -1,11 +1,15 @@
 import React from 'react';
 
 const InternshipOfferCard = ({internship}) => {
+  if (!internship || !internship.interTitle || !internship.interPost || !internship.interfield || !internship.interLocation || !internship.interRequiredEducation) {
+    return null;
+  }
   const {
     interTitle,
     interPost,
     interfield,
     interLocation,
+    interRequiredEducation,
   } = internship;
   return (
     <div
@@ -30,7 +34,7 @@ const InternshipOfferCard = ({internship}) => {
         <div className="flex space-x-2 mb-2">
          <span
            className="rounded-[6px] flex  flex-wrap justify-center items-center bg-neutral-700 px-2 py-2
-    font-bold leading-none text-white dark:bg-[#2c0f14] dark:text-danger-500 text-center">{interfield}</span>
+    font-bold leading-none text-white dark:bg-[#2c0f14] dark:text-danger-500 text-center">{interRequiredEducation}</span>
           <span
             className="rounded-[6px] flex-wrap justify-center items-center bg-neutral-700 px-2 py-2
     font-bold leading-none flex  text-white dark:bg-[#2c0f14] dark:text-danger-500 text-center">{interfield}</span>

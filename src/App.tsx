@@ -51,6 +51,7 @@ import ProtectedRoute from './pages/Authentication/ProtectedRoute';
 import PersistLoginRoute from './pages/Authentication/PersistLoginRoute';
 import AdminRoute from './pages/Authentication/SignUpFiles/ProtectedRouteAdmin';
 import OfferBrowsePage from './pages/Browsing/JobOfferBrowsing';
+import JobOfferView from './pages/Opportunity/JobOfferView';
 
 function App() {
   const navigate = useNavigate();
@@ -131,6 +132,16 @@ function App() {
               <PageTitle title="Browsing Offers" />
               <ProtectedRoute>
                 <OfferBrowsePage/>
+              </ProtectedRoute>
+            </>
+          } />
+        <Route
+          path="/Offers/:jobId"
+          element={
+            <>
+              <PageTitle title="Apply Now!" />
+              <ProtectedRoute>
+                <JobOfferView/>
               </ProtectedRoute>
             </>
           } />

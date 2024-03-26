@@ -1,61 +1,73 @@
 import React, { useEffect, useState } from 'react';
-import {Job} from './API/Services';
+import { Internship, internshipService, Job } from './API/Services';
 import DefaultLayout from '../../layout/DefaultLayout';
 import JobOfferCard from '../../components/Cards/JobOfferCard';
 import BrowsingHeader from './BrowsingHeader';
 import InternshipOfferCard from '../../components/Cards/InternshipOfferCard';
-import jobService from './API/Services';
+import { jobService } from './API/Services';
 import FiltersSidebar from '../../components/Sidebar/BrowsingSideBar';
 
 const OfferBrowsePage = () => {
   const [isJobs, setIsJobs] = useState(true);
   const [jobs, setJobs] = useState([]);
+  const [offers, setOffers] = useState<(Job | Internship)[]>([]);
   const [appliedFilters, setAppliedFilters] = useState({
     locations: [],
     experience: '',
     industry: '',
+    interRequiredEducation: '',
   });
   const [searchQuery, setSearchQuery] = useState('');
-  const fetchJobs = async () => {
+  const fetchOffers = async () => {
     try {
-      const fetchedJobs = await jobService.getAllJobs(
-        appliedFilters.locations.join(','), // Convert locations array to comma-separated string
-        appliedFilters.experience,
-        appliedFilters.industry
-      );
-      setJobs(fetchedJobs);
+      if (isJobs) {
+        const fetchedJobs = await jobService.getAllJobs(
+          appliedFilters.locations.join(','),
+          appliedFilters.experience,
+          appliedFilters.industry
+        );
+        setOffers(fetchedJobs);
+      } else {
+        const fetchedInternships = await internshipService.getAllInternships(
+          appliedFilters.interRequiredEducation,
+          appliedFilters.locations.join(','),
+          appliedFilters.industry
+        );
+        console.log("internships", fetchedInternships);
+        setOffers(fetchedInternships);
+      }
     } catch (error) {
-      console.error('Error fetching jobs:', error);
+      console.error('Error fetching offers:', error);
     }
   };
-  const handleSearch = async (query) => {
+  const handleSearch = async (query: string) => {
     try {
-      const filteredJobs = await jobService.searchJobs(query);
-      setJobs(filteredJobs);
+      const filteredOffers = isJobs ? await jobService.searchJobs(query) : await internshipService.searchInternships(query);
+      setOffers(filteredOffers);
     } catch (error) {
-      console.error('Error searching jobs:', error);
+      console.error('Error searching offers:', error);
     }
   };
-
 
   useEffect(() => {
-    fetchJobs();
-  }, [appliedFilters]);
+    fetchOffers();
+  }, [appliedFilters, isJobs]);
 
   useEffect(() => {
     if (searchQuery.trim() !== '') {
       handleSearch(searchQuery);
     } else {
-      fetchJobs();
+      fetchOffers();
     }
-  }, [searchQuery]);
-  const handleFilterChange = (filters) => {
+  }, [searchQuery, isJobs]);
+
+  const handleFilterChange = (filters: any) => {
     setAppliedFilters(filters);
   };
   const handleTabChange = () => {
     setIsJobs(!isJobs);
   };
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
@@ -74,11 +86,11 @@ const OfferBrowsePage = () => {
             onInputChange={handleInputChange}/>
           <div className="max-w-7xl mx-auto px-4">
             <div className="grid gap-10 mt-10 grid-cols-1 sm:grid-cols-2">
-              {jobs.map((job, index) => (
+              {offers.map((offer, index) => (
                 isJobs ? (
-                  <JobOfferCard key={index} job={job} />
+                  <JobOfferCard key={index} job={offer as Job} />
                 ) : (
-                  <InternshipOfferCard key={index} job={job} />
+                  <InternshipOfferCard key={index} internship={offer as Internship} />
                 )
               ))}
             </div>

@@ -4,14 +4,14 @@ interface Filters {
   locations: string[];
   experience: string;
   industry: string;
-  internshipTypes:string;
+  interRequiredEducation:string;
 }
 const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJobs: boolean }> = ({ onFilterChange, isJobs  }) => {
   const [filters, setFilters] = useState<Filters>({
     locations: [],
     experience: '',
     industry: '',
-    internshipTypes: ''
+    interRequiredEducation: ''
   });
   const locations = [
     "Ariana","Beja","Ben Arous","Bizerte","Gabes","Gafsa","Jendouba","Kairouan","Kasserine",
@@ -21,7 +21,7 @@ const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJ
 
   const experienceLevels = ['Junior', 'Intermediate','Senior','Entry-level','Mid-level','Experienced','Expert','Lead'];
   const industries = ['Computer Science', 'Mechanical Engineering','Electromechanical Engineering','Civil Engineering','Business'];
-  const internshipTypes = ['First Year Internship', 'Second Year Internship', 'Third Year Internship','Fourth Year Internship','Final Course Project'];
+  const requiredEducation = ['Bachelor degree 1st year','Bachelor degree 2nd year','Bachelor degree 3rd year', 'Engineering degree 1st year', 'Engineering degree 2nd year', 'Engineering degree 3rd year',"PreEngineering 1st year","PreEngineering 2nd year"];
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFilters((prevFilters) => ({
@@ -42,6 +42,14 @@ const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJ
         ? filters.locations.filter((location) => location !== value)
         : [...filters.locations, value] });
   };
+  const handleEducationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      interRequiredEducation: value,
+    }));
+    onFilterChange({ ...filters, interRequiredEducation: value });
+  };
   const handleApplyFilters = () => {
     // Pass the selected filters to the parent component
     onFilterChange(filters);
@@ -58,7 +66,6 @@ const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJ
   return (
     <div className="bg-gray-200 p-4">
       <h2 className="text-lg font-semibold mb-4">Filters</h2>
-      {/* Location filter */}
       <div className="mb-4 flex flex-wrap">
         {renderLocationGroups().map((group, index) => (
           <ul key={index} className="mb-2 px-1">
@@ -79,27 +86,26 @@ const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJ
           </ul>
         ))}
       </div>
-      {/* Experience level filter */}
       <div className="mb-4">
-        <label htmlFor="experience" className="block font-medium mb-1">{isJobs ? 'Experience Level:' : 'Internship Type :'}</label>
+        <label htmlFor="experience"
+               className="block font-medium mb-1">{isJobs ? 'Experience Level:' : 'Education Level :'}</label>
         <select
           name="experience"
           id="experience"
-          value={filters.experience}
-          onChange={handleFilterChange}
+          value={isJobs ? filters.experience : filters.interRequiredEducation}
+          onChange={isJobs ? handleFilterChange : handleEducationChange}
           className="w-full p-2 border border-gray-300 rounded-md"
         >
-          <option value="">{isJobs ? 'All Experience Levels' : 'All Types'}</option>
+          <option value="">{isJobs ? 'All Experience Levels' : 'All Education Levels'}</option>
           {isJobs ? experienceLevels.map((option, index) => (
-            <option key={index} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+            <option key={index} value={option} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
               {option}
             </option>
-          )) : internshipTypes.map((option, index) => (
-            <option key={index} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+          )) : requiredEducation.map((option, index) => (
+            <option key={index} value={option} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
               {option}
             </option>
           ))}
-
         </select>
       </div>
       {/* Industry filter */}
