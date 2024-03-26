@@ -50,7 +50,8 @@ import Detailsjoboffer from './pages/Detailsjoboffer';import { useRefreshMutatio
 import ProtectedRoute from './pages/Authentication/ProtectedRoute';
 //import PersistLoginRoute from './pages/Authentication/PersistLoginRoute';
 import AdminRoute from './pages/Authentication/SignUpFiles/ProtectedRouteAdmin';
-import OfferBrowsePage from './pages/Browsing/OfferBrowsing';
+import OfferBrowsePage from './pages/Browsing/JobOfferBrowsing';
+import JobOfferView from './pages/Opportunity/JobOfferView';
 import Detailsintership from './pages/Detailsintership';
 
 function App() {
@@ -131,9 +132,19 @@ function App() {
           path="/Offers"
           element={
             <>
-              <PageTitle title="Your Profile" />
+              <PageTitle title="Browsing Offers" />
               <ProtectedRoute>
                 <OfferBrowsePage/>
+              </ProtectedRoute>
+            </>
+          } />
+        <Route
+          path="/Offers/:jobId"
+          element={
+            <>
+              <PageTitle title="Apply Now!" />
+              <ProtectedRoute>
+                <JobOfferView/>
               </ProtectedRoute>
             </>
           } />
