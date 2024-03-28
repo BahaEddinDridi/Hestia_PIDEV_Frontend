@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 // };
 
 const IntershipOpp: React.FC = () => {
-    
+
     const [interCommpanyName, setinterCommpanyName] = useState('')
     const [interTitle, setinterTitle] = useState('')
     const [interAdress, setinterAdress] = useState('')
@@ -31,61 +31,78 @@ const IntershipOpp: React.FC = () => {
     const [interImage, setinterImage] = useState('')
     const [error, setError] = useState(false)
     const currentUser = useSelector(selectCurrentUser);
-    
-    //const currentUser = useSelector(selectCurrentUser) || defaultUser;
+
+    const [showModal, setShowModal] = useState(false);
+    const [showModalBack, setShowModalBack] = useState(false);
+
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false); // New state
 
 
+    const handleAddOpportunity = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault(); // Empêche le comportement par défaut du formulaire
+        setShowModal(true);
+    };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleCancel = () => {
+        setShowModal(false);
+    };
+
+    const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
-        if (!currentUser) {
-            console.warn('Aucun utilisateur connecté. L\'ajout de l\'opportunité ne peut pas être effectué.');
-            return;
-        }
-        if (interTitle.length === 0 || interAdress.length === 0 || interDescription.length === 0 || interType.length===0 || interPost.length === 0 ||
-            interfield.length === 0  || interApplicationDeadline.length === 0 || interRequiredSkills.length === 0 || interRequiredEducation.length === 0
-            || contactNumber.length === 0 || interLocation.length === 0) {
-            setError(true);
-            return;
-        }
-
-        // Obtenir la date actuelle
-        const currentDate = new Date();
-        const formattedDate = currentDate.toISOString();
-
-        const intershipData = {
-            interCommpanyName: currentUser.username,
-            interImage: currentUser.image,
-            interTitle: interTitle,
-            interAdress: interAdress,
-            interType : interType,
-            interLocation: interLocation,
-            interDescription: interDescription,
-            interPost: interPost,
-            interfield: interfield,
-            interStartDate: formattedDate,
-            interApplicationDeadline: interApplicationDeadline,
-            interRequiredSkills: interRequiredSkills,
-            interRequiredEducation: interRequiredEducation,
-            contactNumber: contactNumber,
-            interOtherInformation: interOtherInformation,
-
-        };
-
         try {
-            const response = await AddIntership(currentUser.username, intershipData);
-            console.log("intership added", response);
-            window.location.href = '/Profilecompany';
+            //Obtenir la date actuelle
+            const currentDate = new Date();
+            const formattedDate = currentDate.toISOString();
+            const intershipData = {
+                interCommpanyName: currentUser.username,
+                interImage: currentUser.image,
+                interTitle: interTitle,
+                interAdress: interAdress,
+                interType: interType,
+                interLocation: interLocation,
+                interDescription: interDescription,
+                interPost: interPost,
+                interfield: interfield,
+                interStartDate: formattedDate,
+                interApplicationDeadline: interApplicationDeadline,
+                interRequiredSkills: interRequiredSkills,
+                interRequiredEducation: interRequiredEducation,
+                contactNumber: contactNumber,
+                interOtherInformation: interOtherInformation,
+            };
+            await AddIntership(currentUser.username, intershipData);
+            setShowModal(false);
+            setShowSuccessMessage(true); // Mettre à jour l'état pour afficher le message de succès
+            setTimeout(() => {
+                setShowSuccessMessage(false); // Cacher le message de succès après quelques secondes
+                window.location.href = '/Profilecompany'; // Rediriger après l'ajout avec succès
+            }, 3000);
+            console.log('Intership data:', intershipData);
+            console.log("intership added successfully");
         } catch (error: any) {
-            if (error instanceof Error) {
-                console.error('Registration failed:', error.message);
-            } else {
-                console.error('An unknown error occurred:', error);
-            }
+            console.error('An error occurred while adding intership:', error);
+
         }
-    }
+    };
 
 
+    //////////////pour le retour au profil//////////////////////
+    const handleShowModalBack = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setShowModalBack(true);
+    };
+
+    const handleConfirmBack = () => {
+        window.location.href = '/Profilecompany'; // Rediriger vers le profil
+    };
+
+    const handleCancelBack = () => {
+        setShowModalBack(false); // Fermer le modal sans effectuer d'action
+    };
+
+
+
+    //const currentUser = useSelector(selectCurrentUser) || defaultUser;
 
 
 
@@ -93,6 +110,80 @@ const IntershipOpp: React.FC = () => {
 
     return (
         <DefaultLayout>
+            {showSuccessMessage && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-opacity-50">
+                    <div className="bg-green-400 p-6 rounded-lg">
+                        <p className='text-white'>Opportunity added successfully!</p>
+                        <button
+                            onClick={() => setShowSuccessMessage(false)}
+                            className="absolute top-0 right-0 m-4 text-gray-500 hover:text-gray-700 focus:outline-none"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            )}
+
+
+            {showModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg">
+                        <p className="text-black">
+                            Are you sure you want to add this opportunity?
+                        </p>
+                        <div className="mt-4 flex justify-end">
+                            <button
+                                onClick={handleConfirm}
+                                className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 mr-2"
+                            >
+                                Confirm
+                            </button>
+                            <button
+                                onClick={handleCancel}
+                                className="px-4 py-2 text-sm font-medium text-red-600 border border-red-600 rounded-md hover:bg-red-50"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showModalBack && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg">
+                        <p className="text-black">
+                            Are you sure you want to go back to your profile?
+                        </p>
+                        <div className="mt-4 flex justify-end">
+                            <button
+                                onClick={handleConfirmBack} // Confirme et redirige vers le profil
+                                className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 mr-2"
+                            >
+                                Confirm
+                            </button>
+                            <button
+                                onClick={handleCancelBack} // Annule et ferme le modal
+                                className="px-4 py-2 text-sm font-medium text-red-600 border border-red-600 rounded-md hover:bg-red-50"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div>
                 <body className="bg-cream text-charcoal min-h-screen font-sans leading-normal overflow-x-hidden lg:overflow-auto pb-8">
                     <main className="flex-1 md:p-0 lg:pt-8 lg:px-8 md:mx-24 flex flex-col">
@@ -142,11 +233,11 @@ const IntershipOpp: React.FC = () => {
                                             <label className="block uppercase tracking-wide text-xs font-bold text-OppSarra2R">Post</label>
                                             <input className="w-full shadow-4 p-4 border-0 xs" type="text" name="name" placeholder=" Acme Mfg. Co." onChange={e => setinterPost(e.target.value)} />
                                         </div>
-                                            <div className="mb-4">
-                                                <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Application Deadline</label>
-                                                <input className="w-full shadow-4 p-4 border-0" type="date" name="address_number" placeholder="#3" onChange={e => setinterApplicationDeadline(e.target.value)} />
-                                                {/* <span className="text-xs mb-4 font-thin">We lied, this isn't required.</span> */}
-                                            </div>
+                                        <div className="mb-4">
+                                            <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Application Deadline</label>
+                                            <input className="w-full shadow-4 p-4 border-0" type="date" name="address_number" placeholder="#3" onChange={e => setinterApplicationDeadline(e.target.value)} />
+                                            {/* <span className="text-xs mb-4 font-thin">We lied, this isn't required.</span> */}
+                                        </div>
                                     </div>
                                 </div>
                                 <hr className="w-full border-t border-graydouble mb-10"></hr>
@@ -214,6 +305,7 @@ const IntershipOpp: React.FC = () => {
                                     <div className="md:flex-1 px-3 text-center md:text-left">
                                         <Link to="/Profilecompany">
                                             <button
+                                                onClick={handleShowModalBack} // Affiche le modal
                                                 className="bg-red-300 hover:bg-esprit text-white font-bold py-3 px-6 mt-6 rounded-full shadow-lg hover:text-white shadow-white transform transition-all duration-500 ease-in-out hover:scale-110 hover:brightness-110 hover:animate-pulse active:animate-bounce">
                                                 Back to Profile
                                             </button>
@@ -221,7 +313,7 @@ const IntershipOpp: React.FC = () => {
                                     </div>
                                     <div className="md:flex-1 px-3 text-center md:text-right">
                                         <button
-                                            onClick={(e) => handleSubmit(e)}
+                                            onClick={handleAddOpportunity}
                                             className="bg-green-400 hover:bg-green-600 text-white font-bold py-3 px-6 mt-6 rounded-full shadow-lg hover:text-white shadow-white transform transition-all duration-500 ease-in-out hover:scale-110 hover:brightness-110 hover:animate-pulse active:animate-bounce">
                                             Add Opportunity
                                         </button>
