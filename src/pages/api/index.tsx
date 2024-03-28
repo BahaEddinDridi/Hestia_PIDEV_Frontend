@@ -348,3 +348,22 @@ export const deactivateAccount = async (username:any, duration:any,password:stri
    
   }
 };
+export const getUserImage = async (username:any) => {
+  try {
+      const response = await fetch(`http://localhost:3001/user/image`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username: username }),
+      });
+      if (!response.ok) {
+          throw new Error('Failed to fetch user image');
+      }
+      const imageData = await response.json();
+      return imageData; // Renvoie l'URL de l'image de l'utilisateur
+  } catch (error) {
+      console.error('Error fetching user image:', error);
+      return null;
+  }
+};
