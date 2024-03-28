@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate,BrowserRouter } from 'react-router-dom';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
@@ -49,10 +49,11 @@ import RederactionRoute from './pages/Profil/rederection';
 import ViewCompany from './pages/Profil/viewCompany';
 import Detailsjoboffer from './pages/Detailsjoboffer'; import { useRefreshMutation } from './ApiSlices/authApiSlice';
 import ProtectedRoute from './pages/Authentication/ProtectedRoute';
-import PersistLoginRoute from './pages/Authentication/PersistLoginRoute';
+//import PersistLoginRoute from './pages/Authentication/PersistLoginRoute';
 import AdminRoute from './pages/Authentication/SignUpFiles/ProtectedRouteAdmin';
 import OfferBrowsePage from './pages/Browsing/JobOfferBrowsing';
 import JobOfferView from './pages/Opportunity/JobOfferView';
+import Detailsintership from './pages/Detailsintership';
 
 function App() {
   const navigate = useNavigate();
@@ -85,12 +86,14 @@ function App() {
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
-
+  
+  
 
   return loading ? (
     <Loader />
   ) : (
     <>
+  
       <Routes>
         <Route
           index
@@ -150,12 +153,15 @@ function App() {
           path="/Profile"
           element={
             <>
-              <PageTitle title="Your Profile" />
-              <ProtectedRoute>
-                <Profiletest />
-              </ProtectedRoute>
+            <PageTitle title="Your Profile" />
+            <ProtectedRoute>
+              <RederactionRoute>
+              <Profiletest/>
+              </RederactionRoute>
+            </ProtectedRoute>
             </>
           }
+          
         />
         <Route
           path="/Profilecompany"
@@ -167,6 +173,7 @@ function App() {
               </ProtectedRoute>
             </>
           }
+        
         />
         <Route
           path="/company/:username"
@@ -179,8 +186,8 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/detailsoffer"
+          <Route
+          path="/detailsoffer/:jobId"
           element={
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
@@ -189,7 +196,17 @@ function App() {
               </ProtectedRoute>
             </>
           } />
-        <Route
+           <Route
+          path="/detailsintership/:id"
+          element={
+            <>
+              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <ProtectedRoute>
+            <Detailsintership/>
+              </ProtectedRoute>
+            </>
+          } />
+         <Route
           path="/UserDetails/:id"
           element={
             <>
@@ -589,6 +606,7 @@ function App() {
           }
         />
       </Routes>
+  
     </>
   );
 }
