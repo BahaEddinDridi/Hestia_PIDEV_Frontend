@@ -186,7 +186,7 @@ function App() {
           }
         />
           <Route
-          path="/detailsoffer/:id"
+          path="/detailsoffer/:jobId"
           element={
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />

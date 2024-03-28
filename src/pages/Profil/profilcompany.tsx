@@ -6,7 +6,7 @@ import CoverOne from '../../images/cover/cover-01.png';
 import userSix from '../../images/user/user-06.png';
 import { Link } from "react-router-dom";
 const formatDate = (dateString: string) => {
-  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
   return new Date(dateString).toLocaleDateString('fr-FR', options);
 }
 const ProfileCompany = () => {
@@ -127,7 +127,7 @@ const ProfileCompany = () => {
   });
   //trie le tableau de job 
   const filteredJobs = currentUser.job.filter(job => job && job.jobStartDate);
-  const sortedJobs = filteredJobs.sort((a, b) => {
+  const sortedJobs = filteredJobs.sort((a:any, b:any) => {
     const dateA = new Date(a.jobStartDate);
     const dateB = new Date(b.jobStartDate);
     const currentDate = new Date();
@@ -365,7 +365,7 @@ const ProfileCompany = () => {
                 </div>
                 <div className="mb-4">
                   <h2 className="font-medium">Date of Creation</h2>
-                  <p>{currentUser && currentUser.birthDate}</p>
+                  <p>{currentUser &&  formatDate(currentUser.birthDate)}</p>
                 </div>
                 <div className="mb-4">
                   <h2 className="font-medium">Email</h2>
@@ -513,7 +513,7 @@ const ProfileCompany = () => {
                      </Link>
                     </div>
                   ))}
-
+                 
                 </div>
               </div>
             </div>
