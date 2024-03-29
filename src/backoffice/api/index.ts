@@ -176,6 +176,111 @@ export const updateByUsernameAdmin = async (username, updatedAdminData) => {
   }
 };
 
+//get all opportunities Job Disponible
+export const fetchJobsByRoleAndFutureDeadline = async () => {
+  try {
+    const response = await fetch(`http://localhost:3001/job/getAllJobsOpportFutureDeadline`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Jobs not found');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    throw error;
+  }
+};
+//get all opportunities Job Not Disponible
+export const fetchJobsByRoleAndDeadline = async () => {
+  try {
+    const response = await fetch(`http://localhost:3001/job/getAllJobsOpportDeadlinefinalized`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Jobs not found');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    throw error;
+  }
+};
+//delete Job opportunities 
+export const deleteJobByIdAndUsername = async (id:string, username:string) => {
+  try {
+      const response = await axios.delete(`http://localhost:3001/job/deleteJob/${username}/${id}`);
+
+      return response.data;
+  } catch (error) {
+      console.error(error);
+      throw new Error('Failed to delete job');
+  }
+};
+
+//get all opportunities Interships Disponible
+export const fetchIntershipsByRoleAndFutureDeadline = async () => {
+  try {
+    const response = await fetch(`http://localhost:3001/intership/getAllFuturIntershipsOpport`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Jobs not found');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    throw error;
+  }
+};
+
+//get all opportunities Interships Not Disponible
+export const fetchIntershipsByRoleAndDeadline = async () => {
+  try {
+    const response = await fetch(`http://localhost:3001/intership/getAllIntershipsOpportDeadlinefinalized`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Jobs not found');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    throw error;
+  }
+};
+//delete interships opportunities 
+export const deleteIntershipByIdAndUsername = async (id:string, username:string) => {
+  try {
+      const response = await axios.delete(`http://localhost:3001/intership/deleteIntership/${username}/${id}`);
+
+      return response.data;
+  } catch (error) {
+      console.error(error);
+      throw new Error('Failed to delete job');
+  }
+};
+
+
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //statistiques
