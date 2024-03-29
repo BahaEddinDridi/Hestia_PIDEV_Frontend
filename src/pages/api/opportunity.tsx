@@ -25,7 +25,7 @@ export const AddJob = async (username: any, jobData: any) => {
 };
 
 
-export const UpdateJob = async (jobId: string, jobData: any) => {
+export const UpdateJob = async (jobId: any, jobData: any) => {
     try {
       const response = await fetch(`${BASE_URL}/job/UpdateJob/${jobId}`, {
         method: 'PUT',
@@ -49,7 +49,7 @@ export const UpdateJob = async (jobId: string, jobData: any) => {
   };
 
 
-  export const getJobById =async(jobId:string)=>{
+  export const getJobById =async(jobId:any)=>{
     try{
         const response =await fetch(`${BASE_URL}/job/getJobById/${jobId}`,{
             method:'GET',
@@ -96,6 +96,45 @@ export const AddIntership = async (username: any, intershipData: any) => {
     }
 };
 
+export const UpdateInter = async (internId: any, intershipData: any) => {
+    try {
+      const response = await fetch(`${BASE_URL}/intership/UpdateInter/${internId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(intershipData),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        console.error('Error updating job:', response.statusText);
+        throw new Error('Error updating job');
+      }
+    } catch (error) {
+      console.error('Error updating job:', error);
+      throw new Error('Error updating job');
+    }
+  };
 
+
+  export const getInterById =async(internId:any)=>{
+    try{
+        const response =await fetch(`${BASE_URL}/intership/getInterById/${internId}`,{
+            method:'GET',
+
+        });
+        if(!response.ok){
+            throw new Error('Failed to fetch job');
+        }
+
+        const data =await response.json();
+        return data;
+    }catch(error){
+        throw new Error('Failed to fetch job');
+    }
+};
 
 /////////////////////////////////////////////////////// END INTERSHIP ////////////////////////////////////////////////////////////

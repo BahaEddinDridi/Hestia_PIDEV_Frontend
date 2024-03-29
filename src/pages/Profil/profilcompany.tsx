@@ -450,25 +450,25 @@ const ProfileCompany = () => {
                           <p className="text-sm text-neutral-400 ">{formatDate(job.jobApplicationDeadline)}</p></div>
                       </div>
                       <div className="flex justify-between items-center">
-                        
+
                         <Link to={`/detailsoffer/${job._id}`}>
                           <button className="bg-gray text-black font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
                         </Link>
 
                         <section className="relative flex justify-center items-center ml-15">
                           <div className="group flex justify-center transition-all rounded-full bg-gray-200 p-1">
-                          <Link to={`/Profilecompany/Opportunity/EditJob/${job._id}`}>
-                            <svg viewBox="0 0 24 24" className="w-4 h-4">
-                              <path
-                                fill="currentColor"
-                                d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
-                              ></path>
-                            </svg>
+                            <Link to={`/Profilecompany/Opportunity/EditJob/${job._id}`}>
+                              <svg viewBox="0 0 24 24" className="w-4 h-4">
+                                <path
+                                  fill="currentColor"
+                                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                                ></path>
+                              </svg>
                             </Link>
                             <span
                               className="absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm"
                             >Update</span>
-                           
+
                           </div>
                         </section>
                       </div>
@@ -543,10 +543,28 @@ const ProfileCompany = () => {
                           <p className="text-sm text-neutral-500">{formatDate(internship.interApplicationDeadline)}</p></div>
 
                       </div>
-                      <Link to={`/detailsintership/${internship._id}`} >
+                      <div className="group flex justify-center transition-all rounded-full bg-gray-200 p-1">
+                        <Link to={`/detailsintership/${internship._id}`} >
 
-                        <button className="bg-red-800  text-white font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
-                      </Link>
+                          <button className="bg-red-800  text-white font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
+                        </Link>
+                        <section className="relative flex justify-center items-center ml-15">
+                          <div className="group flex justify-center transition-all rounded-full bg-gray-200 p-1">
+                            <Link to={`/Profilecompany/Opportunity/EditInternship/${internship._id}`}>
+                              <svg viewBox="0 0 24 24" className="w-4 h-4 text-red-800">
+                                <path
+                                  fill="currentColor"
+                                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                                ></path>
+                              </svg>
+                            </Link>
+                            <span
+                              className="absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm text-red-800"
+                            >Update</span>
+
+                          </div>
+                        </section>
+                      </div>
                     </div>
                   ))}
 

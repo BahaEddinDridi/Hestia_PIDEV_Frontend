@@ -38,6 +38,7 @@ import Offers from './Offers/Offers';
 import JobOpp from '../src/pages/Opportunity/AddOpp/JobOpp'
 import IntershipOpp from '../src/pages/Opportunity/AddOpp/IntershipOpp'
 import EditJob from '../src/pages/Opportunity/UpdateOpp/jobUpdate'
+import EditInter from '../src/pages/Opportunity/UpdateOpp/intershipUpdate'
 
 import AboutUs from './AboutUs/AboutUs';
 import { useSelector } from "react-redux";
@@ -597,11 +598,21 @@ function App() {
           }
         />
         <Route
-          path='/Profilecompany/Opportunity/EditJob/:id'
+          path='/Profilecompany/Opportunity/EditJob/:jobId'
           element={
             <>
               <PageTitle title="Edit A Job Opportunity" />
               <EditJob />
+            </>
+          }
+        />
+
+        <Route
+          path='/Profilecompany/Opportunity/EditInternship/:internId'
+          element={
+            <>
+              <PageTitle title="Edit A Job Opportunity" />
+              <EditInter />
             </>
           }
         />
