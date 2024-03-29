@@ -7,6 +7,7 @@ import { selectCurrentUser } from '../ApiSlices/authSlice';
 import { useParams } from "react-router";
 import { getUserImage } from "./api";
 import { Link } from "react-router-dom";
+import { FaWhatsapp } from "react-icons/fa";
 
 const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -305,7 +306,12 @@ const Detailsjoboffer = () => {
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <a href={application.resume} downloadclassName="text-blue-600 hover:text-blue-900">View CV</a>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{application.phoneNumber}</td>
+                                            
+                                            <td className="px-6 py-4  whitespace-nowrap">
+                                            <a href={`https://wa.me/+${application.phoneNumber}`} >
+                                                {application.phoneNumber}
+                                            </a>
+                                            </td>
                                             <td className="px-6 flex items-center py-4 whitespace-nowrap">
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
