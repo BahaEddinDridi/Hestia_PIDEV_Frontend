@@ -1,157 +1,84 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import DefaultLayout from "../../../layout/DefaultLayout";
-import { UpdateJob, getJobById } from '../../api/opportunity';
 import JobLocation from '../AddOpp/JobLocation';
-import { Link, useParams, useNavigate } from 'react-router-dom'; // Importer useNavigate
-import { useSelector } from 'react-redux';
-import { selectCurrentUsername } from '../../../ApiSlices/authSlice';
-import { validatejobTitle, validatejobAdress, validatejobLocation, validationjobDescription, validationsalary, validatejobPost, validationjobApplicationDeadline, validationjobRequiredSkills, validationcontactNumber } from '../UpdateOpp/validations';
+import { UpdateJob,getJobById } from '../../api/opportunity';
+import { selectCurrentUser } from '../../../ApiSlices/authSlice';
+
 
 const EditJob: React.FC = () => {
-    const navigate = useNavigate(); // Utiliser useNavigate pour la redirection
-
-    const [successMessage, setSuccessMessage] = useState<string>('');
-    const [errorMessage, setErrorMessage] = useState<string>('');
-
-    //const currentUsername = useSelector(selectCurrentUsername);
-    const currentUsername = "Actia";
-    const { jobId } = useParams();
-
-    const [jobInfo, setJobInfo] = useState<any>(null);
-    const [formData, setFormData] = useState({
-        jobImage: '',
+    const { jobId } = useParams<{ jobId: string }>(); // Extrait l'ID du travail de l'URL
+   
+    const [jobData, setJobData] = useState<any>({
         jobTitle: '',
         jobAdress: '',
         jobLocation: '',
         jobDescription: '',
         salary: '',
         jobPost: '',
+        jobRequiredSkills: '',
+        contactNumber: '',
+        jobRequiredEducation: '',
         jobfield: '',
         jobApplicationDeadline: '',
-        jobRequiredSkills: '',
-        jobRequiredEducation: '',
         jobRequiredExperience: '',
-        contactNumber: '',
-        jobOtherInformation: '',
+        jobOtherInformation: ''
     });
-
+    
     useEffect(() => {
-        console.log('jobId:', jobId); // Ajoutez cette ligne pour vérifier la valeur de jobId
-        const fetchJobInfo = async () => {
-            try {
-                if (!jobId) {
-                    console.error('JobId is undefined');
-                    return;
+        if (jobId) {
+            const fetchJobData = async () => {
+                try {
+                    const response = await getJobById(jobId);
+                    setJobData(response.data);
+                    console.log(jobId);
+                } catch (error) {
+                    console.error('Erreur lors de la récupération des données de l\'offre d\'emploi :', error);
+                    // Affichage d'une alerte pour informer l'utilisateur de l'erreur
+                    alert('Une erreur s\'est produite lors de la récupération des données de l\'offre d\'emploi. Veuillez réessayer.');
                 }
-                const data = await getJobById(jobId);
-                setJobInfo(data);
-
-                if (data) {
-                    setFormData({
-                        jobImage: data.jobImage || '',
-                        jobTitle: data.jobTitle || '',
-                        jobAdress: data.jobAdress || '',
-                        jobLocation: data.jobLocation || '',
-                        jobDescription: data.jobDescription || '',
-                        salary: data.salary || '',
-                        jobPost: data.jobPost || '',
-                        jobfield: data.jobfield || '',
-                        jobApplicationDeadline: data.jobApplicationDeadline || '',
-                        jobRequiredSkills: data.jobRequiredSkills || '',
-                        jobRequiredEducation: data.jobRequiredEducation || '',
-                        jobRequiredExperience: data.jobRequiredExperience || '',
-                        contactNumber: data.contactNumber || '',
-                        jobOtherInformation: data.jobOtherInformation || '',
-                    });
-                } else {
-                    console.error('Error fetching job data:', data);
-                    setErrorMessage('Error fetching job data');
-                }
-            } catch (error) {
-                console.error('Error fetching user profile:', error);
-                setErrorMessage('Error fetching user profile');
-            }
-        };
-        fetchJobInfo();
+            };
+    
+            fetchJobData();
+        }
     }, [jobId]);
-
-    const [errors, setErrors] = useState({
-        jobImage: '',
-        jobTitle: '',
-        jobAdress: '',
-        jobLocation: '',
-        jobDescription: '',
-        salary: '',
-        jobPost: '',
-        jobfield: '',
-        jobApplicationDeadline: '',
-        jobRequiredSkills: '',
-        jobRequiredEducation: '',
-        jobRequiredExperience: '',
-        contactNumber: '',
-        jobOtherInformation: '',
-    });
+    
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        let errorMessage = '';
-
-        if (name === 'jobTitle') {
-            errorMessage = validatejobTitle(value);
-        } else if (name === "jobAdress") {
-            errorMessage = validatejobAdress(value);
-        } else if (name === "jobLocation") {
-            errorMessage = validatejobLocation(value);
-        } else if (name === "jobDescription") {
-            errorMessage = validationjobDescription(value);
-        } else if (name === "salary") {
-            errorMessage = validationsalary(value);
-        } else if (name === 'jobPost') {
-            errorMessage = validatejobPost(value);
-        } else if (name === "jobApplicationDeadline") {
-            errorMessage = validationjobApplicationDeadline(value);
-        } else if (name === "jobRequiredSkills") {
-            errorMessage = validationjobRequiredSkills(value);
-        } else if (name === "contactNumber") {
-            errorMessage = validationcontactNumber(value);
-        }
-
-        setErrors({
-            ...errors,
-            [name]: errorMessage,
-        });
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
+        setJobData((prevState : any) => ({
+            ...prevState,
+            [name]: value
+        }));
     };
+    
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
         try {
-            if (!currentUsername) {
-                console.error('Current username is undefined');
-                setErrorMessage('Current username is undefined');
-                return;
+            if (jobId) { // Vérifier si jobId est défini
+                // Appel de la fonction d'API pour mettre à jour l'offre d'emploi
+                const result = await UpdateJob(jobId, jobData);
+                console.log('Profile updated successfully:', result);
+                window.location.href = '/Profilecompany';
+            } else {
+                console.error('No jobId provided');
+                alert('Une erreur s\'est produite lors de la mise à jour de l\'offre d\'emploi. Veuillez réessayer.');
             }
-
-            const result = await UpdateJob(jobId, formData);
-            console.log('Job updated successfully:', result);
-
-            setFormData(formData);
-            setSuccessMessage('Job updated successfully');
-
-            navigate('/Profilecompany'); // Utiliser navigate pour la redirection
         } catch (error) {
-            console.error('Error updating job:', error);
-            setErrorMessage('Error updating job');
+            console.error('Erreur lors de la mise à jour de l\'offre d\'emploi :', error);
+            // Logique pour afficher un message d'erreur à l'utilisateur
+            alert('Une erreur s\'est produite lors de la mise à jour de l\'offre d\'emploi. Veuillez réessayer.');
         }
     };
+    
 
-    return (
-        <DefaultLayout>
-            <div>
+
+
+return (
+    <DefaultLayout>
+ <div>
                 <body className="bg-cream text-charcoal min-h-screen font-sans leading-normal overflow-x-hidden lg:overflow-auto pb-8">
                     <main className="flex-1 md:p-0 lg:pt-8 lg:px-8 md:mx-24 flex flex-col">
                         <section className="bg-white p-4 shadow-6 ">
@@ -171,14 +98,14 @@ const EditJob: React.FC = () => {
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-xs font-bold text-OppSarra2R">Title</label>
                                             <input className="w-full shadow-4 p-4 border-0 xs" type="text" name="jobTitle" placeholder=" Acme Mfg. Co."
-                                                value={formData.jobTitle}
+                                                value={jobData.jobTitle}
                                                 onChange={handleInputChange} />
                                         </div>
 
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Job Field</label>
-                                            <select className="w-full shadow-4 p-4 border-0" name="jobType"
-                                                value={formData.jobfield}
+                                            <select className="w-full shadow-4 p-4 border-0" name="jobfield"
+                                                value={jobData.jobfield}
                                                 onChange={handleInputChange}>
                                                 <option value="Computer Science">Computer Science</option>
                                                 <option value="Mechanical Engineering">Mechanical Engineering</option>
@@ -190,13 +117,13 @@ const EditJob: React.FC = () => {
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-xs font-bold text-OppSarra2R">Post</label>
                                             <input className="w-full shadow-4 p-4 border-0 xs" type="text" name="jobPost" placeholder=" Acme Mfg. Co."
-                                                value={formData.jobPost}
+                                                value={jobData.jobPost}
                                                 onChange={handleInputChange} />
                                         </div>
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Application Deadline</label>
                                             <input className="w-full shadow-4 p-4 border-0" type="date" name="jobApplicationDeadline" placeholder="#3"
-                                                value={formData.jobApplicationDeadline}
+                                                value={jobData.jobApplicationDeadline}
                                                 onChange={handleInputChange} />
                                             {/* <span className="text-xs mb-4 font-thin">We lied, this isn't required.</span> */}
                                         </div>
@@ -204,13 +131,13 @@ const EditJob: React.FC = () => {
                                             <div className="md:flex-1 md:pr-3">
                                                 <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Salary</label>
                                                 <input className="w-full shadow-4 p-4 border-0" type="text" name="salary" placeholder="30.0455542"
-                                                    value={formData.salary}
+                                                    value={jobData.salary}
                                                     onChange={handleInputChange} />
                                             </div>
                                             <div className="md:flex-1 md:pl-3">
                                                 <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Reference Contact</label>
                                                 <input className="w-full shadow-4 p-4 border-0" type="tel" name="contactNumber" placeholder="(555) 555-5555"
-                                                    value={formData.contactNumber}
+                                                    value={jobData.contactNumber}
                                                     onChange={handleInputChange} />
                                             </div>
                                         </div>
@@ -223,8 +150,8 @@ const EditJob: React.FC = () => {
                                         <p className="text-xs font-light text-esprit">** This entire section is required.</p>
                                     </div>
                                     <div className="md:flex-1 mt-2 mb:mt-0 md:px-3">
-                                        <textarea className="w-full shadow-4 p-4 border-0" placeholder="We build fine acmes." rows="2"
-                                            value={formData.jobDescription}
+                                        <textarea className="w-full shadow-4 p-4 border-0" placeholder="We build fine acmes." rows="2" name="jobDescription"
+                                            value={jobData.jobDescription}
                                             onChange={handleInputChange}></textarea>
                                     </div>
                                 </div>
@@ -239,25 +166,26 @@ const EditJob: React.FC = () => {
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-xs font-bold text-OppSarra2R">Address</label>
                                             <input className="w-full shadow-4 p-4 border-0 xs" type="text" name="jobAdress" placeholder=" Acme Mfg. Co."
-                                                value={formData.jobAdress}
+                                                value={jobData.jobAdress}
                                                 onChange={handleInputChange} />
                                         </div>
                                         <JobLocation
-                                            value={formData.jobLocation}
-                                            onChange={handleInputChange}
+                                            value={jobData.jobLocation}
+                                            onChange={(value) => setJobData({ ...jobData, jobLocation: value })} // Utilisez une fonction pour mettre à jour jobData
                                         />
+
 
 
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required skills</label>
-                                            <textarea className="w-full shadow-4 p-4 border-0" placeholder="required skills" rows="2"
-                                                value={formData.jobRequiredSkills}
+                                            <textarea className="w-full shadow-4 p-4 border-0" placeholder="required skills" rows="2" name="jobRequiredSkills"
+                                                value={jobData.jobRequiredSkills}
                                                 onChange={handleInputChange}></textarea>
                                         </div>
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required education</label>
                                             <select className="w-full shadow-4 p-4 border-0" name="jobRequiredEducation"
-                                                value={formData.jobRequiredEducation}
+                                                value={jobData.jobRequiredEducation}
                                                 onChange={handleInputChange}>
                                                 <option value="Bachelor's degree">Bachelor degree</option>
                                                 <option value="Engineering degree">Engineering degree</option>
@@ -266,7 +194,7 @@ const EditJob: React.FC = () => {
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required experience</label>
                                             <select className="w-full shadow-4 p-4 border-0" name="jobRequiredExperience"
-                                                value={formData.jobRequiredExperience}
+                                                value={jobData.jobRequiredExperience}
                                                 onChange={handleInputChange}>
                                                 <option value="Junior">Junior</option>
                                                 <option value="Senior">Senior</option>
@@ -283,8 +211,8 @@ const EditJob: React.FC = () => {
                                     <div className="md:flex-1 mt-2 mb:mt-0 md:px-3">
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">additional Info</label>
-                                            <textarea className="w-full shadow-4 p-4 border-0" placeholder="required skills" rows="2"
-                                                value={formData.jobOtherInformation}
+                                            <textarea className="w-full shadow-4 p-4 border-0" placeholder="required skills" rows="2" name="jobOtherInformation"
+                                                value={jobData.jobOtherInformation}
                                                 onChange={handleInputChange}></textarea>
                                         </div>
                                     </div>
@@ -312,7 +240,9 @@ const EditJob: React.FC = () => {
                     </main>
                 </body>
             </div>
-        </DefaultLayout>
-    );
+
+    </DefaultLayout>
+
+);
 };
 export default EditJob;

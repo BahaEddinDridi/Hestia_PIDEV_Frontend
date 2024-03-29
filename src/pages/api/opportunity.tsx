@@ -48,6 +48,7 @@ export const UpdateJob = async (jobId: string, jobData: any) => {
     }
   };
 
+
   export const getJobById =async(jobId:string)=>{
     try{
         const response =await fetch(`${BASE_URL}/job/getJobById/${jobId}`,{

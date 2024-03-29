@@ -21,9 +21,9 @@ export const validatejobLocation = (value:string) => {
 };
 
 export const validationjobDescription = (value:string) => {
-    if (value.length > 20) {
-        return 'The description must be 20 characters .';
-      }
+    if (!value) {
+        return 'The description is required.';
+    }
       return '';
 };
 
@@ -54,15 +54,28 @@ export const validationjobApplicationDeadline = (value:string) => {
 };
 
 export const validationjobRequiredSkills = (value:string) => {
-    if (value.length > 10) {
-        return 'The Required Skills Section must be 10 characters .';
-      }
+    if (!value) {
+        return 'The Skills are required.';
+    }
       return '';
 };
 
 export const validationcontactNumber = (value:string) => {
     if (!/^\d+$/.test(value)) {
         return 'The Contact Number must contain only numbers.';
+    }
+      return '';
+};
+
+export const validationjobfield = (value:string) => {
+    if (!value) {
+        return 'The field is required.';
+    }
+      return '';
+};
+export const validationjobLocation = (value:string) => {
+    if (!value) {
+        return 'The location is required.';
     }
       return '';
 };

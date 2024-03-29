@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation, useNavigate,BrowserRouter } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate, BrowserRouter } from 'react-router-dom';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
@@ -86,14 +86,14 @@ function App() {
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
-  
-  
+
+
 
   return loading ? (
     <Loader />
   ) : (
     <>
-  
+
       <Routes>
         <Route
           index
@@ -153,15 +153,15 @@ function App() {
           path="/Profile"
           element={
             <>
-            <PageTitle title="Your Profile" />
-            <ProtectedRoute>
-              <RederactionRoute>
-              <Profiletest/>
-              </RederactionRoute>
-            </ProtectedRoute>
+              <PageTitle title="Your Profile" />
+              <ProtectedRoute>
+                <RederactionRoute>
+                  <Profiletest />
+                </RederactionRoute>
+              </ProtectedRoute>
             </>
           }
-          
+
         />
         <Route
           path="/Profilecompany"
@@ -173,7 +173,7 @@ function App() {
               </ProtectedRoute>
             </>
           }
-        
+
         />
         <Route
           path="/company/:username"
@@ -186,7 +186,7 @@ function App() {
             </>
           }
         />
-          <Route
+        <Route
           path="/detailsoffer/:jobId"
           element={
             <>
@@ -196,17 +196,17 @@ function App() {
               </ProtectedRoute>
             </>
           } />
-           <Route
+        <Route
           path="/detailsintership/:id"
           element={
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <ProtectedRoute>
-            <Detailsintership/>
+                <Detailsintership />
               </ProtectedRoute>
             </>
           } />
-         <Route
+        <Route
           path="/UserDetails/:id"
           element={
             <>
@@ -597,7 +597,7 @@ function App() {
           }
         />
         <Route
-          path='/Profilecompany/:username/Opportunity/EditJob/:jobId'
+          path='/Profilecompany/Opportunity/EditJob/:id'
           element={
             <>
               <PageTitle title="Edit A Job Opportunity" />
@@ -605,8 +605,9 @@ function App() {
             </>
           }
         />
+
       </Routes>
-  
+
     </>
   );
 }
