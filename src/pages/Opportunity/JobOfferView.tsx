@@ -160,7 +160,7 @@ const JobOfferView = () => {
                         width="100%"
                         height="100%"
                         preserveAspectRatio="xMidYMid slice"
-                      xlinkHref="https://res.cloudinary.com/dasrakdbi/image/upload/v1709839309/lqjn6qfwsgfcvcnc2i9w.jpg"
+                      xlinkHref={job.jobImage}
                     />
                   </svg>
 

@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 export interface Job {
+  jobImage: string;
   jobCommpanyName: string;
   jobTitle: string;
   jobAdress?: string;
