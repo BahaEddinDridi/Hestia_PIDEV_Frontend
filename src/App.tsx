@@ -280,7 +280,7 @@ function App() {
           }
         />
         <Route
-          path="/Dashboard/tables-Of-Users"
+          path="/Dashboard/Dashboard/tables-Of-Users-Of-Users"
           element={
             <>
               <PageTitle title="Users List" />
@@ -326,6 +326,42 @@ function App() {
             </>
           }
         />
+        <Route
+          path="/Dashboard/tables-Of-Jobs"
+          element={
+            <>
+              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <TablesJobs />
+            </>
+          }
+        />
+        <Route
+          path="/Dashboard/tables-Of-Interships"
+          element={
+            <>
+              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <TablesInterships />
+            </>
+          }
+        />
+        <Route
+          path="/Dashboard/tables-Of-Jobs"
+          element={
+            <>
+              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <TablesJobs />
+            </>
+          }
+        />
+        <Route
+          path="/Dashboard/tables-Of-Interships"
+          element={
+            <>
+              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <TablesInterships />
+            </>
+          }
+        />
          <Route
           path="/Dashboard/ProfileAdmin/:username"
           element={
@@ -338,7 +374,7 @@ function App() {
           }
         />
         <Route
-          path="/Dashboard/Statistic"
+          path="/Dashboard"
           element={
             <>
               <PageTitle title="Statistics" />

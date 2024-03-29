@@ -29,6 +29,7 @@ interface User{
     image:string;
     gender:string;
     phoneNumber:string;
+    coverimage:string;
     
   }
 
@@ -38,7 +39,7 @@ const userDetails:React.FC = () => {
     const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const profileImage = user && user.image ? `http://127.0.0.1:5500/PIDEV_Backend/uploads/${user.image}` : (user && user.gender === 'female' ? 'http://127.0.0.1:5500/PIDEV_Backend/uploads/unknownF.jpg' : 'http://127.0.0.1:5500/PIDEV_Backend/uploads/unknownH.jpg');
+  const profileImage = user && user.image ? `${user.image}` : (user && user.gender === 'female' ? 'https://res.cloudinary.com/dc31jcevz/image/upload/v1710846932/unknownF_ohd798.jpg' : 'https://res.cloudinary.com/dc31jcevz/image/upload/v1710846932/unknownH_oabt4p.jpg');
   const statusColor =user &&user.status =='online' ? 'bg-green-600' : 'bg-red-500';
 
   useEffect(() => {
@@ -62,11 +63,18 @@ const userDetails:React.FC = () => {
 
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="relative z-20 h-35 md:h-65">
-          <img
-            src={CoverOne}
-            alt="profile cover"
-            className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
-          />
+        {user && user.coverimage ? (
+              <img
+                  src={user.coverimage}
+                  alt="profile cover"
+                  className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
+              />
+          ) : (
+              <img
+                  src={CoverOne}
+                  alt="profile cover"
+                  className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
+              />)}
           <div className="absolute bottom-1 right-1 z-10 xsm:bottom-4 xsm:right-4">
             
           </div>
