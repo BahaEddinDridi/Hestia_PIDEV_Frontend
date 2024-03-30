@@ -6,9 +6,13 @@ import { useSendLogoutMutation } from "../../../ApiSlices/authApiSlice";
 
 
 
+
 ////////////////////////////////////////////////////////////
 import { useParams } from 'react-router-dom';
 import { fetchAdminByUsername } from '../../api/index';
+import {useSelector} from "react-redux";
+ import {selectCurrentUser} from "../../../ApiSlices/authSlice";
+
 
 
 interface UserProfile {
@@ -25,6 +29,7 @@ const DropdownUser = () => {
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
   const navigate = useNavigate();
+  const currentUser=useSelector(selectCurrentUser);
 
 
   ////////////////////////////////////////////////////////
@@ -101,13 +106,19 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-          {adminProfile && `${adminProfile.firstName} ${adminProfile.lastName}`}
+          { `${currentUser.firstName} ${currentUser.lastName}`}
           </span>
-          <span className="block text-xs">{adminProfile && adminProfile.role}</span>
+          <span className="block text-xs">{currentUser.role}</span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
-          <img src={UserOne} alt="User" />
+          
+        {currentUser.image ? (
+            <img src={currentUser.image} alt="profile" className='w-12 h-12 rounded-full overflow-hidden object-cover'/>
+          ) : (
+            <img src={UserOne} alt="profile" />
+          )
+          }
         </span>
 
         <svg

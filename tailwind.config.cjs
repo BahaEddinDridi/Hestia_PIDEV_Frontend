@@ -71,6 +71,8 @@ module.exports = {
         greenaddhover:'#16a34a',
         greenadd700:'#166534',
         sidebarcolor:'#D1D1D1',
+        modaltitreomayma:'#561C24',
+       
       },
       fontSize: {
         'title-xxl': ['44px', '55px'],
