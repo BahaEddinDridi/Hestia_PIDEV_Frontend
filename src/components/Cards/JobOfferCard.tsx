@@ -12,7 +12,6 @@ const JobOfferCard = ({ job }) => {
     jobLocation,
   } = job;
   const handleApplyNow = () => {
-    // Redirect to the job offer details page
     navigate(`/Offers/${job._id}`);
   };
   return (

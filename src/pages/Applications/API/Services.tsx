@@ -11,6 +11,15 @@ const ApplicationService = {
       console.log('service',error)
       throw error;
     }
+  },
+  updateApplication: async (applicationId, updatedData) => {
+    try {
+      const response = await axios.put(`${API_URL}/application/updateApplication/${applicationId}`, updatedData);
+      return response.data; // Return response data
+    } catch (error) {
+      console.log('service',error)
+      throw error;
+    }
   }
 };
 

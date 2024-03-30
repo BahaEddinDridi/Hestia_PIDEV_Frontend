@@ -52,6 +52,7 @@ import PersistLoginRoute from './pages/Authentication/PersistLoginRoute';
 import AdminRoute from './pages/Authentication/SignUpFiles/ProtectedRouteAdmin';
 import OfferBrowsePage from './pages/Browsing/JobOfferBrowsing';
 import JobOfferView from './pages/Opportunity/JobOfferView';
+import ApplicationsList from './pages/Applications/ApplicationsList';
 
 function App() {
   const navigate = useNavigate();
@@ -145,6 +146,16 @@ function App() {
               </ProtectedRoute>
             </>
           } />
+        <Route
+          path="/Applications"
+          element={
+            <>
+              <PageTitle title="Applications" />
+              <ProtectedRoute>
+                <ApplicationsList/>
+              </ProtectedRoute>
+            </>
+          } />
           <Route
           path="/Profile"
           element={
@@ -184,7 +195,7 @@ function App() {
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <ProtectedRoute>
-            <Detailsjoboffer/>
+              <Detailsjoboffer/>
               </ProtectedRoute>
             </>
           } />

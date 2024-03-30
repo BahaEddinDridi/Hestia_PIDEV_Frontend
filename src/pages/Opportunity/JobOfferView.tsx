@@ -94,6 +94,9 @@ const JobOfferView = () => {
         resume,
         userId : currentUser._id,
         jobId : jobId,
+        companyName : job.jobCommpanyName,
+        companyLogo : job.jobImage,
+        jobTitle : job.jobTitle,
       });
       setSuccessMessage('Application submitted successfully');
       setErrorMessage('');
