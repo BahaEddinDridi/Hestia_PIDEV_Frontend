@@ -20,6 +20,8 @@ const RederactionRoute =  ( {children } ) => {
     } else if (currentRole  === 'professional' ) {
       return <Navigate to="/Profilecompany" />;
     }
+    else if (currentRole  === 'admin' ) {
+      return <Navigate to="/Dashboard/ProfileAdmin/${currentUser.username}" />;}
   
     return null;;
   };

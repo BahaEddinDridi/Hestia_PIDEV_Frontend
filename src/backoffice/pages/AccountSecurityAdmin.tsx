@@ -1,5 +1,3 @@
-// Import necessary components and hooks
-
 import DefaultLayoutAdmin from '../layaout/DefaultLayoutAdmin';
 import { Link } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
@@ -25,10 +23,16 @@ const AccountSecurityAdmin = () => {
         setShowEmailRecovery(!showEmailRecovery);
     };
 
+    // Function to toggle visibility of the Terms of Service section
+    const toggleTermsOfService = () => {
+        setShowTermsOfService(!showTermsOfService);
+    }
+
     // State variables to manage the visibility of different sections
     const [showPasswordForm, setShowPasswordForm] = useState(false);
     const [showSecurityQuestions, setShowSecurityQuestions] = useState(false);
     const [showEmailRecovery, setShowEmailRecovery] = useState(false);
+    const [showTermsOfService, setShowTermsOfService] = useState(false);
     const [recoveryEmail, setRecoveryEmail] = useState('');
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -47,6 +51,7 @@ const AccountSecurityAdmin = () => {
         { question: "In what city were you born?", answer: '' },
         { question: "What is the name of your first pet?", answer: '' }
     ]);
+ 
 
     const handleSecurityQuestionChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
@@ -343,6 +348,22 @@ const AccountSecurityAdmin = () => {
                                         </Link>
                                     </div>
                                 </form>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Section for Terms of Service and Use */}
+                <div className="mb-5 container mx-auto p-10 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark flex flex-col items-center justify-center">
+                    <div className="account-security__section">
+                        <h2 className="text-xl font-bold cursor-pointer mb-4 text-red-900 dark:text-red-900 dark:hover:text-white hover:text-black" onClick={toggleTermsOfService}>
+                            Terms of Service and Use
+                        </h2>
+                        {showTermsOfService && (
+                            <div className="terms-of-service ">
+                                {/* Render Terms of Service inputs and buttons here */}
+                                {/* Example: */}
+                                <p>Terms of Service content goes here...</p>
                             </div>
                         )}
                     </div>

@@ -146,9 +146,9 @@ export const sendEmail = async (email: string): Promise<any> => {
         throw new Error('Error sending email');
     }
 };
-export const resetPassword = async (_id: string, token: string, password: string) => {
+export const resetPassword = async (_id: string, password: string) => {
   try {
-    const response = await fetch(`${BASE_URL}/auth/Reset_Passwords_Mail/${_id}/${token}`, {
+    const response = await fetch(`${BASE_URL}/auth/Reset_Passwords_Mail/${_id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -183,11 +183,7 @@ export const resetPassword = async (_id: string, token: string, password: string
         throw new Error('Unknown error occurred while resetting password');
     }
 }
-
-
-  
-};
-  
+}
 
 
   /////////////////////////////////////////////////////////        registerUser          ////////////////////////////////////////////////////////////////////////////
