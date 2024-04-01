@@ -1,6 +1,7 @@
 import React from 'react';
 
 const governorates: string[] = [
+  "",
   "Ariana",
   "Beja",
   "Ben Arous",

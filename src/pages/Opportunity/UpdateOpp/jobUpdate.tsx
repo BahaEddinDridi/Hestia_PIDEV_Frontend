@@ -222,6 +222,7 @@ const EditJob: React.FC = () => {
                                             <select className="w-full shadow-4 p-4 border-0" name="jobfield"
                                                 value={jobData?.jobfield || ''}
                                                 onChange={handleInputChange}>
+                                                    <option value=""></option>
                                                 <option value="Computer Science">Computer Science</option>
                                                 <option value="Mechanical Engineering">Mechanical Engineering</option>
                                                 <option value="Electromechanical Engineering">Electromechanical Engineering</option>
@@ -302,6 +303,7 @@ const EditJob: React.FC = () => {
                                             <select className="w-full shadow-4 p-4 border-0" name="jobRequiredEducation"
                                                 value={jobData?.jobRequiredEducation || ''}
                                                 onChange={handleInputChange}>
+                                                    <option value=""></option>
                                                 <option value="Bachelor's degree">Bachelor degree</option>
                                                 <option value="Engineering degree">Engineering degree</option>
                                             </select>
@@ -311,6 +313,7 @@ const EditJob: React.FC = () => {
                                             <select className="w-full shadow-4 p-4 border-0" name="jobRequiredExperience"
                                                 value={jobData?.jobRequiredExperience || ''}
                                                 onChange={handleInputChange}>
+                                                    <option value=""></option>
                                                 <option value="Junior">Junior</option>
                                                 <option value="Senior">Senior</option>
                                                 <option value="Experienced">Experienced</option>

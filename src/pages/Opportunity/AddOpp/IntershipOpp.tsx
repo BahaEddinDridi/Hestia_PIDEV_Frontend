@@ -25,7 +25,7 @@ const IntershipOpp: React.FC = () => {
     const [interStartDate, setinterStartDate] = useState('')
     const [interApplicationDeadline, setinterApplicationDeadline] = useState('')
     const [interRequiredSkills, setinterRequiredSkills] = useState('')
-    const [interRequiredEducation, setinterRequiredEducation] = useState('')
+    const [interRequiredEducation, setinterRequiredEducation] = useState()
     const [contactNumber, setcontactNumber] = useState('')
     const [interOtherInformation, setinterOtherInformation] = useState('')
     const [interImage, setinterImage] = useState('')
@@ -210,6 +210,7 @@ const IntershipOpp: React.FC = () => {
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Intership Field</label>
                                             <select className="w-full shadow-4 p-4 border-0" name="jobType" value={interfield}
                                                 onChange={e => setinterfield(e.target.value)}>
+                                                    <option value=""></option>
                                                 <option value="Computer Science">Computer Science</option>
                                                 <option value="Mechanical Engineering">Mechanical Engineering</option>
                                                 <option value="Electromechanical Engineering">Electromechanical Engineering</option>
@@ -221,6 +222,7 @@ const IntershipOpp: React.FC = () => {
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Intership Type</label>
                                             <select className="w-full shadow-4 p-4 border-0" name="jobType" value={interType}
                                                 onChange={e => setinterType(e.target.value)}>
+                                                    <option value=""></option>
                                                 <option value="Summer Internship">Summer Internship</option>
                                                 <option value="PFE Internship">PFE Internship</option>
                                             </select>
@@ -276,6 +278,7 @@ const IntershipOpp: React.FC = () => {
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required education</label>
                                             <select className="w-full shadow-4 p-4 border-0" name="jobType" value={interRequiredEducation}
                                                 onChange={e => setinterRequiredEducation(e.target.value)}>
+                                                    <option value=""></option>
                                                 <option value="PreEngineering 1st year">PreEngineering 1st year</option>
                                                 <option value="PreEngineering 2nd year">PreEngineering 2nd year</option>
                                                 <option value="Bachelor degree 1st year">Bachelor degree 1st year</option>

@@ -212,6 +212,7 @@ const EditInter: React.FC = () => {
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Intership Field</label>
                                             <select className="w-full shadow-4 p-4 border-0" name="interfield" value={interData?.interfield || ''}
                                                 onChange={handleInputChange}>
+                                                    <option value=""></option>
                                                 <option value="Computer Science">Computer Science</option>
                                                 <option value="Mechanical Engineering">Mechanical Engineering</option>
                                                 <option value="Electromechanical Engineering">Electromechanical Engineering</option>
@@ -224,6 +225,7 @@ const EditInter: React.FC = () => {
                                             <select className="w-full shadow-4 p-4 border-0" name="interType" 
                                             value={interData?.interType || ''}
                                             onChange={handleInputChange}>
+                                                <option value=""></option>
                                                 <option value="Summer Internship">Summer Internship</option>
                                                 <option value="PFE Internship">PFE Internship</option>
                                             </select>
@@ -292,6 +294,7 @@ const EditInter: React.FC = () => {
                                             <select className="w-full shadow-4 p-4 border-0" name="interRequiredEducation" 
                                             value={interData?.interRequiredEducation || ''}
                                             onChange={handleInputChange}>
+                                                <option value=""></option>
                                                 <option value="PreEngineering 1st year">PreEngineering 1st year</option>
                                                 <option value="PreEngineering 2nd year">PreEngineering 2nd year</option>
                                                 <option value="Bachelor degree 1st year">Bachelor degree 1st year</option>

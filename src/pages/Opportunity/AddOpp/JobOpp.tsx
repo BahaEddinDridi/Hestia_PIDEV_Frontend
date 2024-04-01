@@ -218,6 +218,7 @@ const JobOpp: React.FC = () => {
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Job Field</label>
                                             <select className="w-full shadow-4 p-4 border-0" name="jobType" value={jobfield}
                                                 onChange={e => setjobfield(e.target.value)}>
+                                                    <option value=""></option>
                                                 <option value="Computer Science">Computer Science</option>
                                                 <option value="Mechanical Engineering">Mechanical Engineering</option>
                                                 <option value="Electromechanical Engineering">Electromechanical Engineering</option>
@@ -297,6 +298,7 @@ const JobOpp: React.FC = () => {
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required experience</label>
                                             <select className="w-full shadow-4 p-4 border-0" name="jobType" value={jobRequiredExperience}
                                                 onChange={e => setjobRequiredExperience(e.target.value)}>
+                                                    <option value=""></option>
                                                 <option value="Junior">Junior</option>
                                                 <option value="Senior">Senior</option>
                                                 <option value="Experienced">Experienced</option>
