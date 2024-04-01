@@ -98,7 +98,7 @@ export const AddIntership = async (username: any, intershipData: any) => {
 
 export const UpdateInter = async (internId: any, intershipData: any) => {
     try {
-      const response = await fetch(`${BASE_URL}/intership/UpdateInter/${internId}`, {
+      const response = await fetch(`${BASE_URL}/intership/UpdateInternship/${internId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ export const UpdateInter = async (internId: any, intershipData: any) => {
 
   export const getInterById =async(internId:any)=>{
     try{
-        const response =await fetch(`${BASE_URL}/intership/getInterById/${internId}`,{
+        const response =await fetch(`${BASE_URL}/intership/getInternshipById/${internId}`,{
             method:'GET',
 
         });
