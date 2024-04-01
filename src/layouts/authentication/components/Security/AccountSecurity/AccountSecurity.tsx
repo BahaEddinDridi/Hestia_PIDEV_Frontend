@@ -6,9 +6,15 @@ import Breadcrumb from '../../../../../components/Breadcrumbs/Breadcrumb';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SwitcherTwo from '../../../../../components/Switchers/SwitcherTwo';
+import {useDispatch, useSelector} from 'react-redux';
+
 import { UpdatePassword, recoverymail, updateSecurityQuestions } from '../../../../../pages/api/index';
+import { selectCurrentUser } from '../../../../../ApiSlices/authSlice';
+
+
 // Define the AccountSecurity component
 const AccountSecurity = () => {
+  const currentUser=useSelector(selectCurrentUser);
 
     // Function to toggle visibility of the password form
     const togglePasswordForm = () => {
@@ -89,8 +95,8 @@ const AccountSecurity = () => {
         e.preventDefault();
         try {
             // You may want to get the user ID from your context or props instead of localStorage
-            const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-            const userId = storedUser._id;
+            
+            const userId = currentUser._id;
             const response = await UpdatePassword(userId, oldPassword, newPassword);
 
             if (response.status === 'Incorrect old password') {
@@ -108,8 +114,8 @@ const AccountSecurity = () => {
 
     const handleSecurityQuestionsSubmit = async () => {
         try {
-            const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-            const userId = storedUser._id;
+            
+            const userId = currentUser._id;
 
             // Assuming securityQuestions is the state that holds the security questions and answers
             const response = await updateSecurityQuestions(userId, securityQuestions);
@@ -133,9 +139,10 @@ const AccountSecurity = () => {
         e.preventDefault();
         try {
             // You may want to get the user ID from your context or props instead of localStorage
-            const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-            const userId = storedUser._id;
-
+            
+            console.log('currentUser', currentUser);
+            const userId = currentUser._id;
+            console.log(userId);
             // Call the recoverymail service to send recovery email
             const response = await recoverymail(userId, recoveryEmail);
 

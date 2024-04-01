@@ -363,3 +363,34 @@ export const getUserImage = async (username:any) => {
       return null;
   }
 };
+
+/////updateCRM
+export const updateCRM = async (updatedCRMData :any) => {
+  try {
+    const response = await fetch(`http://localhost:3001/CRM/updateCRM`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedCRMData)
+    });
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return { error: 'Internal server error' };
+  }
+};
+
+//getCRM
+export const getCRM = async () => {
+  try {
+    
+    const response = await fetch(`http://localhost:3001/CRM/getCRM`, {
+      method: 'GET'
+    });
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return { error: 'Internal server error' };
+  }
+};

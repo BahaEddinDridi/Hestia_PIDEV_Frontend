@@ -4,32 +4,49 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SwitcherTwo from '../../components/Switchers/SwitcherTwo';
-import { UpdatePassword, recoverymail, updateSecurityQuestions } from '../../../src/pages/api/index';
-// Define the AccountSecurity component
-const AccountSecurityAdmin = () => {
+import { UpdatePassword, recoverymail, updateSecurityQuestions, updateCRM, getCRM } from '../../../src/pages/api/index';
+import { selectCurrentUser } from '../../ApiSlices/authSlice';
+import { useSelector } from 'react-redux';
 
-    // Function to toggle visibility of the password form
+interface CRMData {
+    PrivacyPolicy: string;
+    TermsOfService: string;
+    Location: string;
+    Email: string;
+    PhoneNumber: number;
+    Description: string;
+    CompanyName: string;
+    CompanyLink: string;
+    SocialMedia: {
+        Facebook: string;
+        Twitter: string;
+        LinkedIn: string;
+        Instagram: string;
+    };
+}
+
+const AccountSecurityAdmin = () => {
+    const storedUser=useSelector(selectCurrentUser);
     const togglePasswordForm = () => {
         setShowPasswordForm(!showPasswordForm);
     };
 
-    // Function to toggle visibility of the security questions section
     const toggleSecurityQuestions = () => {
         setShowSecurityQuestions(!showSecurityQuestions);
     };
 
-    // Function to toggle visibility of the email recovery section
     const toggleEmailRecovery = () => {
         setShowEmailRecovery(!showEmailRecovery);
     };
 
-    // Function to toggle visibility of the Terms of Service section
     const toggleTermsOfService = () => {
         setShowTermsOfService(!showTermsOfService);
-    }
+    };
 
-    // State variables to manage the visibility of different sections
     const [showPasswordForm, setShowPasswordForm] = useState(false);
+    const [crmData, setCrmData] = useState<CRMData>({} as CRMData);
+    const [isLoading, setIsLoading] = useState(true);
+    const [fetchError, setFetchError] = useState(null);
     const [showSecurityQuestions, setShowSecurityQuestions] = useState(false);
     const [showEmailRecovery, setShowEmailRecovery] = useState(false);
     const [showTermsOfService, setShowTermsOfService] = useState(false);
@@ -38,7 +55,11 @@ const AccountSecurityAdmin = () => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
+    const [errorter, setErrorTer] = useState('');
+
     const [successMessage, setSuccessMessage] = useState('');
+  
+
     const [isSwitchOn, setIsSwitchOn] = useState(false);
     const [passwordValidation, setPasswordValidation] = useState({
         minLength: false,
@@ -51,7 +72,8 @@ const AccountSecurityAdmin = () => {
         { question: "In what city were you born?", answer: '' },
         { question: "What is the name of your first pet?", answer: '' }
     ]);
- 
+
+
 
     const handleSecurityQuestionChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
@@ -63,6 +85,41 @@ const AccountSecurityAdmin = () => {
     useEffect(() => {
         validatePassword(newPassword);
     }, [newPassword]);
+
+
+
+    useEffect(() => {
+        const fetchCRMData = async () => {
+            try {
+                const response = await getCRM();
+                console.log('Response:', response); // Log the entire response object to see its structure
+                if (!response || !Array.isArray(response) || response.length === 0) {
+                    console.warn('No CRM data found or response is empty.'); // Log a warning
+                    // Optionally set a flag or message to indicate no data
+                } else {
+                    // Extract the first object in the array
+                    const firstObject = response[0];
+                    console.log('First Object:', firstObject);
+
+                    // Fetch Company Name from the first object
+                    const companyName = firstObject.CompanyName;
+                    console.log('Company Name:', companyName);
+
+                    // You can also set this company name to state if needed
+                    // setCompanyName(companyName);
+                    setCrmData(firstObject)
+                }
+            } catch (error) {
+                console.error('Error fetching CRM data:', error);
+                setFetchError(error.message || 'An error occurred.'); // Set a user-friendly error message
+            } finally {
+                setIsLoading(false); // Set loading state to false when data is fetched
+            }
+        };
+
+        fetchCRMData();
+    }, []);
+
 
     const validatePassword = (password: string) => {
         setPasswordValidation({
@@ -87,14 +144,14 @@ const AccountSecurityAdmin = () => {
             return;
         }
 
-
+        // Handle form submission
     };
 
     const handlePasswordFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             // You may want to get the user ID from your context or props instead of localStorage
-            const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+          
             const userId = storedUser._id;
             const response = await UpdatePassword(userId, oldPassword, newPassword);
 
@@ -103,7 +160,7 @@ const AccountSecurityAdmin = () => {
             } else {
                 setSuccessMessage(response.status);
                 setTimeout(() => {
-                    navigate('/profile');
+                    navigate('/Dashboard/ProfileAdmin/:username');
                 }, 3000);
             }
         } catch (error) {
@@ -113,7 +170,7 @@ const AccountSecurityAdmin = () => {
 
     const handleSecurityQuestionsSubmit = async () => {
         try {
-            const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+           
             const userId = storedUser._id;
 
             // Assuming securityQuestions is the state that holds the security questions and answers
@@ -138,8 +195,9 @@ const AccountSecurityAdmin = () => {
         e.preventDefault();
         try {
             // You may want to get the user ID from your context or props instead of localStorage
-            const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+            
             const userId = storedUser._id;
+            console.log(userId);
 
             // Call the recoverymail service to send recovery email
             const response = await recoverymail(userId, recoveryEmail);
@@ -158,11 +216,50 @@ const AccountSecurityAdmin = () => {
         }
     };
 
+    const handleTermsOfServiceSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+        // You may want to get the user ID from your context or props instead of localStorage
+        
+        if (storedUser.role !== 'admin') {
+            setErrorTer('You do not have permission to update the Terms of Service');
+            return;
+        }
 
+        // Prepare the data needed to update the CRM (Replace these with your actual data)
+        const updatedTermsOfServiceData = {
+            PrivacyPolicy: crmData.PrivacyPolicy,
+            TermsOfService: crmData.TermsOfService,
+            Location: crmData.Location,
+            Email: crmData.Email,
+            PhoneNumber: crmData.PhoneNumber,
+            Description: crmData.Description,
+            CompanyName: crmData.CompanyName,
+            SocialMedia: {
+                Facebook: crmData.SocialMedia.Facebook,
+                Twitter: crmData.SocialMedia.Twitter,
+                LinkedIn: crmData.SocialMedia.LinkedIn,
+                Instagram: crmData.SocialMedia.Instagram
+            }
+        };
 
+        // Call the updateCRM service to update the CRM with the prepared data
+        const response = await updateCRM(updatedTermsOfServiceData);
 
+        // Handle the response
+        if (response.status === 'Success') {
+            setSuccessMessage(response.message);
+            setTimeout(() => {
+                navigate('/profile');
+            }, 3000);
+        } else {
+            setErrorTer(response.error || 'Failed to update CRM');
+        }
+    } catch (error) {
+        setErrorTer((error as Error).message || 'An error occurred while updating CRM');
+    }
+}
 
-    // JSX structure of the AccountSecurity component
     return (
         <DefaultLayoutAdmin>
             <div className="account-security">
@@ -357,14 +454,121 @@ const AccountSecurityAdmin = () => {
                 <div className="mb-5 container mx-auto p-10 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark flex flex-col items-center justify-center">
                     <div className="account-security__section">
                         <h2 className="text-xl font-bold cursor-pointer mb-4 text-red-900 dark:text-red-900 dark:hover:text-white hover:text-black" onClick={toggleTermsOfService}>
-                            Terms of Service and Use
+                            CRM
                         </h2>
-                        {showTermsOfService && (
-                            <div className="terms-of-service ">
-                                {/* Render Terms of Service inputs and buttons here */}
-                                {/* Example: */}
-                                <p>Terms of Service content goes here...</p>
-                            </div>
+                        {isLoading ? (
+                            <div>Loading...</div>
+                        ) : fetchError ? (
+                            <div className="text-red-600">{fetchError}</div>
+                        ) : (
+                            showTermsOfService && (
+                                <form onSubmit={handleTermsOfServiceSubmit} className="max-w-sm ">
+                                    {successMessage && <div className="text-green-600">{successMessage}</div>}
+
+                                    <div>
+                                        {/* Input field for Privacy Policy */}
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Update the Privacy Policy</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Privacy Policy"
+                                            value={crmData?.PrivacyPolicy || ''} // Use optional chaining
+                                            onChange={(e) => setCrmData({ ...crmData, PrivacyPolicy: e.target.value })}
+                                            className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 mb-2"
+                                        />
+                                    </div>
+                                    <div>
+                                        {/* Input field for Terms of Service */}
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Update the Terms of Service</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Terms of Service"
+                                            value={crmData?.TermsOfService || ''} // Use optional chaining
+                                            onChange={(e) => setCrmData({ ...crmData, TermsOfService: e.target.value })}
+                                            className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 mb-2"
+                                        />
+                                    </div>
+                                    <div>
+                                        {/* Input field for Location */}
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Update the Location</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Location"
+                                            value={crmData?.Location || ''} // Use optional chaining
+                                            onChange={(e) => setCrmData({ ...crmData, Location: e.target.value })}
+                                            className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 mb-2"
+                                        />
+                                    </div>
+                                    <div>
+                                        {/* Input field for Email */}
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Update the Email</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Email"
+                                            value={crmData?.Email || ''} // Use optional chaining
+                                            onChange={(e) => setCrmData({ ...crmData, Email: e.target.value })}
+                                            className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 mb-2"
+                                        />
+                                    </div>
+                                    <div>
+                                        {/* Input field for Phone Number */}
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Update the Phone Number</label>
+                                        <input
+                                            type="number"
+                                            placeholder="Phone Number"
+                                            value={crmData?.PhoneNumber || ''} // Use optional chaining
+                                            onChange={(e) => setCrmData({ ...crmData, PhoneNumber: Number(e.target.value) })}
+                                            className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 mb-2"
+                                        />
+                                    </div>
+                                    <div>
+                                        {/* Input field for Description */}
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Update the Description</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Description"
+                                            value={crmData?.Description || ''} // Use optional chaining
+                                            onChange={(e) => setCrmData({ ...crmData, Description: e.target.value })}
+                                            className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 mb-2"
+                                        />
+                                    </div>
+                                    <div>
+                                        {/* Input field for Company Name */}
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Update the Company Name</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Company Name"
+                                            value={crmData?.CompanyName || ''} // Use optional chaining
+                                            onChange={(e) => setCrmData({ ...crmData, CompanyName: e.target.value })}
+                                            className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 mb-2"
+                                        />
+                                    </div>
+                                    <div>
+                                        {/*input field for social media links */}
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Update the Social Media Links</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Facebook"
+                                            value={crmData?.SocialMedia.Facebook || ''} // Use optional chaining
+                                            onChange={(e) => setCrmData({ ...crmData, SocialMedia: { ...crmData.SocialMedia, Facebook: e.target.value } })}
+                                            className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 mb-2" />
+                                        <input type="text" placeholder="Twitter" value={crmData?.SocialMedia.Twitter || ''} onChange={(e) => setCrmData({ ...crmData, SocialMedia: { ...crmData.SocialMedia, Twitter: e.target.value } })} className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 mb-2" />
+                                        <input type="text" placeholder="LinkedIn" value={crmData?.SocialMedia.LinkedIn || ''} onChange={(e) => setCrmData({ ...crmData, SocialMedia: { ...crmData.SocialMedia, LinkedIn: e.target.value } })} className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 mb-2" />
+                                        <input type="text" placeholder="Instagram" value={crmData?.SocialMedia.Instagram || ''} onChange={(e) => setCrmData({ ...crmData, SocialMedia: { ...crmData.SocialMedia, Instagram: e.target.value } })} className="mt-1 p-2 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 mb-2" />
+                                    </div>
+
+                                    <div className='mt-5 px-10'>
+                                        <button
+                                            type="submit"
+                                            className="mb-5 inline-flex items-center justify-center rounded-md border  py-4 px-10 text-center font-medium  hover:bg-opacity-90 lg:px-8 xl:px-10 focus:outline-none focus:shadow-outline cursor-pointer 
+                    border-red-900 bg-red-800 p-4 text-white transition
+                     dark:bg-cyan-900
+               dark:hover:bg-cyan-700 dark:focus:ring-cyan-400 dark:border-cyan-900"
+                                        >
+                                            Update Terms of Service
+                                        </button>
+                                    </div>
+                                </form>
+                            )
                         )}
                     </div>
                 </div>
