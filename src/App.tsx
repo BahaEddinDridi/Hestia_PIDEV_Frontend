@@ -57,6 +57,7 @@ import OfferBrowsePage from './pages/Browsing/JobOfferBrowsing';
 import JobOfferView from './pages/Opportunity/JobOfferView';
 import Detailsintership from './pages/Detailsintership';
 import ApplicationsList from './pages/Applications/ApplicationsList';
+import InternshipOfferView from './pages/Opportunity/InternshipOfferView';
 
 function App() {
   const navigate = useNavigate();
@@ -143,7 +144,7 @@ function App() {
             </>
           } />
         <Route
-          path="/Offers/:jobId"
+          path="/Offers/Jobs/:jobId"
           element={
             <>
               <PageTitle title="Apply Now!" />
@@ -153,10 +154,20 @@ function App() {
             </>
           } />
         <Route
+          path="/Offers/Internships/:internshipId"
+          element={
+            <>
+              <PageTitle title="Apply Now!" />
+              <ProtectedRoute>
+                <InternshipOfferView/>
+              </ProtectedRoute>
+            </>
+          } />
+        <Route
           path="/Applications"
           element={
             <>
-              <PageTitle title="Applications" />
+              <PageTitle title="Your Applications" />
               <ProtectedRoute>
                 <ApplicationsList/>
               </ProtectedRoute>
@@ -205,7 +216,7 @@ function App() {
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <ProtectedRoute>
-              <Detailsjoboffer/>
+            <Detailsjoboffer/>
               </ProtectedRoute>
             </>
           } />

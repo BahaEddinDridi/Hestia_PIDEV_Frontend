@@ -18,6 +18,7 @@ const ApplicationsList = () => {
   const [motivationLetter, setMotivationLetter] = useState(selectedApplication?.motivationLetter || '');
   const [jobId, setJobId] = useState(selectedApplication?.job || '')
 
+
   useEffect(() => {
     if (selectedApplication) {
       setFullName(selectedApplication.fullName || '');
@@ -183,8 +184,14 @@ const ApplicationsList = () => {
                       <p>{formatDate(selectedApplication.submitDate)}</p>
                     </div>
                     <div className="mb-1">
-                      <label className="block text-sm font-bold text-gray-700">Submitted Email</label>
-                      <p>{selectedApplication.email}</p>
+                      <div className="mb-1">
+                        <label className="block text-sm font-bold text-gray-700">Full Name</label>
+                        <p>{selectedApplication.fullName}</p>
+                      </div>
+                      <div className="mb-1">
+                        <label className="block text-sm font-bold text-gray-700">Submitted Email</label>
+                        <p>{selectedApplication.email}</p>
+                      </div>
                     </div>
                     <div className="mb-1">
                       <label className="block text-sm font-bold text-gray-700">Submitted Phone Number</label>

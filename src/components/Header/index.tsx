@@ -83,8 +83,8 @@ const Header = (props: {
 
           </Link>
         </div>
-        <Link to="/Profile/offer">
-        <img src={Logo_PIDEV} className='w-20 h-10' />
+        <Link to="/Offers">
+        <img src={Logo_PIDEV} className='w-26 h-14'  alt="Logo"/>
         </Link>
         <ul className="flex items-center gap-3 2xsm:gap-4">
           <li className="relative">
