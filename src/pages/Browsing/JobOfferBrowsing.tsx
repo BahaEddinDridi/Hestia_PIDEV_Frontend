@@ -15,7 +15,7 @@ const OfferBrowsePage = () => {
     locations: [],
     experience: '',
     industry: '',
-    interRequiredEducation: '',
+    interType: '',
   });
   const [searchQuery, setSearchQuery] = useState('');
   const fetchOffers = async () => {
@@ -29,7 +29,7 @@ const OfferBrowsePage = () => {
         setOffers(fetchedJobs);
       } else {
         const fetchedInternships = await internshipService.getAllInternships(
-          appliedFilters.interRequiredEducation,
+          appliedFilters.interType,
           appliedFilters.locations.join(','),
           appliedFilters.industry
         );

@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const InternshipOfferCard = ({internship}) => {
+  const navigate = useNavigate();
   if (!internship || !internship.interTitle || !internship.interPost || !internship.interfield || !internship.interLocation || !internship.interRequiredEducation) {
     return null;
   }
@@ -11,6 +13,10 @@ const InternshipOfferCard = ({internship}) => {
     interLocation,
     interRequiredEducation,
   } = internship;
+
+  const handleApplyNow = () => {
+    navigate(`/Offers/Internships/${internship._id}`);
+  };
   return (
     <div
       className="block rounded-lg bg-white  text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white">
@@ -51,6 +57,7 @@ const InternshipOfferCard = ({internship}) => {
           focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2
           dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong
           dark:active:shadow-dark-strong"
+            onClick={handleApplyNow}
           >
             Apply Now
           </button>

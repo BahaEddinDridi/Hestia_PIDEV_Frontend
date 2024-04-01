@@ -12,7 +12,7 @@ const JobOfferCard = ({ job }) => {
     jobLocation,
   } = job;
   const handleApplyNow = () => {
-    navigate(`/Offers/${job._id}`);
+    navigate(`/Offers/Jobs/${job._id}`);
   };
   return (
     <div

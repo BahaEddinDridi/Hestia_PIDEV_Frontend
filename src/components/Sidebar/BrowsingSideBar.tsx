@@ -4,14 +4,14 @@ interface Filters {
   locations: string[];
   experience: string;
   industry: string;
-  interRequiredEducation:string;
+  interType:string;
 }
 const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJobs: boolean }> = ({ onFilterChange, isJobs  }) => {
   const [filters, setFilters] = useState<Filters>({
     locations: [],
     experience: '',
     industry: '',
-    interRequiredEducation: ''
+    interType: ''
   });
   const locations = [
     "Ariana","Beja","Ben Arous","Bizerte","Gabes","Gafsa","Jendouba","Kairouan","Kasserine",
@@ -21,7 +21,7 @@ const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJ
 
   const experienceLevels = ['Junior', 'Intermediate','Senior','Entry-level','Mid-level','Experienced','Expert','Lead'];
   const industries = ['Computer Science', 'Mechanical Engineering','Electromechanical Engineering','Civil Engineering','Business'];
-  const requiredEducation = ['Bachelor degree 1st year','Bachelor degree 2nd year','Bachelor degree 3rd year', 'Engineering degree 1st year', 'Engineering degree 2nd year', 'Engineering degree 3rd year',"PreEngineering 1st year","PreEngineering 2nd year"];
+  const internshipType = ['Summer Internship','PFE Internship'];
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFilters((prevFilters) => ({
@@ -46,9 +46,9 @@ const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJ
     const { value } = e.target;
     setFilters((prevFilters) => ({
       ...prevFilters,
-      interRequiredEducation: value,
+      interType: value,
     }));
-    onFilterChange({ ...filters, interRequiredEducation: value });
+    onFilterChange({ ...filters, interType: value });
   };
   const handleApplyFilters = () => {
     // Pass the selected filters to the parent component
@@ -88,20 +88,20 @@ const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJ
       </div>
       <div className="mb-4">
         <label htmlFor="experience"
-               className="block font-medium mb-1">{isJobs ? 'Experience Level:' : 'Education Level :'}</label>
+               className="block font-medium mb-1">{isJobs ? 'Experience Level :' : 'Internship Type :'}</label>
         <select
           name="experience"
           id="experience"
-          value={isJobs ? filters.experience : filters.interRequiredEducation}
+          value={isJobs ? filters.experience : filters.interType}
           onChange={isJobs ? handleFilterChange : handleEducationChange}
           className="w-full p-2 border border-gray-300 rounded-md"
         >
-          <option value="">{isJobs ? 'All Experience Levels' : 'All Education Levels'}</option>
+          <option value="">{isJobs ? 'All Experience Levels' : 'All Internship Types'}</option>
           {isJobs ? experienceLevels.map((option, index) => (
             <option key={index} value={option} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
               {option}
             </option>
-          )) : requiredEducation.map((option, index) => (
+          )) : internshipType.map((option, index) => (
             <option key={index} value={option} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
               {option}
             </option>
