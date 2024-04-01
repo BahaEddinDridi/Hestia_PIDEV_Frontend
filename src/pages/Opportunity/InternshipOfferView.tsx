@@ -1,16 +1,16 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import DefaultLayout from '../../layout/DefaultLayout';
-import { jobService } from '../Browsing/API/Services';
+import { internshipService, jobService } from '../Browsing/API/Services';
 import PhoneInput from 'react-phone-input-2';
 import ApplicationService from '../Applications/API/Services';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../ApiSlices/authSlice';
 import PhoneNumber from '../Authentication/SignUpFiles/PhoneNumber';
 
-const JobOfferView = () => {
-  const { jobId } = useParams();
-  const [job, setJob] = useState(null);
+const InternshipOfferView = () => {
+  const {internshipId} = useParams();
+  const [internship, setInternship] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState('');
@@ -21,17 +21,18 @@ const JobOfferView = () => {
   const currentUser = useSelector(selectCurrentUser);
 
   useEffect(() => {
-    const fetchJob = async () => {
+    const fetchInternship = async () => {
       try {
-        const fetchedJob = await jobService.getJobById(jobId);
-        setJob(fetchedJob);
+        const fetchedInternship = await internshipService.getInternshipById(internshipId);
+        setInternship(fetchedInternship);
+        console.log(internship.interCommpanyName)
       } catch (error) {
-        console.error('Error fetching job:', error);
+        console.error('Error fetching internship:', error);
       }
     };
 
-    fetchJob();
-  }, [jobId]);
+    fetchInternship();
+  }, [internshipId]);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -59,7 +60,7 @@ const JobOfferView = () => {
       }
       catch (error) {
         console.error('Error uploading image:', error);
-    }
+      }
     }
   }
 
@@ -85,7 +86,7 @@ const JobOfferView = () => {
     }
 
     try {
-      await ApplicationService.saveApplication({
+      await ApplicationService.saveInternshipApplication({
         fullName,
         email,
         phoneNumber,
@@ -93,10 +94,10 @@ const JobOfferView = () => {
         motivationLetter,
         resume,
         userId : currentUser._id,
-        jobId : jobId,
-        companyName : job.jobCommpanyName,
-        companyLogo : job.jobImage,
-        jobTitle : job.jobTitle,
+        internshipId : internshipId,
+        companyName : internship.interCommpanyName,
+        companyLogo : internship.interImage,
+        jobTitle : internship.interTitle,
       });
       setSuccessMessage('Application submitted successfully');
       setErrorMessage('');
@@ -106,8 +107,8 @@ const JobOfferView = () => {
       }, 2000);
     } catch (error) {
       console.log(error);
-      if (error.response && error.response.data && error.response.data.error === 'User has already applied for this job') {
-        setErrorMessage('You have already submitted an application for this job offer');
+      if (error.response && error.response.data && error.response.data.error === 'User has already applied for this internship') {
+        setErrorMessage('You have already submitted an application for this internship offer');
       } else if (error.response && error.response.data && error.response.data.error) {
         setErrorMessage(error.response.data.error);
       } else {
@@ -121,7 +122,7 @@ const JobOfferView = () => {
   };
   return (
     <DefaultLayout>
-      {job && (
+      {internship && (
         <div
           className="p-6 mx-26 bg-gray border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 p-10 mr-5">
@@ -129,8 +130,8 @@ const JobOfferView = () => {
               <div
                 className="p-6 bg-white border border-gray-200 w-full h-1/2 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
                 <div className="mb-6 text-center">
-                  <h2 className="text-xl font-semibold mb-2">{job.jobTitle}</h2>
-                  <h4 className="text-xl font-semibold mb-2">{job.jobPost}</h4>
+                  <h2 className="text-xl font-semibold mb-2">{internship.interTitle}</h2>
+                  <h4 className="text-xl font-semibold mb-2">{internship.interPost}</h4>
                 </div>
               </div>
             </div>
@@ -163,23 +164,23 @@ const JobOfferView = () => {
                         width="100%"
                         height="100%"
                         preserveAspectRatio="xMidYMid slice"
-                      xlinkHref={job.jobImage}
-                    />
-                  </svg>
+                        xlinkHref={internship.interImage}
+                      />
+                    </svg>
 
-                  <div
-                    className="absolute bg-red-700 z-10 size-[60%] w-full group-hover:size-[1%]
+                    <div
+                      className="absolute bg-red-700 z-10 size-[60%] w-full group-hover:size-[1%]
                       group-hover:transition-all group-hover:duration-300 transition-all duration-300 delay-700
                        group-hover:delay-0"
-                  ></div>
+                    ></div>
+                  </div>
                 </div>
-              </div>
-              <div className="headings *:text-center *:leading-4">
-                <p className="text-xl font-serif font-semibold text-[#434955]">{job.jobCommpanyName}</p>
-              </div>
-              <div className="w-full items-center justify-center flex">
-                <ul
-                  className="flex flex-col items-start gap-2 has-[:last]:border-b-0 *:inline-flex *:gap-2 *:items-center *:justify-center *:border-b-[1.5px] *:border-b-stone-700 *:border-dotted *:text-xs *:font-semibold *:text-[#434955] pb-3"
+                <div className="headings *:text-center *:leading-4">
+                  <p className="text-xl font-serif font-semibold text-[#434955]">{internship.interCommpanyName}</p>
+                </div>
+                <div className="w-full items-center justify-center flex">
+                  <ul
+                    className="flex flex-col items-start gap-2 has-[:last]:border-b-0 *:inline-flex *:gap-2 *:items-center *:justify-center *:border-b-[1.5px] *:border-b-stone-700 *:border-dotted *:text-xs *:font-semibold *:text-[#434955] pb-3"
                   >
                     <li>
                       <svg
@@ -195,7 +196,7 @@ const JobOfferView = () => {
                           d="M19.23 15.26l-2.54-.29c-.61-.07-1.21.14-1.64.57l-1.84 1.84c-2.83-1.44-5.15-3.75-6.59-6.59l1.85-1.85c.43-.43.64-1.03.57-1.64l-.29-2.52c-.12-1.01-.97-1.77-1.99-1.77H5.03c-1.13 0-2.07.94-2 2.07.53 8.54 7.36 15.36 15.89 15.89 1.13.07 2.07-.87 2.07-2v-1.73c.01-1.01-.75-1.86-1.76-1.98z"
                         ></path>
                       </svg>
-                      <p>{job.contactNumber}</p>
+                      <p>{internship.contactNumber}</p>
                     </li>
                     <li>
                       <svg
@@ -249,7 +250,7 @@ const JobOfferView = () => {
                           fill="#444"
                         ></path>
                       </svg>
-                      <p>{job.jobAdress}</p>
+                      <p>{internship.jobAdress}</p>
                     </li>
                   </ul>
                 </div>
@@ -262,17 +263,16 @@ const JobOfferView = () => {
           </div>
           <div className="border bg-white border-gray-200 rounded-lg  p-4 shadow-lg dark:border-gray-700">
             <h3 className="text-lg font-semibold mb-2">Job Details</h3>
-            <p><span className="font-semibold">Description:</span> {job.jobDescription}</p>
-            <p><span className="font-semibold">Required Experience:</span> {job.jobRequiredExperience}</p>
-            <p><span className="font-semibold">Required Skills:</span> {job.jobRequiredSkills}</p>
-            <p><span className="font-semibold">Required Education:</span> {job.jobRequiredEducation}</p>
-            <p><span className="font-semibold">Field:</span> {job.jobfield}</p>
-            <p><span className="font-semibold">Location:</span> {job.jobLocation}</p>
-            <p><span className="font-semibold">Address:</span> {job.jobAdress}</p>
-            <p><span className="font-semibold">Salary:</span> {job.salary} DT</p>
-            <p><span className="font-semibold">Other Information:</span> {job.jobOtherInformation}</p>
+            <p><span className="font-semibold">Description:</span> {internship.interDescription}</p>
+            <p><span className="font-semibold">Required Skills:</span> {internship.interRequiredSkills}</p>
+            <p><span className="font-semibold">Required Education:</span> {internship.interRequiredEducation}</p>
+            <p><span className="font-semibold">Field:</span> {internship.interfield}</p>
+            <p><span className="font-semibold">Location:</span> {internship.interLocation}</p>
+            <p><span className="font-semibold">Address:</span> {internship.interAdress}</p>
+            <p><span className="font-semibold">Internship Type:</span> {internship.interType} DT</p>
+            <p><span className="font-semibold">Other Information:</span> {internship.interOtherInformation}</p>
             <h3 className="text-lg font-semibold mb-2">Contact Information</h3>
-            <p><span className="font-semibold">Contact Number:</span> {job.contactNumber}</p>
+            <p><span className="font-semibold">Contact Number:</span> {internship.contactNumber}</p>
           </div>
 
 
@@ -403,4 +403,4 @@ const JobOfferView = () => {
   );
 };
 
-export default JobOfferView;
+export default InternshipOfferView;

@@ -9,8 +9,10 @@ import { FaWhatsapp } from "react-icons/fa";
 import Pagination from "../pagination/pagination";
 import { exportExcel, exportPDF } from '../api';
 import { deactivateAccount } from "../api";
-//modal
-import { Button, Dialog, DialogHeader, DialogBody, DialogFooter } from "@material-tailwind/react";
+import { desactiveProfilByIdAuto } from "../api";
+import axios from 'axios';
+
+
 
 
 
@@ -29,6 +31,7 @@ interface User{
   gender:string;
   phoneNumber:string;
   ProfileStatus:string;
+  deactivationExpiresAt?: Date | null;
 }
 
 const TableOne = () => {
@@ -49,8 +52,7 @@ const TableOne = () => {
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
-
-
+  
 
   useEffect(()=>{
     const fetchData=async()=>{
@@ -62,7 +64,10 @@ const TableOne = () => {
       }
     };
     fetchData();
+    
   },[]);
+  
+  
   
   const handleUpdateRole = (userId: string, role: string) => {
     setEditingUserId(userId);
@@ -123,28 +128,153 @@ const TableOne = () => {
     };
     
     
-    
-    
-    const handleUpdateStatus = async (userId: string, status: string) => {
-      try {
-        console.log("Editing user info type:", editingUserInfo.type);
-        setEditingUserInfo({ userId, type: 'status' });
-        setNewStatus(status);
-    
-        await deactivateAccount(userId, status); // Attendre la fin de la désactivation du compte
-        // Mettre à jour localement l'utilisateur dans la liste
-          setUsers((prevUsers) =>
-          prevUsers.map((user) => (user._id === userId ? { ...user, ProfileStatus: status } : user))
-        );
-       
-        // Vous pouvez ajouter ici le code pour afficher un message de succès ou mettre à jour l'interface utilisateur
-    
-      } catch (error) {
-        console.error('Erreur lors de la désactivation du compte :', error);
-        // Vous pouvez ajouter ici le code pour afficher un message d'erreur à l'utilisateur
-      }
-    };
-    
+    //desactivation du compte automatiquement
+    const [isUpdatingUser, setIsUpdatingUser] = useState<string | null>(null);
+
+// const handleUpdateStatus = async (userId: string, status: string) => {
+//   if (isUpdatingUser === userId) {
+//     return;
+//   }
+
+//   try {
+//     setIsUpdatingUser(userId); // Marquer l'utilisateur comme étant mis à jour
+
+//     await desactiveProfilByIdAuto(userId, status, customDeactivation);
+
+//     // Mettre à jour localement l'utilisateur dans la liste
+//     setUsers((prevUsers) =>
+//       prevUsers.map((user) => (user._id === userId ? { ...user, ProfileStatus: status } : user))
+//     );
+
+//     // Afficher un message de succès ou mettre à jour l'interface utilisateur
+//   } catch (error) {
+//     console.error('Erreur lors de la désactivation du compte :', error);
+//     // Afficher un message d'erreur à l'utilisateur
+//   } finally {
+//     setIsUpdatingUser(null); // Réinitialiser l'état après la mise à jour
+//   }
+// };
+/////////////////////////////////////////////////////////////////////////////:
+const handleDurationChange = (e:any) => {
+  const { value } = e.target;
+  setCustomDeactivation({
+    ...customDeactivation,
+    duration: value,
+  });
+};
+
+// Mettre à jour le type de durée personnalisée en fonction du type de durée sélectionné par l'utilisateur
+const handleDurationTypeChange = (e:any) => {
+  const { value } = e.target;
+  setCustomDeactivation({
+    ...customDeactivation,
+    durationType: value,
+  });
+};
+const handleUpdateStatus = async (userId: string, status: string,customDeactivation: any) => {
+  if (isUpdatingUser === userId) {
+    return;
+  }
+
+  try {
+    setIsUpdatingUser(userId); // Marquer l'utilisateur comme étant mis à jour
+
+    await desactiveProfilByIdAuto(userId, status, customDeactivation);
+
+    // Mettre à jour localement l'utilisateur dans la liste
+    setUsers((prevUsers) =>
+      prevUsers.map((user) => (user._id === userId ? { ...user, ProfileStatus: status } : user))
+    );
+
+    // Afficher un message de succès ou mettre à jour l'interface utilisateur
+  } catch (error) {
+    console.error('Erreur lors de la désactivation du compte :', error);
+    // Afficher un message d'erreur à l'utilisateur
+  } finally {
+    setIsUpdatingUser(null); // Réinitialiser l'état après la mise à jour
+  }
+};
+
+
+
+
+
+// // Définir la fonction scheduleReactivation dans votre fichier frontend
+// const scheduleReactivation = (userId: string, expirationDate: Date) => {
+//   const delay = expirationDate.getTime() - Date.now();
+
+//   if (delay <= 0) {
+//     // Si le délai est négatif ou nul, réactivez immédiatement le compte
+//     setUsers((prevUsers) =>
+//       prevUsers.map((user) => (user._id === userId ? { ...user, ProfileStatus: 'active' } : user))
+//     );
+//   } else {
+//     // Sinon, planifiez la réactivation après le délai spécifié
+//     setTimeout(() => {
+//       setUsers((prevUsers) =>
+//         prevUsers.map((user) => (user._id === userId ? { ...user, ProfileStatus: 'active' } : user))
+//       );
+//     }, delay);
+//   }
+// };
+
+
+// // Utiliser la fonction scheduleReactivation dans votre handleUpdateStatus
+// const handleUpdateStatus = async (userId: string, status: string, customDeactivation: any) => {
+//   if (isUpdatingUser === userId) {
+//     return;
+//   }
+
+//   try {
+//     setIsUpdatingUser(userId); // Marquer l'utilisateur comme étant mis à jour
+
+//     await desactiveProfilByIdAuto(userId, status, customDeactivation);
+
+//     // Planifier la réactivation du compte après la durée de désactivation spécifiée
+//     if (status === 'deactivated' && customDeactivation) {
+//       let duration = parseInt(customDeactivation.duration);
+//       if (customDeactivation.durationType === 'minutes') {
+//         duration *= 60 * 1000; // Convertir en millisecondes
+//       } else if (customDeactivation.durationType === 'hours') {
+//         duration *= 60 * 60 * 1000; // Convertir en millisecondes
+//       } else if (customDeactivation.durationType === 'days') {
+//         duration *= 24 * 60 * 60 * 1000; // Convertir en millisecondes
+//       } else {
+//         throw new Error('Type de durée de désactivation non valide');
+//       }
+
+//       const expirationDate = new Date(Date.now() + duration);
+//       scheduleReactivation(userId, expirationDate); // Appeler la fonction pour planifier la réactivation
+//     }
+
+//     // Mettre à jour localement l'utilisateur dans la liste
+//     setUsers((prevUsers) =>
+//       prevUsers.map((user) => (user._id === userId ? { ...user, ProfileStatus: status } : user))
+//     );
+
+//     // Afficher un message de succès ou mettre à jour l'interface utilisateur
+//   } catch (error) {
+//     console.error('Erreur lors de la désactivation du compte :', error);
+//     // Afficher un message d'erreur à l'utilisateur
+//   } finally {
+//     setIsUpdatingUser(null); // Réinitialiser l'état après la mise à jour
+//   }
+// };
+
+
+
+
+    const [duration, setDuration] = useState('');
+    const [durationType, setDurationType] = useState('minutes');
+    const [customDeactivation, setCustomDeactivation] = useState({
+      duration: '',
+      durationType: 'minutes'
+    });
+    const [openDurationModal, setOpenDurationModal] = useState(false);
+  
+
+
+
 
     
   
@@ -257,10 +387,10 @@ const TableOne = () => {
             <div className="flex items-center gap-3 p-2.5 xl:p-5">
             <div className="h-12.5 w-15 rounded-md">
               {user.image ? (
-                   <img src={`http://127.0.0.1:5500/PIDEV_Backend/uploads/${user.image}`} alt="User" />
+                   <img src={`${user.image}`} alt="User" />
               ):(
-                <img src={user.gender=='female'?'http://127.0.0.1:5500/PIDEV_Backend/uploads/unknownF.jpg'
-                :'http://127.0.0.1:5500/PIDEV_Backend/uploads/unknownH.jpg'} alt="Default User" />
+                <img src={user.gender=='female'?'https://res.cloudinary.com/dc31jcevz/image/upload/v1710846932/unknownF_ohd798.jpg'
+                :'https://res.cloudinary.com/dc31jcevz/image/upload/v1710846932/unknownH_oabt4p.jpg'} alt="Default User" />
               )}
                
               </div>
@@ -366,8 +496,9 @@ const TableOne = () => {
                   <button
                     className="text-gray-900 bg-gradient-to-r from-lime-200 via-lime-400 to-lime-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-lime-300 dark:focus:ring-lime-800 shadow-lg shadow-lime-500/50 dark:shadow-lg dark:shadow-lime-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
                     onClick={() => {
-                      handleUpdateStatus(user._id, 'active');
+                      handleUpdateStatus(user._id, 'active', customDeactivation);
                       closeModal2();
+                      setOpenDurationModal(false);
                     }}
                   >
                     Active
@@ -376,8 +507,8 @@ const TableOne = () => {
                   <button
                     className="text-gray-900 bg-gradient-to-r from-yellow-200 via-yellow-200 to-yellow-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
                     onClick={() => {
-                      handleUpdateStatus(user._id, 'deactivated');
-                      closeModal2();
+                      setOpenDurationModal(true);
+                      // closeModal2();
                     }}
                   >
                     Deactivate
@@ -385,8 +516,9 @@ const TableOne = () => {
                   <button
                     className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
                     onClick={() => {
-                      handleUpdateStatus(user._id, 'banned');
+                      handleUpdateStatus(user._id, 'banned', customDeactivation);
                       closeModal2();
+                      setOpenDurationModal(false);
                     }}
                   >
                     Banned
@@ -408,6 +540,7 @@ const TableOne = () => {
                   onClick={() => {
                     openModal2(user._id)
                     handleDeactivateAccount(user._id,user.ProfileStatus)
+                    setOpenDurationModal(false);
                   }}
                 >
                   <svg
@@ -431,6 +564,7 @@ const TableOne = () => {
                      onClick={() => {
                        openModal2(user._id)
                        handleDeactivateAccount(user._id,user.ProfileStatus)
+                       setOpenDurationModal(false);
                      }}
                    >
                   <svg
@@ -463,6 +597,56 @@ const TableOne = () => {
                 )}
               </div>
             )} 
+            {openDurationModal && editingUserId2 === user._id &&(
+              <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50">
+                <div className="bg-white p-4 rounded-lg">
+                <h1 className="text-xl font-semibold mb-4 dark:text-black">Choose the deactivation duration</h1>
+                <label className="mb-2.5 block text-black dark:text-black">
+                Duration Type <span className="text-meta-1">*</span>
+                  </label>
+                  <select
+                    name="role"
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    value={customDeactivation.durationType}
+                    onChange={handleDurationTypeChange}
+                  >
+                    <option value="minutes">Minutes</option>
+                    <option value="hours">Hours</option>
+                    <option value="days">Days</option>
+                  </select>
+                  <label className="mb-2.5 block text-black dark:text-black">  
+                  Duration <span className="text-meta-1">*</span>
+                  </label>
+                  <input
+                      type="number"
+                      placeholder="Enter Number Of Duration"
+                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      value={customDeactivation.duration}
+                      onChange={handleDurationChange}
+                    />
+
+                   <button 
+                    className="text-gray-900 mt-2 bg-gradient-to-r from-lime-500 via-lime-400 to-lime-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-lime-100 dark:focus:ring-lime-800 shadow-lg shadow-lime-500/50 dark:shadow-lg dark:shadow-lime-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                     onClick={() => {
+                       handleUpdateStatus(user._id, 'deactivated', customDeactivation);
+                       setOpenDurationModal(false);
+                        }}
+                      >
+                      confirmer
+                  </button>
+                  <button 
+                    className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-33 dark:bg-gray-800 dark:text-black dark:border-black dark:hover:bg-gray-700 dark:hover:border-esprit dark:focus:ring-gray-700"
+                     onClick={() => {
+                        setOpenDurationModal(false);
+                        }}
+                      >
+                      Concel
+                  </button>
+                </div>
+              
+                  
+              </div>
+            )}
 
 
       
