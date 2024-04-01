@@ -115,9 +115,9 @@ const ProfileCompany = () => {
 
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-   //trie le tableau de intership 
-   
-   const sortedintership = [...currentUser.intership].sort((a, b) => {
+  //trie le tableau de intership 
+
+  const sortedintership = [...currentUser.intership].sort((a, b) => {
     const dateA = new Date(a.interStartDate);
     const dateB = new Date(b.interStartDate);
     const currentDate = new Date();
@@ -127,7 +127,7 @@ const ProfileCompany = () => {
   });
   //trie le tableau de job 
   const filteredJobs = currentUser.job.filter(job => job && job.jobStartDate);
-  const sortedJobs = filteredJobs.sort((a:any, b:any) => {
+  const sortedJobs = filteredJobs.sort((a: any, b: any) => {
     const dateA = new Date(a.jobStartDate);
     const dateB = new Date(b.jobStartDate);
     const currentDate = new Date();
@@ -135,19 +135,19 @@ const ProfileCompany = () => {
     const differenceB = Math.abs(dateB - currentDate);
     return differenceA - differenceB;
   });
-  
- 
+
+
   const currentCards = sortedJobs.slice(indexOfFirstCard, indexOfLastCard);
   const currentCardstwo = sortedintership.slice(indexOfFirstCard, indexOfLastCard);
-  
- 
 
 
-  const handleButtonAddJob = () =>{
+
+
+  const handleButtonAddJob = () => {
     window.location.href = `Profilecompany/${currentUser.username}/Opportunity/job`;
   };
 
-  const handleButtonAddIntership = () =>{
+  const handleButtonAddIntership = () => {
     window.location.href = `Profilecompany/${currentUser.username}/Opportunity/intership`;
   };
 
@@ -375,7 +375,7 @@ const ProfileCompany = () => {
                 </div>
                 <div className="mb-4">
                   <h2 className="font-medium">Date of Creation</h2>
-                  <p>{currentUser &&  formatDate(currentUser.birthDate)}</p>
+                  <p>{currentUser && formatDate(currentUser.birthDate)}</p>
                 </div>
                 <div className="mb-4">
                   <h2 className="font-medium">Email</h2>
@@ -430,24 +430,50 @@ const ProfileCompany = () => {
                   </button>
                 </div>
                 <div className="flex flex-wrap justify-center ">
+
                   {currentCards.map((job) => (
+
                     <div className="w-66 h-66 mr-4 bg-red-800 rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
+
                       <div className="w-52 h-30 bg-white text-black text-center rounded-2xl"><b>{job.jobTitle}</b></div>
+
                       <div className="">
                         <div className="  felex items-center">
-                      <h2  className="font-bold text-white text-base mr-1">Post:</h2>
-                       <p className="text-sm  text-neutral-400">{job.jobPost}</p>
-                       </div>
-                       <div  className=" felex items-center">
-                       <h2 className="font-bold  text-white text-base mr-1">Field:</h2>
-                       <p className="text-sm text-neutral-400">{job.jobfield}</p></div>
-                       <div  className=" text-black felex items-center">
-                       <h2 className="font-bold  text-white text-base mr-1">Application Deadline:</h2>
-                       <p className="text-sm text-neutral-400 ">{formatDate(job.jobApplicationDeadline)}</p></div>
+                          <h2 className="font-bold text-white text-base mr-1">Post:</h2>
+                          <p className="text-sm  text-neutral-400">{job.jobPost}</p>
+                        </div>
+                        <div className=" felex items-center">
+                          <h2 className="font-bold  text-white text-base mr-1">Field:</h2>
+                          <p className="text-sm text-neutral-400">{job.jobfield}</p></div>
+                        <div className=" text-black felex items-center">
+                          <h2 className="font-bold  text-white text-base mr-1">Application Deadline:</h2>
+                          <p className="text-sm text-neutral-400 ">{formatDate(job.jobApplicationDeadline)}</p></div>
                       </div>
-                      <Link to={`/detailsoffer/${job._id}`} >
-                        <button className="bg-gray text-black font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
-                      </Link>
+                      <div className="flex justify-between items-center">
+
+                        <Link to={`/detailsoffer/${job._id}`}>
+                          <button className="bg-gray text-black font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
+                        </Link>
+
+                        <section className="relative flex justify-center items-center ml-15">
+                          <div className="group flex justify-center transition-all rounded-full bg-gray-200 p-1">
+                            <Link to={`/Profilecompany/Opportunity/EditJob/${job._id}`}>
+                              <svg viewBox="0 0 24 24" className="w-4 h-4">
+                                <path
+                                  fill="currentColor"
+                                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                                ></path>
+                              </svg>
+                            </Link>
+                            <span
+                              className="absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm"
+                            >Update</span>
+
+                          </div>
+                        </section>
+                      </div>
+
+
                     </div>
                   ))}
                 </div>
@@ -505,25 +531,43 @@ const ProfileCompany = () => {
                     <div className="w-66 h-66 mr-4  bg-companybgfarah rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
                       <div className="w-52 h-30   bg-red-800 text-white text-center rounded-2xl"><b>{internship.interTitle}</b></div>
                       <div className="">
-                      <div className="  felex items-center">
-                      <h2  className="font-bold text-black text-base mr-1">Post:</h2>
-                       <p className="text-sm text-neutral-500">{internship.interPost}</p>
-                       </div>
-                       <div  className="  felex items-center">
-                       <h2 className="font-bold text-base text-black  mr-1">Field:</h2>
-                       <p className="text-sm text-neutral-500">{internship.interfield}</p></div>
-                       <div  className="  felex items-center">
-                       <h2 className="font-bold text-black  text-base mr-1">Application Deadline:</h2>
-                       <p className="text-sm text-neutral-500">{formatDate(internship.interApplicationDeadline)}</p></div>
-                  
-                      </div>
-                      <Link to={`/detailsintership/${internship._id}`} >
+                        <div className="  felex items-center">
+                          <h2 className="font-bold text-black text-base mr-1">Post:</h2>
+                          <p className="text-sm text-neutral-500">{internship.interPost}</p>
+                        </div>
+                        <div className="  felex items-center">
+                          <h2 className="font-bold text-base text-black  mr-1">Field:</h2>
+                          <p className="text-sm text-neutral-500">{internship.interfield}</p></div>
+                        <div className="  felex items-center">
+                          <h2 className="font-bold text-black  text-base mr-1">Application Deadline:</h2>
+                          <p className="text-sm text-neutral-500">{formatDate(internship.interApplicationDeadline)}</p></div>
 
-                      <button className="bg-red-800  text-white font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
-                     </Link>
+                      </div>
+                      <div className="group flex justify-center transition-all rounded-full bg-gray-200 p-1">
+                        <Link to={`/detailsintership/${internship._id}`} >
+
+                          <button className="bg-red-800  text-white font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
+                        </Link>
+                        <section className="relative flex justify-center items-center ml-15">
+                          <div className="group flex justify-center transition-all rounded-full bg-gray-200 p-1">
+                            <Link to={`/Profilecompany/Opportunity/EditInternship/${internship._id}`}>
+                              <svg viewBox="0 0 24 24" className="w-4 h-4 text-red-800">
+                                <path
+                                  fill="currentColor"
+                                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                                ></path>
+                              </svg>
+                            </Link>
+                            <span
+                              className="absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm text-red-800"
+                            >Update</span>
+
+                          </div>
+                        </section>
+                      </div>
                     </div>
                   ))}
-                 
+
                 </div>
               </div>
             </div>
