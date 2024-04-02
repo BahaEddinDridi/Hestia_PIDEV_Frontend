@@ -96,3 +96,26 @@ export const validateFormExperience = (data: any) => {
 
   return errors;
 };
+export const validateFormproject = (data: any) => {
+  const errors: any = {};
+
+ 
+  if (!data.title) {
+      errors.title = "The field is required.";
+  }
+  if (!data.startDate) {
+      errors.startDate = "The field is required.";
+  }
+  if (!data.endDate) {
+      errors.endDate = "The field is required.";
+  }
+  if (!data.description) {
+    errors.description = "The field is required.";
+}
+  
+  if (data.startDate && data.endDate && data.startDate >= data.endDate) {
+      errors.endDate = "The end date must be after the start date.";
+  }
+
+  return errors;
+};

@@ -304,11 +304,11 @@ const Detailsjoboffer = () => {
                                             <td className="px-6 py-4 whitespace-nowrap">{application.email}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{formatDate(application.submitDate)}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <a href={application.resume} downloadclassName="text-blue-600 hover:text-blue-900">View CV</a>
+                                                <a href={application.resume} downloadclassName="text-blue-600 hover:text-blue-900" target="_blank" rel="noopener noreferrer">View CV</a>
                                             </td>
                                             
                                             <td className="px-6 py-4  whitespace-nowrap">
-                                            <a href={`https://wa.me/+${application.phoneNumber}`} >
+                                            <a href={`https://wa.me/+${application.phoneNumber}`}  target="_blank" rel="noopener noreferrer">
                                                 {application.phoneNumber}
                                             </a>
                                             </td>

@@ -194,12 +194,12 @@ const ProfileCard = () => {
         </Link>
 
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
-          <div className="relative z-30 ml-10 -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
+          <div className="relative mx-auto z-30 ml-10 -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
             <div className="relative drop-shadow-2">
               {currentUser.image ? (
-                  <img src={currentUser.image} alt="profile" className='w-50 h-40 rounded-full overflow-hidden object-cover' />
+                  <img src={currentUser.image} alt="profile" className='w-50 h-40 sm:w-44 sm:h-44 rounded-full overflow-hidden object-cover' />
               ) : selectedImage ? (
-                  <img src={selectedImage} alt="profile" className='w-50 h-40 rounded-full overflow-hidden object-cover' />
+                  <img src={selectedImage} alt="profile" className='w-50 h-40 sm:w-44 sm:h-44 rounded-full overflow-hidden object-cover' />
               ) : (
                   <img src={userSix} alt="profile" />
               )
@@ -243,7 +243,7 @@ const ProfileCard = () => {
 
           </div>
 
-          <div className="mr-150  ">
+          <div className="mr-150 sm:mt-10 ">
             <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
               {/* Display user's full name */}
               {currentUser && `${currentUser.firstName} ${currentUser.lastName}`}

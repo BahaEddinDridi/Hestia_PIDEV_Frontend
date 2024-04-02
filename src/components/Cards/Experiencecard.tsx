@@ -1,17 +1,26 @@
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentToken, selectCurrentUser, selectCurrentUsername } from '../../ApiSlices/authSlice';
 import { useGetUserInfoQuery } from "../../ApiSlices/userApiSlice";
 import { addUserExperience } from '../../pages/api';
 import DatePickerOne from '../Forms/DatePicker/DatePickerOne';
 import { validateFormExperience } from '../../pages/Profil/validation';
-const formatDate = (dateString:any) => {
-  const options : Intl.DateTimeFormatOptions ={ year: 'numeric', month: 'short', day: 'numeric'};
-  const formattedDate = new Intl.DateTimeFormat('fr-FR', options).format(new Date(dateString));
-  return formattedDate;
+import axios from 'axios';
+import { updateExperience } from '../../../src/backoffice/api/index';
+import { deleteExperience } from '../../../src/backoffice/api/index';
+const formatDate = (dateString: any) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 };
 
 const ExperienceCard = () => {
+
+
+
+
   const dispatch = useDispatch();
   const currentUser = useSelector(selectCurrentUser);
   //const { data: userInfo = {} } = useGetUserInfoQuery(currentUsername);
@@ -22,6 +31,25 @@ const ExperienceCard = () => {
     endDate: '',
     description: '',
   });
+  const [experiences, setExperiences] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchExperiences = async () => {
+        try {
+            const response = await axios.get(`http://localhost:3001/user/Experiences/${currentUser.username}`);
+            console.log(response);
+            setExperiences(response.data.data);
+        } catch (error) {
+            console.error('Error fetching experiences:', error.message);
+        }
+    };
+
+    fetchExperiences();
+}, []);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState<{ [key: string]: boolean }>({});
+  const toggleDropdown = (experienceId: string) => {
+    setIsDropdownOpen({...isDropdownOpen, [experienceId]: !isDropdownOpen[experienceId]});
+  };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
     const { name, value } = e.target;
     setexperienceData((prevData) => ({
@@ -62,6 +90,82 @@ const ExperienceCard = () => {
 
   const [selectedExperience, setSelectedExperience] = useState(currentUser.experience && currentUser.experience.length > 0 ? currentUser.experience[0] : null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const handleDeleteExperience = async (experienceId: string) => {
+    try {
+        const confirmed = window.confirm('Are you sure you want to delete this Experience?');
+        if (!confirmed) {
+            return;
+        }
+
+        // Supprimez l'expérience côté serveur
+        await deleteExperience(currentUser.username, experienceId);
+        setMessage('Experience deleted successfully');
+
+        // Mettez à jour localement la liste des expériences en filtrant l'expérience supprimée
+        setExperiences((prevList) => prevList.filter((selectedExperience) => selectedExperience._id !== experienceId));
+
+        // Forcer le rechargement de la page
+        window.location.reload();
+    } catch (error) {
+        setMessage('Error deleting experience');
+        console.error(error);
+    }
+};
+const [isEditingExperienceModalOpen, setIsEditingExperienceModalOpen] = useState(false);
+   const [editingExperienceId, setEditingExperienceId] = useState<string>('');
+   const [editingExperienceData, setEditingExperienceData] = useState<Experience>({
+    _id: '',
+    title: '',
+    company: '',
+    startDate: '',
+    endDate: '',
+    description: ''
+  });
+  
+   const handleOpenEditExperienceModal = async (experienceId: string) => {
+      console.log('Opening edit modal for experience ID:', experienceId);
+      const experienceToEdit = experiences.find((exp) => exp._id === experienceId);
+      console.log('Experience List:', experiences);
+      if (experienceToEdit) {
+        setEditingExperienceId(experienceId);
+        setEditingExperienceData({
+          _id: experienceId,
+          title: experienceToEdit.title,
+          company: experienceToEdit.company,
+          startDate: experienceToEdit.startDate,
+          endDate: experienceToEdit.endDate,
+          description: experienceToEdit.description
+        });
+        setIsEditingExperienceModalOpen(true);
+        console.log('isEditingExperienceModalOpen:', isEditingExperienceModalOpen);
+      }
+    };
+    
+    const handleEditExperience = async (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      try {
+        const result = await updateExperience(currentUser.username, editingExperienceId, editingExperienceData);
+        console.log('Experience updated successfully:', result);
+        setExperiences((prevList) =>
+          prevList.map((exp) => (exp._id === editingExperienceId ? { ...exp, ...editingExperienceData } : exp))
+        );
+        setIsEditingExperienceModalOpen(false);
+           // Reload the page
+           window.location.reload();
+      } catch (error) {
+        console.error('Error updating experience:', error.message);
+      }
+    };
+    const handleEditExperienceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setEditingExperienceData((prevData) => ({
+        ...prevData,
+        [name]: value
+      }));
+    };
+  
   return (
     <>
       <div className="mb-10 mr-7 ml-7 rounded-lg bg-white border border-stroke shadow-md dark:border-strokedark dark:bg-boxdark">
@@ -104,9 +208,27 @@ const ExperienceCard = () => {
           <div className="w-3/4 p-4">
             {selectedExperience ? (
               <>
+              <div className="relative inline-block ">
+               <button id={`dropdownMenuIconButton-${selectedExperience._id}`} onClick={() => toggleDropdown(selectedExperience._id)}   aria-haspopup="true"  aria-expanded={isDropdownOpen[selectedExperience._id]}  className="inline-flex ml-80 items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
+                  <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor darck:bg-black dark:hover:bg-white" viewBox="0 0 4 15">
+                    <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
+                  </svg>
+                </button>
+                {isDropdownOpen[selectedExperience._id] && (
+                <div id={`dropdownDots-${selectedExperience._id}`} className=" absolute right-0 z-1  bg-gray divide-y divide-gray-100 rounded-lg shadow w-50 dark:bg-gray-700 dark:divide-gray-600" aria-labelledby={`dropdownMenuIconButton-${selectedExperience._id}`}>
+                  <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+                    <li><a  onClick={() => handleDeleteExperience(selectedExperience._id)} className="block px-4 py-2 hover:bg-gray-100 hover:text-esprit dark:hover:bg-gray-600 dark:hover:text-esprit cursor-pointer">Delete</a></li>
+                    <li><a  data-modal-target="update-modal" data-modal-toggle="update-modal" onClick={() =>handleOpenEditExperienceModal(selectedExperience._id)} className="block px-4 py-2 hover:bg-gray-100 hover:text-esprit dark:hover:bg-gray-600 dark:hover:text-esprit cursor-pointer">Update</a></li>
+                  
+
+                  
+                  </ul>
+                </div>
+                 )}
                 <h4 className="text-lg font-semibold text-red-700 dark:text-red-600">{selectedExperience.title}</h4>
                 <p className="text-sm text-gray-500 dark:text-white">{`${formatDate(selectedExperience.startDate)} to ${formatDate(selectedExperience.endDate)}`}</p>
                 <p className="text-gray-600 dark:text-white">{selectedExperience.description}</p>
+                </div>
               </>
             ) : (
               <p className="text-gray-500">Select an experience to see details.</p>
@@ -141,19 +263,26 @@ const ExperienceCard = () => {
             <label className="mb-2 text-sm font-medium  uppercase block text-black dark:text-white">
               startDate
             </label>
-            <DatePickerOne
-                            value={experienceData.startDate}
-                            onChange={(value) => setexperienceData((prevData) => ({ ...prevData, startDate: value }))}
-                           
-                        />
+              <input
+                    type="date"
+                    placeholder="Enter Date Start "
+                    className="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:border-red-800 dark:border-gray-500 dark:bg-gray-600 dark:text-black"
+                    value={experienceData.startDate}
+                    onChange={handleChange}
+                    name="startDate" 
+                  />
                  {errors.startDate && <p className="text-red-500">{errors.startDate}</p>}
             <label className="mb-2 text-sm font-medium  uppercase block text-black dark:text-white">
               endDate
             </label>
-            <DatePickerOne
-                            value={experienceData.endDate}
-                            onChange={(value) => setexperienceData((prevData) => ({ ...prevData, endDate: value }))}
-                        />
+            <input
+                    type="date"
+                    placeholder="Enter End Date "
+                    className="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:border-red-800 dark:border-gray-500 dark:bg-gray-600 dark:text-black"
+                    value={experienceData.endDate}
+                    onChange={handleChange}
+                    name="endDate" 
+                  />
                   {errors.endDate&& <p className="text-red-500">{errors.endDate}</p>}
             <label className="mb-2 text-sm font-medium block uppercase text-black dark:text-white">
               description
@@ -186,6 +315,85 @@ const ExperienceCard = () => {
 
 
         )}
+         {isEditingExperienceModalOpen && (
+
+<form className="p-4 md:p-5">
+  <label className="mb-2 text-sm font-medium block uppercase text-black dark:text-white">
+    title
+  </label>
+  <input
+    type="text"
+    placeholder="title"
+    name='title'
+    value={editingExperienceData.title}
+    onChange={handleEditExperienceChange}
+    className="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:border-red-800 dark:border-gray-500 dark:bg-gray-600 dark:text-black" />
+  <label className="mb-2 text-sm font-medium block uppercase text-black dark:text-white">
+    company Name
+  </label>
+  <input
+    type="text"
+    placeholder=" company Name"
+    name='company'
+    value={editingExperienceData.company}
+    onChange={handleEditExperienceChange}
+    className="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:border-red-800 dark:border-gray-500 dark:bg-gray-600 dark:text-black" />
+  <label className="mb-2 text-sm font-medium  uppercase block text-black dark:text-white">
+    startDate
+  </label>
+  <input
+          type="date"
+          placeholder="Enter Date Start "
+          className="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:border-red-800 dark:border-gray-500 dark:bg-gray-600 dark:text-black"
+          value={formatDate(editingExperienceData.startDate)}
+          onChange={handleEditExperienceChange}
+          name="startDate" 
+        />
+    
+
+  <label className="mb-2 text-sm font-medium  uppercase block text-black dark:text-white">
+    endDate
+  </label>
+              <input
+          type="date"
+          placeholder="Enter End Date "
+          className="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:border-red-800 dark:border-gray-500 dark:bg-gray-600 dark:text-black"
+          value={formatDate(editingExperienceData.endDate)}
+          onChange={handleEditExperienceChange}
+          name="endDate" 
+        />
+
+  <label className="mb-2 text-sm font-medium block uppercase text-black dark:text-white">
+    description
+  </label>
+  <textarea
+
+    placeholder="description"
+    name='description'
+    value={editingExperienceData.description}
+    onChange={handleEditExperienceChange}
+    className="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:border-red-800 dark:border-gray-500 dark:bg-gray-600 dark:text-black" />
+
+  <div className="flex mt-4 justify-center gap-4.5 mb-5">
+
+
+    <button
+      className=" flex  justify-center rounded-md border  py-2 px-6  text-center font-medium  hover:bg-opacity-90 lg:px-8 xl:px-10 focus:outline-none focus:shadow-outline cursor-pointer 
+                        border-red-900 bg-red-800 p-4 text-white transition
+                                dark:bg-red-500
+                          dark:hover:bg-red-400 dark:focus:ring-red-300 dark:border-red-900"
+      type="submit" onClick={handleEditExperience}
+
+    >
+      Save
+
+    </button>
+    <button onClick={() => setIsModalOpen(false)} className='dark:text-white dark:border-red-500 transition '>Close</button>
+  </div>
+</form>
+
+
+)}
       </div>
 
     </>);
