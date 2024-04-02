@@ -19,6 +19,8 @@ export interface Job {
 }
 
 export interface Internship {
+  interImage: string;
+  interCommpanyName: string;
   interTitle: string;
   interAdress?: string;
   interLocation: 'Ariana' | 'Beja' | 'Ben Arous' | 'Bizerte' | 'Gabes' | 'Gafsa' | 'Jendouba' | 'Kairouan' | 'Kasserine' | 'Kebili' | 'Kef' | 'Mahdia' | 'Manouba' | 'Medenine' | 'Monastir' | 'Nabeul' | 'Sfax' | 'Sidi Bouzid' | 'Siliana' | 'Sousse' | 'Tataouine' | 'Tozeur' | 'Tunis' | 'Zaghouan' | 'Other';
@@ -29,6 +31,7 @@ export interface Internship {
   interApplicationDeadline?: Date;
   interRequiredSkills?: string;
   interRequiredEducation: 'Bachelor degree 1st year' | 'Bachelor degree 2nd year' | 'Bachelor degree 3rd year' | 'Engineering degree 1st year' | 'Engineering degree 2nd year' | 'Engineering degree 3rd year' | 'PreEngineering 1st year' | 'PreEngineering 2nd year';
+  interType: 'Summer Internship' | 'PFE Internship';
   contactNumber?: number;
   interOtherInformation?: string;
 }
@@ -77,11 +80,11 @@ const jobService = {
   }
 };
 const internshipService = {
-  getAllInternships: async (education?: string, location?: string, field?: string): Promise<Internship[]> => {
+  getAllInternships: async (type?: string, location?: string, field?: string): Promise<Internship[]> => {
     try {
       const response: AxiosResponse<Internship[]> = await axios.get(`${API_BASE_URL}/intership/getAllInternships`, {
         params: {
-          education,
+          type,
           location,
           field
         }
@@ -102,6 +105,17 @@ const internshipService = {
       return response.data;
     } catch (error) {
       console.error('Error searching internships:', error);
+      throw error;
+    }
+  },
+  getInternshipById: async (internshipId: string): Promise<Internship> => {
+    try {
+      console.log(internshipId)
+      const response: AxiosResponse<Internship> = await axios.get(`${API_BASE_URL}/intership/getInternshipById/${internshipId}`);
+
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching internship by ID:', error);
       throw error;
     }
   }

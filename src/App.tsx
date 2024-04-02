@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation, useNavigate,BrowserRouter } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate, BrowserRouter } from 'react-router-dom';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
@@ -40,22 +40,26 @@ import SignUpStudent from './pages/Authentication/SignUpStudent';
 import Offers from './Offers/Offers';
 import JobOpp from '../src/pages/Opportunity/AddOpp/JobOpp'
 import IntershipOpp from '../src/pages/Opportunity/AddOpp/IntershipOpp'
+import EditJob from '../src/pages/Opportunity/UpdateOpp/jobUpdate'
+import EditInter from '../src/pages/Opportunity/UpdateOpp/intershipUpdate'
 
 import AboutUs from './AboutUs/AboutUs';
-import {useSelector} from "react-redux";
-import {selectCurrentUsername} from "./ApiSlices/authSlice";
-import {useGetUserInfoQuery} from "./ApiSlices/userApiSlice";
+import { useSelector } from "react-redux";
+import { selectCurrentUsername } from "./ApiSlices/authSlice";
+import { useGetUserInfoQuery } from "./ApiSlices/userApiSlice";
 import DesactiveAccount from './pages/Profil/desactiveaccoun';
 import ProfileCompany from './pages/Profil/profilcompany';
 import RederactionRoute from './pages/Profil/rederection';
 import ViewCompany from './pages/Profil/viewCompany';
-import Detailsjoboffer from './pages/Detailsjoboffer';import { useRefreshMutation } from './ApiSlices/authApiSlice';
+import Detailsjoboffer from './pages/Detailsjoboffer'; import { useRefreshMutation } from './ApiSlices/authApiSlice';
 import ProtectedRoute from './pages/Authentication/ProtectedRoute';
-//import PersistLoginRoute from './pages/Authentication/PersistLoginRoute';
+import PersistLoginRoute from './pages/Authentication/PersistLoginRoute';
 import AdminRoute from './pages/Authentication/SignUpFiles/ProtectedRouteAdmin';
 import OfferBrowsePage from './pages/Browsing/JobOfferBrowsing';
 import JobOfferView from './pages/Opportunity/JobOfferView';
 import Detailsintership from './pages/Detailsintership';
+import ApplicationsList from './pages/Applications/ApplicationsList';
+import InternshipOfferView from './pages/Opportunity/InternshipOfferView';
 
 function App() {
   const navigate = useNavigate();
@@ -79,7 +83,7 @@ function App() {
   }, []);
 
   //const currentUsername = useSelector(selectCurrentUsername);
-    //const { data: userInfo = {} } = useGetUserInfoQuery(currentUsername);
+  //const { data: userInfo = {} } = useGetUserInfoQuery(currentUsername);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -88,14 +92,14 @@ function App() {
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
-  
-  
+
+
 
   return loading ? (
     <Loader />
   ) : (
     <>
-  
+
       <Routes>
         <Route
           index
@@ -137,17 +141,37 @@ function App() {
             <>
               <PageTitle title="Browsing Offers" />
               <ProtectedRoute>
-                <OfferBrowsePage/>
+                <OfferBrowsePage />
               </ProtectedRoute>
             </>
           } />
         <Route
-          path="/Offers/:jobId"
+          path="/Offers/Jobs/:jobId"
           element={
             <>
               <PageTitle title="Apply Now!" />
               <ProtectedRoute>
-                <JobOfferView/>
+                <JobOfferView />
+              </ProtectedRoute>
+            </>
+          } />
+        <Route
+          path="/Offers/Internships/:internshipId"
+          element={
+            <>
+              <PageTitle title="Apply Now!" />
+              <ProtectedRoute>
+                <InternshipOfferView/>
+              </ProtectedRoute>
+            </>
+          } />
+        <Route
+          path="/Applications"
+          element={
+            <>
+              <PageTitle title="Your Applications" />
+              <ProtectedRoute>
+                <ApplicationsList/>
               </ProtectedRoute>
             </>
           } />
@@ -155,66 +179,66 @@ function App() {
           path="/Profile"
           element={
             <>
-            <PageTitle title="Your Profile" />
-            <ProtectedRoute>
-              <RederactionRoute>
-              <Profiletest/>
-              </RederactionRoute>
-            </ProtectedRoute>
+              <PageTitle title="Your Profile" />
+              <ProtectedRoute>
+                <RederactionRoute>
+                  <Profiletest />
+                </RederactionRoute>
+              </ProtectedRoute>
             </>
           }
-          
+
         />
-            <Route
+        <Route
           path="/Profilecompany"
           element={
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <ProtectedRoute>
-              <ProfileCompany/>
+                <ProfileCompany />
               </ProtectedRoute>
             </>
           }
-        
+
         />
-          <Route
+        <Route
           path="/company/:username"
           element={
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <ProtectedRoute>
-              <ViewCompany/>
+                <ViewCompany />
               </ProtectedRoute>
             </>
           }
         />
-          <Route
+        <Route
           path="/detailsoffer/:jobId"
           element={
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <ProtectedRoute>
-            <Detailsjoboffer/>
+                <Detailsjoboffer />
               </ProtectedRoute>
             </>
           } />
-           <Route
+        <Route
           path="/detailsintership/:id"
           element={
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <ProtectedRoute>
-            <Detailsintership/>
+                <Detailsintership />
               </ProtectedRoute>
             </>
           } />
-         <Route
+        <Route
           path="/UserDetails/:id"
           element={
             <>
               <PageTitle title="User Details" />
               <ProtectedRoute>
-              <UserDetails />
+                <UserDetails />
               </ProtectedRoute>
             </>
           }
@@ -225,28 +249,28 @@ function App() {
             <>
               <PageTitle title="Update Your Profile" />
               <ProtectedRoute>
-              <UpdateProfile />
+                <UpdateProfile />
               </ProtectedRoute>
             </>
           }
         />
-        <Route 
+        <Route
           path="/desactiveAccount"
           element={
             <>
               <PageTitle title="Update Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <ProtectedRoute>
-              <DesactiveAccount/>
+                <DesactiveAccount />
               </ProtectedRoute>
             </>
           }
         />
-        <Route 
+        <Route
           path="/desactiveAccount"
           element={
             <>
               <PageTitle title="Update Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <DesactiveAccount/>
+              <DesactiveAccount />
             </>
           }
         />
@@ -256,11 +280,11 @@ function App() {
             <>
               <PageTitle title="Profile" />
               <ProtectedRoute>
-              <OtherProfile />
+                <OtherProfile />
               </ProtectedRoute>
             </>
           }
-        /> 
+        />
         <Route
           path="/forms/form-elements"
           element={
@@ -344,15 +368,15 @@ function App() {
             </>
           }
         />
-       
-      
+
+
          <Route
           path="/Dashboard/ProfileAdmin/:username"
           element={
             <>
               <PageTitle title="Admin Profile" />
               <AdminRoute>
-              <ProfileAdmin />
+                <ProfileAdmin />
               </AdminRoute>
             </>
           }
@@ -363,7 +387,7 @@ function App() {
             <>
               <PageTitle title="Statistics" />
               <AdminRoute>
-              <StatisticPage />
+                <StatisticPage />
               </AdminRoute>
             </>
           }
@@ -374,7 +398,7 @@ function App() {
             <>
               <PageTitle title="Settings" />
               <AdminRoute>
-              <SettingsAdmin />
+                <SettingsAdmin />
               </AdminRoute>
             </>
           }
@@ -385,7 +409,7 @@ function App() {
             <>
               <PageTitle title="Update Admin Profile" />
               <AdminRoute>
-              <UpdateProfileAdmin />
+                <UpdateProfileAdmin />
               </AdminRoute>
             </>
           }
@@ -396,19 +420,19 @@ function App() {
             <>
               <PageTitle title="Security Settings" />
               <AdminRoute>
-              <AccountSecurityAdmin />
+                <AccountSecurityAdmin />
               </AdminRoute>
             </>
           }
         />
-       
+
         <Route
           path="/tables/AddUser"
           element={
             <>
               <PageTitle title="Adding User" />
               <AdminRoute>
-              <AddUser />
+                <AddUser />
               </AdminRoute>
             </>
           }
@@ -419,7 +443,7 @@ function App() {
             <>
               <PageTitle title="Settings" />
               <ProtectedRoute>
-              <Settings />
+                <Settings />
               </ProtectedRoute>
             </>
           }
@@ -457,7 +481,7 @@ function App() {
             <>
               <PageTitle title="Sign in" />
 
-                <SignIn />
+              <SignIn />
 
             </>
           }
@@ -471,7 +495,7 @@ function App() {
             </>
           }
         />
-         <Route
+        <Route
           path="/auth/signup/Student"
           element={
             <>
@@ -480,7 +504,7 @@ function App() {
             </>
           }
         />
-        
+
         <Route
           path="/auth/signUp/Company"
           element={
@@ -491,40 +515,40 @@ function App() {
           }
         />
         <Route
-        path='/pages/settings'
-        element={
-          <>
-          <PageTitle title="Settings" />
-          <Settings />
-          </>
-        }
+          path='/pages/settings'
+          element={
+            <>
+              <PageTitle title="Settings" />
+              <Settings />
+            </>
+          }
         />
         <Route
-        path='/pages/settings/updatePassword'
-        element={
-          <>
-          <PageTitle title="update Password" />
-          <UpdatePassword />
-          </>
-        }
+          path='/pages/settings/updatePassword'
+          element={
+            <>
+              <PageTitle title="update Password" />
+              <UpdatePassword />
+            </>
+          }
         />
         <Route
-        path='/pages/settings'
-        element={
-          <>
-          <PageTitle title="Settings" />
-          <Settings />
-          </>
-        }
+          path='/pages/settings'
+          element={
+            <>
+              <PageTitle title="Settings" />
+              <Settings />
+            </>
+          }
         />
         <Route
-        path='/pages/settings/updatePassword'
-        element={
-          <>
-          <PageTitle title="update Password" />
-          <UpdatePassword />
-          </>
-        }
+          path='/pages/settings/updatePassword'
+          element={
+            <>
+              <PageTitle title="update Password" />
+              <UpdatePassword />
+            </>
+          }
         />
         <Route
           path="/auth/EmailVerif"
@@ -545,40 +569,40 @@ function App() {
           }
         />
         <Route
-        path='/pages/settings'
-        element={
-          <>
-          <PageTitle title="Settings" />
-          <Settings />
-          </>
-        }
+          path='/pages/settings'
+          element={
+            <>
+              <PageTitle title="Settings" />
+              <Settings />
+            </>
+          }
         />
         <Route
-        path='/pages/settings/updatePassword'
-        element={
-          <>
-          <PageTitle title="update Password" />
-          <UpdatePassword />
-          </>
-        }
+          path='/pages/settings/updatePassword'
+          element={
+            <>
+              <PageTitle title="update Password" />
+              <UpdatePassword />
+            </>
+          }
         />
         <Route
-        path='/pages/settings'
-        element={
-          <>
-          <PageTitle title="Settings" />
-          <Settings />
-          </>
-        }
+          path='/pages/settings'
+          element={
+            <>
+              <PageTitle title="Settings" />
+              <Settings />
+            </>
+          }
         />
         <Route
-        path='/pages/settings/updatePassword'
-        element={
-          <>
-          <PageTitle title="Update Password" />
-          <UpdatePassword />
-          </>
-        }
+          path='/pages/settings/updatePassword'
+          element={
+            <>
+              <PageTitle title="Update Password" />
+              <UpdatePassword />
+            </>
+          }
         />
         <Route
           path="/auth/EmailVerif"
@@ -622,7 +646,7 @@ function App() {
             <>
               <PageTitle title="Offers" />
               <ProtectedRoute>
-              <Offers />
+                <Offers />
               </ProtectedRoute>
             </>
           }
@@ -637,7 +661,7 @@ function App() {
           }
         />
         <Route
-          path='Opportunity/job'
+          path='Profilecompany/:username/Opportunity/job'
           element={
             <>
               <PageTitle title="Add A Job Opportunity" />
@@ -646,7 +670,7 @@ function App() {
           }
         />
         <Route
-          path='Opportunity/intership'
+          path='Profilecompany/:username/Opportunity/intership'
           element={
             <>
               <PageTitle title="Add An Intership Opportunity" />
@@ -654,8 +678,28 @@ function App() {
             </>
           }
         />
+        <Route
+          path='/Profilecompany/Opportunity/EditJob/:jobId'
+          element={
+            <>
+              <PageTitle title="Edit A Job Opportunity" />
+              <EditJob />
+            </>
+          }
+        />
+
+        <Route
+          path='/Profilecompany/Opportunity/EditInternship/:internId'
+          element={
+            <>
+              <PageTitle title="Edit A Job Opportunity" />
+              <EditInter />
+            </>
+          }
+        />
+
       </Routes>
-  
+
     </>
   );
 }

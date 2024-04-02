@@ -42,8 +42,11 @@ const DropdownNotification = () => {
           setDropdownOpen(!dropdownOpen);
         }}
         to="#"
-        className="relative flex h-8.5 w-8.5 items-center justify-center rounded-full border-[0.5px] border-stroke bg-gray hover:text-primary dark:border-strokedark dark:bg-meta-4 dark:text-white"
+        className="relative flex h-9 w-9 items-center justify-center text-white
+        rounded-full border-[0.5px] border-stroke bg-red-600 hover:text-red-800
+        dark:border-strokedark dark:bg-meta-4 dark:text-white"
       >
+
         <span
           className={`absolute -top-0.5 right-0 z-1 h-2 w-2 rounded-full bg-meta-1 ${
             notifying === false ? 'hidden' : 'inline'
