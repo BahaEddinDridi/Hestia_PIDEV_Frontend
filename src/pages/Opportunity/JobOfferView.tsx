@@ -136,7 +136,7 @@ const JobOfferView = () => {
             </div>
             <div className="order-1 md:order-2 flex items-center justify-end">
               <div
-                className="profile-card w-[300px]  rounded-md shadow-lg overflow-hidden z-[100] relative
+                className="profile-card w-[300px]  rounded-md shadow-lg overflow-hidden z-40 relative
                 cursor-pointer snap-start shrink-0 bg-white flex flex-col items-center justify-center gap-3
                 transition-all duration-300 group"
               >
@@ -292,108 +292,144 @@ const JobOfferView = () => {
       </button>
       {isModalOpen && (
         <div
-          id="authentication-modal"
           className="fixed top-10 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-gray-800 bg-opacity-50"
         >
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xl font-semibold">Job Application Form</h3>
-              <button
-                onClick={toggleModal}
-                className="text-gray-600 hover:text-gray-800 focus:outline-none"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
+          <div
+            className="relative flex w-230 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md "
+          >
+            <div
+              className="relative mx-30 -mt-6 mb-4 grid h-28 place-items-center overflow-hidden
+              rounded-xl bg-gradient-to-tr from-red-600 to-red-400 bg-clip-border text-white shadow-lg shadow-red-600/40"
+            >
+              <div className="absolute top-0 right-0 m-4">
+                <button
+                  onClick={toggleModal}
+                  className="text-gray-600  hover:text-gray-800 focus:outline-none"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  ></path>
-                </svg>
-              </button>
-            </div>
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              <div>
-                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  name="fullName"
-                  id="fullName"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="Your Name..."
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="name@example.com"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                  Phone Number
-                </label>
-                <PhoneNumber onChange={(value, isValid) => handlePhoneNumberChange(value, isValid)} />
-              </div>
-              <div>
-                <label htmlFor="motivationLetter" className="block text-sm font-medium text-gray-700">
-                  Motivation Letter
-                </label>
-                <textarea
-                  name="motivationLetter"
-                  id="motivationLetter"
-                  rows="4"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="Write your letter of motivation here..."
-                  required
-                ></textarea>
-              </div>
-              <div>
-                <label htmlFor="resume" className="block text-sm font-medium text-gray-700">
-                  Resume (PDF)
-                </label>
-                <input
-                  type="file"
-                  name="resume"
-                  id="resume"
-                  accept="application/pdf"
-                  onChange={handleFileChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  required
-                />
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    ></path>
+                  </svg>
+                </button>
               </div>
 
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded-md transition duration-300 ease-in-out hover:bg-blue-700"
+              <h3
+                className="block font-sans text-2xl md:text-xl sm:text-sm
+                font-semibold leading-snug tracking-normal text-white antialiased"
               >
-                Submit Application
-              </button>
+                Job Application Form
+              </h3>
+
+            </div>
+            <form className="space-y-6 md:flex md:flex-col px-10" onSubmit={handleSubmit}>
+              <div className="flex flex-col space-x-6 md:flex-row">
+                {/* Left side inputs */}
+                <div className="md:w-1/2 pr-4 rounded-lg shadow-lg shadow-red-600/40 ">
+                  <div>
+                    <div className="ml-4 relative my-6">
+                      <input
+                        id="fullName"
+                        name="fullName"
+                        type="text"
+                        className="border-b w-75 border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit"
+                        required
+                      />
+                      <label
+                        htmlFor="fullName"
+                        className="absolute left-0 top-1 cursor-text peer-focus:text-xs peer-focus:-top-4 transition-all peer-focus:text-blue-700"
+                      >
+                        Full Name
+                      </label>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="ml-4 relative my-6">
+                      <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        className="border-b w-75 border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors
+                        focus:outline-none peer bg-inherit"
+                        required
+                      />
+                      <label
+                        htmlFor="email"
+                        className="absolute left-0 top-1 cursor-text peer-focus:text-xs peer-focus:-top-4 transition-all
+                        peer-focus:text-blue-700"
+                      >Email</label
+                      >
+                    </div>
+                  </div>
+                  <div className="ml-4 my-6">
+                    <PhoneNumber onChange={(value, isValid) => handlePhoneNumberChange(value, isValid)} />
+                  </div>
+                  <div className="ml-4">
+                    <label htmlFor="resume" className="block font-medium text-black dark:text-white">
+                      Resume (PDF)
+                    </label>
+                    <input
+                      type="file"
+                      name="resume"
+                      id="resume"
+                      accept="application/pdf"
+                      onChange={handleFileChange}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="md:w-1/2 pl-4 rounded-lg shadow-lg shadow-red-600/40">
+                  <div className="mt-6 mr-4">
+                    <label htmlFor="motivationLetter" className="block mb-3 font-medium text-black dark:text-white">
+                      Motivation Letter
+                    </label>
+                    <textarea
+                      name="motivationLetter"
+                      id="motivationLetter"
+                      rows="12"
+                      className="mb-3 block w-full rounded-md border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      placeholder="Write your letter of motivation here..."
+                      required
+                    ></textarea>
+                  </div>
+
+                </div>
+              </div>
+
+              <div className="flex  justify-center">
+                <button
+                  data-ripple-light="true"
+                  type="submit"
+                  className="block  mb-5 rounded-lg bg-gradient-to-tr
+                from-red-600 to-red-400 py-3 px-6 text-center align-middle font-sans
+                 text-xs font-bold uppercase text-white shadow-md shadow-red-500/20 transition-all
+                 hover:shadow-lg hover:shadow-red-500/40 "
+                >
+                  Submit Application
+                </button>
+              </div>
             </form>
+
 
           </div>
           {successMessage && (
-            <div className="fixed bg-green-200 top-50 justify-center items-center  text-green-800 p-4 rounded-md my-4">{successMessage}</div>
+            <div
+              className="fixed bg-green-200 top-50 justify-center items-center  text-green-800 p-4 rounded-md my-4">{successMessage}</div>
           )}
 
           {errorMessage && (
-            <div className="fixed bg-red-200 top-50 justify-center items-center text-red-800 p-4 rounded-md my-4">{errorMessage}</div>
+            <div
+              className="fixed bg-red-200 top-50 justify-center items-center text-red-800 p-4 rounded-md my-4">{errorMessage}</div>
           )}
         </div>
 

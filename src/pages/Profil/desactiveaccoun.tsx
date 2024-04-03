@@ -3,7 +3,10 @@ import DefaultLayout from '../../layout/DefaultLayout';
 import { useState } from 'react';
 import { deactivateAccount } from '../api';
 import { Link, useNavigate } from "react-router-dom";
+import { useSendLogoutMutation } from '../../ApiSlices/authApiSlice';
+
 const DesactiveAccount = () => {
+    const [sendLogout, { isLoading }] = useSendLogoutMutation();
     const navigate = useNavigate();
     const [duration, setDuration] = useState('');
     const [username, setUsername] = useState('');
@@ -33,6 +36,13 @@ const DesactiveAccount = () => {
                 if (response.success) {
                     console.log(response.message);
                     setSuccessMessage('Account desactivated');
+                    try {
+                        // @ts-ignore
+                        await sendLogout();
+                        console.log('Logout successful');
+                    } catch (err) {
+                        console.error('Logout failed', err);
+                    }
                     setTimeout(() => {
                         navigate('/auth/signin');
                       }, 2000);
