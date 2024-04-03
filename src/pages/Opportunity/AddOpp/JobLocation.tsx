@@ -1,6 +1,7 @@
 import React from 'react';
 
 const governorates: string[] = [
+  "",
   "Ariana",
   "Beja",
   "Ben Arous",
@@ -42,12 +43,8 @@ const JobLocation: React.FC<JobLocationProps> = ({ value, onChange }) => {
         name="jobLocation"
         value={value}
         onChange={(e) => {
-          // Vérifier si e et e.target sont définis
-          if (e && e.target) {
-            // Vérifier si e.target.value est défini
-            const selectedValue = e.target.value ?? ''; // Si e.target.value est undefined, utilisez une chaîne vide
-            onChange(selectedValue);
-          }
+          const selectedValue = e.target.value ?? '';
+          onChange(selectedValue); // Utilisez la fonction onChange pour mettre à jour la valeur de la localisation de l'emploi
         }}
       >
         {governorates.map((governorate, index) => (

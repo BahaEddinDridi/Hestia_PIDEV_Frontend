@@ -155,6 +155,13 @@ const SignIn: React.FC = () => {
         setErrorMessage('Invalid email or password.');
       } else if (err.status === 401) {
         setErrorMessage('Invalid email or password.');
+      } else if (err.status === 403) {
+        console.log(err.data.error)
+        if (err.data.error === 'Your profile is deactivated') {
+          setErrorMessage('Your profile is deactivated. Please contact support at <a href="mailto:hestia2024.5@outlook.com">hestia2024.5@outlook.com</a>.');
+        } else if (err.data.error === 'Your profile has been banned') {
+          setErrorMessage('Your profile has been banned. Please contact support at <a href="mailto:hestia2024.5@outlook.com">hestia2024.5@outlook.com</a>.');
+        }
       } else {
         setErrorMessage('An error occurred during login. Please try again.');
       }
@@ -177,7 +184,9 @@ const SignIn: React.FC = () => {
       setErrorMessage('Failed to initiate LinkedIn login');
     }
   };
-
+  const handleErrorMessage = (message: string) => {
+    return { __html: message };
+  };
 
   return (
     <DefaultLayoutLogin>
@@ -386,7 +395,7 @@ const SignIn: React.FC = () => {
           <div className="bg-red-200 border border-red-500 text-red-700 px-6 py-4 rounded-lg relative z-50"
                role="alert">
             <strong className="font-bold">Error!</strong>
-            <span className="block sm:inline"> {errorMessage}</span>
+            <span className="block sm:inline" dangerouslySetInnerHTML={handleErrorMessage(errorMessage)}></span>
           </div>
         </div>
       )}

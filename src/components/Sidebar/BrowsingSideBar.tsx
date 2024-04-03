@@ -4,24 +4,24 @@ interface Filters {
   locations: string[];
   experience: string;
   industry: string;
-  interRequiredEducation:string;
+  interType:string;
 }
 const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJobs: boolean }> = ({ onFilterChange, isJobs  }) => {
   const [filters, setFilters] = useState<Filters>({
     locations: [],
     experience: '',
     industry: '',
-    interRequiredEducation: ''
+    interType: ''
   });
   const locations = [
     "Ariana","Beja","Ben Arous","Bizerte","Gabes","Gafsa","Jendouba","Kairouan","Kasserine",
     "Kebili","Kef","Mahdia","Manouba","Medenine","Monastir","Nabeul","Sfax",
-    "Sidi Bouzid","Siliana","Sousse","Tataouine","Tozeur","Tunis","Zaghouan","Other"
+    "Sidi Bouzid","Siliana","Sousse","Tataouine","Tozeur","Tunis","Zaghouan",""
   ];
 
-  const experienceLevels = ['Junior', 'Intermediate','Senior','Entry-level','Mid-level','Experienced','Expert','Lead'];
+  const experienceLevels = ['Junior', 'Senior','Experienced'];
   const industries = ['Computer Science', 'Mechanical Engineering','Electromechanical Engineering','Civil Engineering','Business'];
-  const requiredEducation = ['Bachelor degree 1st year','Bachelor degree 2nd year','Bachelor degree 3rd year', 'Engineering degree 1st year', 'Engineering degree 2nd year', 'Engineering degree 3rd year',"PreEngineering 1st year","PreEngineering 2nd year"];
+  const internshipType = ['Summer Internship','PFE Internship'];
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFilters((prevFilters) => ({
@@ -46,16 +46,16 @@ const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJ
     const { value } = e.target;
     setFilters((prevFilters) => ({
       ...prevFilters,
-      interRequiredEducation: value,
+      interType: value,
     }));
-    onFilterChange({ ...filters, interRequiredEducation: value });
+    onFilterChange({ ...filters, interType: value });
   };
   const handleApplyFilters = () => {
     // Pass the selected filters to the parent component
     onFilterChange(filters);
   };
   const renderLocationGroups = () => {
-    const chunkSize = 10;
+    const chunkSize = 8;
     const locationGroups = [];
     for (let i = 0; i < locations.length; i += chunkSize) {
       locationGroups.push(locations.slice(i, i + chunkSize));
@@ -64,13 +64,14 @@ const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJ
   };
 
   return (
-    <div className="bg-gray-200 p-4">
-      <h2 className="text-lg font-semibold mb-4">Filters</h2>
-      <div className="mb-4 flex flex-wrap">
+    <div className="bg-gradient-to-r from-red-400 via-red-600 to-red-800 p-4 rounded-lg shadow-md">
+      <h2 className="text-lg font-semibold text-white text-center mb-4">Filters</h2>
+      <label htmlFor="location" className="font-medium text-white mb-1 ml-2">Location:</label>
+      <div className="mb-4 flex flex-wrap bg-white rounded-lg p-1 py-5">
         {renderLocationGroups().map((group, index) => (
-          <ul key={index} className="mb-2 px-1">
+          <ul key={index}  className={`mb- px-1 ${index < renderLocationGroups().length - 1 ? 'border-l border-gray-300' : ''}`}>
             {group.map((location, i) => (
-              <li key={i} className="flex items-center">
+              <li key={i} className="flex text-black items-center">
                 <input
                   type="checkbox"
                   id={location}
@@ -78,30 +79,42 @@ const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJ
                   value={location}
                   checked={filters.locations.includes(location)}
                   onChange={handleLocationChange}
-                  className="mr-1"
+                  className="hidden"
                 />
-                <label htmlFor={location}>{location}</label>
+                <label htmlFor={location} className="relative cursor-pointer flex items-center">
+                  <div className="w-5 flex-shrink-0">
+                    {filters.locations.includes(location) && (
+                      <svg className="h-4 w-4 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                           strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                      </svg>
+                    )}
+                  </div>
+                  <span className="ml-1">{location}</span>
+                </label>
               </li>
+
             ))}
           </ul>
         ))}
       </div>
       <div className="mb-4">
         <label htmlFor="experience"
-               className="block font-medium mb-1">{isJobs ? 'Experience Level:' : 'Education Level :'}</label>
+               className="block font-medium mb-1 text-white ml-2">{isJobs ? 'Experience Level :' : 'Internship Type :'}</label>
         <select
           name="experience"
           id="experience"
-          value={isJobs ? filters.experience : filters.interRequiredEducation}
+          value={isJobs ? filters.experience : filters.interType}
           onChange={isJobs ? handleFilterChange : handleEducationChange}
           className="w-full p-2 border border-gray-300 rounded-md"
         >
-          <option value="">{isJobs ? 'All Experience Levels' : 'All Education Levels'}</option>
+          <option value="">{isJobs ? 'All Experience Levels' : 'All Internship Types'}</option>
           {isJobs ? experienceLevels.map((option, index) => (
             <option key={index} value={option} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
               {option}
             </option>
-          )) : requiredEducation.map((option, index) => (
+          )) : internshipType.map((option, index) => (
             <option key={index} value={option} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
               {option}
             </option>
@@ -110,7 +123,7 @@ const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJ
       </div>
       {/* Industry filter */}
       <div className="mb-4">
-        <label htmlFor="industry" className="block font-medium mb-1">Industry:</label>
+        <label htmlFor="industry" className="block text-white font-medium mb-1 ml-2">Industry:</label>
         <select
           name="industry"
           id="industry"
@@ -120,8 +133,7 @@ const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJ
         >
           <option value="">All Industries</option>
           {industries.map((option, index) => (
-            <option key={index} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
+            <option key={index} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
               {option}
             </option>
           ))}

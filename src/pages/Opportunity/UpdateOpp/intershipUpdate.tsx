@@ -1,90 +1,98 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import DefaultLayout from "../../../layout/DefaultLayout";
 import JobLocation from '../AddOpp/JobLocation';
-import { Alert, input } from '@material-tailwind/react';
-import { AddIntership } from '../../api/opportunity';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectCurrentUser } from '../../../ApiSlices/authSlice';
-import { Link } from 'react-router-dom';
+import { UpdateInter, getInterById } from '../../api/opportunity';
 
-//Essai avant de lié avec un compte user
-// const defaultUser = {
-//     username: 'testuser',
-// };
+const formatDateForInput = (dateString: string) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
 
-const IntershipOpp: React.FC = () => {
-
-    const [interCommpanyName, setinterCommpanyName] = useState('')
-    const [interTitle, setinterTitle] = useState('')
-    const [interAdress, setinterAdress] = useState('')
-    const [interType, setinterType] = useState('')
-    const [interLocation, setinterLocation] = useState()
-    const [interDescription, setinterDescription] = useState('')
-    const [interPost, setinterPost] = useState('')
-    const [interfield, setinterfield] = useState()
-    const [interStartDate, setinterStartDate] = useState('')
-    const [interApplicationDeadline, setinterApplicationDeadline] = useState('')
-    const [interRequiredSkills, setinterRequiredSkills] = useState('')
-    const [interRequiredEducation, setinterRequiredEducation] = useState()
-    const [contactNumber, setcontactNumber] = useState('')
-    const [interOtherInformation, setinterOtherInformation] = useState('')
-    const [interImage, setinterImage] = useState('')
-    const [error, setError] = useState(false)
-    const currentUser = useSelector(selectCurrentUser);
-
+const EditInter: React.FC = () => {
+    const { internId } = useParams<{ internId: any }>(); // Extrait l'ID du travail de l'URL
     const [showModal, setShowModal] = useState(false);
     const [showModalBack, setShowModalBack] = useState(false);
-
     const [showSuccessMessage, setShowSuccessMessage] = useState(false); // New state
-
-
     const handleAddOpportunity = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault(); // Empêche le comportement par défaut du formulaire
         setShowModal(true);
     };
-
     const handleCancel = () => {
         setShowModal(false);
     };
 
-    const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault();
-        try {
-            //Obtenir la date actuelle
-            const currentDate = new Date();
-            const formattedDate = currentDate.toISOString();
-            const intershipData = {
-                interCommpanyName: currentUser.username,
-                interImage: currentUser.image,
-                interTitle: interTitle,
-                interAdress: interAdress,
-                interType: interType,
-                interLocation: interLocation,
-                interDescription: interDescription,
-                interPost: interPost,
-                interfield: interfield,
-                interStartDate: formattedDate,
-                interApplicationDeadline: interApplicationDeadline,
-                interRequiredSkills: interRequiredSkills,
-                interRequiredEducation: interRequiredEducation,
-                contactNumber: contactNumber,
-                interOtherInformation: interOtherInformation,
-            };
-            await AddIntership(currentUser.username, intershipData);
-            setShowModal(false);
-            setShowSuccessMessage(true); // Mettre à jour l'état pour afficher le message de succès
-            setTimeout(() => {
-                setShowSuccessMessage(false); // Cacher le message de succès après quelques secondes
-                window.location.href = '/Profilecompany'; // Rediriger après l'ajout avec succès
-            }, 3000);
-            console.log('Intership data:', intershipData);
-            console.log("intership added successfully");
-        } catch (error: any) {
-            console.error('An error occurred while adding intership:', error);
+    const [interData, setinterData] = useState<any>({
+        interTitle: '',
+        interAdress: '',
+        interType: '',
+        interLocation: '',
+        interDescription: '',
+        interPost: '',
+        interfield: '',
+        interStartDate: '',
+        interApplicationDeadline: '',
+        interRequiredSkills: '',
+        interRequiredEducation: '',
+        contactNumber: '',
+        interOtherInformation: ''
+    });
 
+    useEffect(() => {
+        console.log("Initial jobData:", interData);
+        if (internId) {
+            const fetchJobData = async () => {
+                try {
+                    const response = await getInterById(internId);
+                    setinterData(response);
+                    console.log("Data fetched:", response);
+                } catch (error) {
+                    console.error('Erreur lors de la récupération des données de l\'offre d\'emploi :', error);
+                    // Affichage d'une alerte pour informer l'utilisateur de l'erreur
+                    alert('Une erreur s\'est produite lors de la récupération des données de l\'offre d\'emploi. Veuillez réessayer.');
+                }
+            };
+
+            fetchJobData();
         }
+    }, [internId]);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        console.log("Input changed - Name:", name, "Value:", value);
+        setinterData((prevState: any) => ({
+            ...prevState,
+            [name]: value
+        }));
     };
 
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        console.log("Submitting jobData:", interData);
+        try {
+            if (internId) { // Vérifier si jobId est défini
+                // Appel de la fonction d'API pour mettre à jour l'offre d'emploi
+                const result = await UpdateInter(internId, interData);
+                console.log('Profile updated successfully:', result);
+                setShowModal(false);
+                setShowSuccessMessage(true); // Mettre à jour l'état pour afficher le message de succès
+                setTimeout(() => {
+                    setShowSuccessMessage(false); // Cacher le message de succès après quelques secondes
+                    window.location.href = '/Profilecompany'; // Rediriger après l'ajout avec succès
+                }, 3000);
+            } else {
+                console.error('No jobId provided');
+                alert('Une erreur s\'est produite lors de la mise à jour de l\'offre d\'emploi. Veuillez réessayer.');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la mise à jour de l\'offre d\'emploi :', error);
+            // Logique pour afficher un message d'erreur à l'utilisateur
+            alert('Une erreur s\'est produite lors de la mise à jour de l\'offre d\'emploi. Veuillez réessayer.');
+        }
+    };
 
     //////////////pour le retour au profil//////////////////////
     const handleShowModalBack = (e: React.FormEvent<HTMLFormElement>) => {
@@ -100,20 +108,12 @@ const IntershipOpp: React.FC = () => {
         setShowModalBack(false); // Fermer le modal sans effectuer d'action
     };
 
-
-
-    //const currentUser = useSelector(selectCurrentUser) || defaultUser;
-
-
-
-
-
     return (
         <DefaultLayout>
             {showSuccessMessage && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-opacity-50">
                     <div className="bg-green-400 p-6 rounded-lg">
-                        <p className='text-white'>Opportunity added successfully!</p>
+                        <p className='text-white'>Opportunity Updated successfully!</p>
                         <button
                             onClick={() => setShowSuccessMessage(false)}
                             className="absolute top-0 right-0 m-4 text-gray-500 hover:text-gray-700 focus:outline-none"
@@ -142,11 +142,11 @@ const IntershipOpp: React.FC = () => {
                 <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
                     <div className="bg-white p-6 rounded-lg">
                         <p className="text-black">
-                            Are you sure you want to add this opportunity?
+                            Are you sure you want to edit this opportunity?
                         </p>
                         <div className="mt-4 flex justify-end">
                             <button
-                                onClick={handleConfirm}
+                                onClick={handleSubmit}
                                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 mr-2"
                             >
                                 Confirm
@@ -203,13 +203,15 @@ const IntershipOpp: React.FC = () => {
                                     <div className="md:flex-1 mt-2 mb:mt-0 md:px-3">
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-xs font-bold text-OppSarra2R">Title</label>
-                                            <input onChange={e => setinterTitle(e.target.value)} className="w-full shadow-4 p-4 border-0 xs" type="text" name="name" placeholder=" Acme Mfg. Co." />
+                                            <input className="w-full shadow-4 p-4 border-0 xs" type="text" name="interTitle" placeholder=" Acme Mfg. Co." 
+                                            value={interData?.interTitle || ''}
+                                            onChange={handleInputChange} />
                                         </div>
 
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Intership Field</label>
-                                            <select className="w-full shadow-4 p-4 border-0" name="jobType" value={interfield}
-                                                onChange={e => setinterfield(e.target.value)}>
+                                            <select className="w-full shadow-4 p-4 border-0" name="interfield" value={interData?.interfield || ''}
+                                                onChange={handleInputChange}>
                                                     <option value=""></option>
                                                 <option value="Computer Science">Computer Science</option>
                                                 <option value="Mechanical Engineering">Mechanical Engineering</option>
@@ -220,24 +222,31 @@ const IntershipOpp: React.FC = () => {
                                         </div>
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Intership Type</label>
-                                            <select className="w-full shadow-4 p-4 border-0" name="jobType" value={interType}
-                                                onChange={e => setinterType(e.target.value)}>
-                                                    <option value=""></option>
+                                            <select className="w-full shadow-4 p-4 border-0" name="interType" 
+                                            value={interData?.interType || ''}
+                                            onChange={handleInputChange}>
+                                                <option value=""></option>
                                                 <option value="Summer Internship">Summer Internship</option>
                                                 <option value="PFE Internship">PFE Internship</option>
                                             </select>
                                         </div>
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Reference Contact</label>
-                                            <input className="w-full shadow-4 p-4 border-0" type="tel" name="lon" placeholder="(555) 555-5555" onChange={e => setcontactNumber(e.target.value)} />
+                                            <input className="w-full shadow-4 p-4 border-0" type="tel" name="contactNumber" placeholder="(555) 555-5555" 
+                                            value={interData?.contactNumber || ''}
+                                            onChange={handleInputChange} />
                                         </div>
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-xs font-bold text-OppSarra2R">Post</label>
-                                            <input className="w-full shadow-4 p-4 border-0 xs" type="text" name="name" placeholder=" Acme Mfg. Co." onChange={e => setinterPost(e.target.value)} />
+                                            <input className="w-full shadow-4 p-4 border-0 xs" type="text" name="interPost" placeholder=" Acme Mfg. Co." 
+                                            value={interData?.interPost || ''}
+                                            onChange={handleInputChange} />
                                         </div>
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Application Deadline</label>
-                                            <input className="w-full shadow-4 p-4 border-0" type="date" name="address_number" placeholder="#3" onChange={e => setinterApplicationDeadline(e.target.value)} />
+                                            <input className="w-full shadow-4 p-4 border-0" type="date" name="interApplicationDeadline" placeholder="#3" 
+                                            value={interData?.interApplicationDeadline ? formatDateForInput(interData.interApplicationDeadline) : ''}
+                                            onChange={handleInputChange} />
                                             {/* <span className="text-xs mb-4 font-thin">We lied, this isn't required.</span> */}
                                         </div>
                                     </div>
@@ -249,7 +258,9 @@ const IntershipOpp: React.FC = () => {
                                         <p className="text-xs font-light text-esprit">** This entire section is required.</p>
                                     </div>
                                     <div className="md:flex-1 mt-2 mb:mt-0 md:px-3">
-                                        <textarea className="w-full shadow-4 p-4 border-0" placeholder="We build fine acmes." rows="2" onChange={e => setinterDescription(e.target.value)}></textarea>
+                                        <textarea className="w-full shadow-4 p-4 border-0" placeholder="We build fine acmes." rows="2" name="interDescription" 
+                                        value={interData?.interDescription || ''}
+                                                onChange={handleInputChange}></textarea>
                                     </div>
                                 </div>
                                 <hr className="w-full border-t border-graydouble mb-10"></hr>
@@ -262,23 +273,28 @@ const IntershipOpp: React.FC = () => {
 
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-xs font-bold text-OppSarra2R">Address</label>
-                                            <input className="w-full shadow-4 p-4 border-0 xs" type="text" name="name" placeholder=" Acme Mfg. Co." onChange={e => setinterAdress(e.target.value)} />
+                                            <input className="w-full shadow-4 p-4 border-0 xs" type="text" name="interAdress" placeholder=" Acme Mfg. Co."
+                                            value={interData?.interAdress || ''}
+                                            onChange={handleInputChange} />
                                         </div>
                                         <JobLocation
-                                            value={interLocation}
-                                            onChange={newValue => setinterLocation(newValue)}
+                                            value={interData?.interLocation || ''}
+                                            onChange={(value) => setinterData({ ...interData, interLocation: value })}
                                         />
 
 
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required skills</label>
-                                            <textarea className="w-full shadow-4 p-4 border-0" placeholder="required skills" rows="2" onChange={e => setinterRequiredSkills(e.target.value)}></textarea>
+                                            <textarea className="w-full shadow-4 p-4 border-0" placeholder="required skills" rows="2" name="interRequiredSkills"
+                                            value={interData?.interRequiredSkills || ''}
+                                            onChange={handleInputChange}></textarea>
                                         </div>
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required education</label>
-                                            <select className="w-full shadow-4 p-4 border-0" name="jobType" value={interRequiredEducation}
-                                                onChange={e => setinterRequiredEducation(e.target.value)}>
-                                                    <option value=""></option>
+                                            <select className="w-full shadow-4 p-4 border-0" name="interRequiredEducation" 
+                                            value={interData?.interRequiredEducation || ''}
+                                            onChange={handleInputChange}>
+                                                <option value=""></option>
                                                 <option value="PreEngineering 1st year">PreEngineering 1st year</option>
                                                 <option value="PreEngineering 2nd year">PreEngineering 2nd year</option>
                                                 <option value="Bachelor degree 1st year">Bachelor degree 1st year</option>
@@ -299,7 +315,9 @@ const IntershipOpp: React.FC = () => {
                                     <div className="md:flex-1 mt-2 mb:mt-0 md:px-3">
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">additional Info</label>
-                                            <textarea className="w-full shadow-4 p-4 border-0" placeholder="required skills" rows="2" onChange={e => setinterOtherInformation(e.target.value)}></textarea>
+                                            <textarea className="w-full shadow-4 p-4 border-0" placeholder="required skills" rows="2" name="interOtherInformation"
+                                            value={interData?.interOtherInformation || ''}
+                                            onChange={handleInputChange}></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -308,7 +326,7 @@ const IntershipOpp: React.FC = () => {
                                     <div className="md:flex-1 px-3 text-center md:text-left">
                                         <Link to="/Profilecompany">
                                             <button
-                                                onClick={handleShowModalBack} // Affiche le modal
+                                                onClick={handleShowModalBack}
                                                 className="bg-red-300 hover:bg-esprit text-white font-bold py-3 px-6 mt-6 rounded-full shadow-lg hover:text-white shadow-white transform transition-all duration-500 ease-in-out hover:scale-110 hover:brightness-110 hover:animate-pulse active:animate-bounce">
                                                 Back to Profile
                                             </button>
@@ -331,4 +349,4 @@ const IntershipOpp: React.FC = () => {
         </DefaultLayout>
     );
 };
-export default IntershipOpp;
+export default EditInter;

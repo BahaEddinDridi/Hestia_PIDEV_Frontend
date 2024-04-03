@@ -1,16 +1,16 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import DefaultLayout from '../../layout/DefaultLayout';
-import { jobService } from '../Browsing/API/Services';
+import { internshipService, jobService } from '../Browsing/API/Services';
 import PhoneInput from 'react-phone-input-2';
 import ApplicationService from '../Applications/API/Services';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../ApiSlices/authSlice';
 import PhoneNumber from '../Authentication/SignUpFiles/PhoneNumber';
 
-const JobOfferView = () => {
-  const { jobId } = useParams();
-  const [job, setJob] = useState(null);
+const InternshipOfferView = () => {
+  const {internshipId} = useParams();
+  const [internship, setInternship] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState('');
@@ -21,17 +21,18 @@ const JobOfferView = () => {
   const currentUser = useSelector(selectCurrentUser);
 
   useEffect(() => {
-    const fetchJob = async () => {
+    const fetchInternship = async () => {
       try {
-        const fetchedJob = await jobService.getJobById(jobId);
-        setJob(fetchedJob);
+        const fetchedInternship = await internshipService.getInternshipById(internshipId);
+        setInternship(fetchedInternship);
+        console.log(internship.interCommpanyName)
       } catch (error) {
-        console.error('Error fetching job:', error);
+        console.error('Error fetching internship:', error);
       }
     };
 
-    fetchJob();
-  }, [jobId]);
+    fetchInternship();
+  }, [internshipId]);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -59,7 +60,7 @@ const JobOfferView = () => {
       }
       catch (error) {
         console.error('Error uploading image:', error);
-    }
+      }
     }
   }
 
@@ -85,7 +86,7 @@ const JobOfferView = () => {
     }
 
     try {
-      await ApplicationService.saveApplication({
+      await ApplicationService.saveInternshipApplication({
         fullName,
         email,
         phoneNumber,
@@ -93,10 +94,10 @@ const JobOfferView = () => {
         motivationLetter,
         resume,
         userId : currentUser._id,
-        jobId : jobId,
-        companyName : job.jobCommpanyName,
-        companyLogo : job.jobImage,
-        jobTitle : job.jobTitle,
+        internshipId : internshipId,
+        companyName : internship.interCommpanyName,
+        companyLogo : internship.interImage,
+        jobTitle : internship.interTitle,
       });
       setSuccessMessage('Application submitted successfully');
       setErrorMessage('');
@@ -106,8 +107,8 @@ const JobOfferView = () => {
       }, 2000);
     } catch (error) {
       console.log(error);
-      if (error.response && error.response.data && error.response.data.error === 'User has already applied for this job') {
-        setErrorMessage('You have already submitted an application for this job offer');
+      if (error.response && error.response.data && error.response.data.error === 'User has already applied for this internship') {
+        setErrorMessage('You have already submitted an application for this internship offer');
       } else if (error.response && error.response.data && error.response.data.error) {
         setErrorMessage(error.response.data.error);
       } else {
@@ -121,7 +122,7 @@ const JobOfferView = () => {
   };
   return (
     <DefaultLayout>
-      {job && (
+      {internship && (
         <div
           className="p-6 mx-26 bg-gray border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 p-10 mr-5">
@@ -129,14 +130,14 @@ const JobOfferView = () => {
               <div
                 className="p-6 bg-white border border-gray-200 w-full h-1/2 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
                 <div className="mb-6 text-center">
-                  <h2 className="text-xl font-semibold mb-2">{job.jobTitle}</h2>
-                  <h4 className="text-xl font-semibold mb-2">{job.jobPost}</h4>
+                  <h2 className="text-xl font-semibold mb-2">{internship.interTitle}</h2>
+                  <h4 className="text-xl font-semibold mb-2">{internship.interPost}</h4>
                 </div>
               </div>
             </div>
             <div className="order-1 md:order-2 flex items-center justify-end">
               <div
-                className="profile-card w-[300px]  rounded-md shadow-lg overflow-hidden z-40 relative
+                className="profile-card w-[300px]  rounded-md shadow-lg overflow-hidden z-[100] relative
                 cursor-pointer snap-start shrink-0 bg-white flex flex-col items-center justify-center gap-3
                 transition-all duration-300 group"
               >
@@ -163,23 +164,23 @@ const JobOfferView = () => {
                         width="100%"
                         height="100%"
                         preserveAspectRatio="xMidYMid slice"
-                      xlinkHref={job.jobImage}
-                    />
-                  </svg>
+                        xlinkHref={internship.interImage}
+                      />
+                    </svg>
 
-                  <div
-                    className="absolute bg-red-700 z-10 size-[60%] w-full group-hover:size-[1%]
+                    <div
+                      className="absolute bg-red-700 z-10 size-[60%] w-full group-hover:size-[1%]
                       group-hover:transition-all group-hover:duration-300 transition-all duration-300 delay-700
                        group-hover:delay-0"
-                  ></div>
+                    ></div>
+                  </div>
                 </div>
-              </div>
-              <div className="headings *:text-center *:leading-4">
-                <p className="text-xl font-serif font-semibold text-[#434955]">{job.jobCommpanyName}</p>
-              </div>
-              <div className="w-full items-center justify-center flex">
-                <ul
-                  className="flex flex-col items-start gap-2 has-[:last]:border-b-0 *:inline-flex *:gap-2 *:items-center *:justify-center *:border-b-[1.5px] *:border-b-stone-700 *:border-dotted *:text-xs *:font-semibold *:text-[#434955] pb-3"
+                <div className="headings *:text-center *:leading-4">
+                  <p className="text-xl font-serif font-semibold text-[#434955]">{internship.interCommpanyName}</p>
+                </div>
+                <div className="w-full items-center justify-center flex">
+                  <ul
+                    className="flex flex-col items-start gap-2 has-[:last]:border-b-0 *:inline-flex *:gap-2 *:items-center *:justify-center *:border-b-[1.5px] *:border-b-stone-700 *:border-dotted *:text-xs *:font-semibold *:text-[#434955] pb-3"
                   >
                     <li>
                       <svg
@@ -195,7 +196,7 @@ const JobOfferView = () => {
                           d="M19.23 15.26l-2.54-.29c-.61-.07-1.21.14-1.64.57l-1.84 1.84c-2.83-1.44-5.15-3.75-6.59-6.59l1.85-1.85c.43-.43.64-1.03.57-1.64l-.29-2.52c-.12-1.01-.97-1.77-1.99-1.77H5.03c-1.13 0-2.07.94-2 2.07.53 8.54 7.36 15.36 15.89 15.89 1.13.07 2.07-.87 2.07-2v-1.73c.01-1.01-.75-1.86-1.76-1.98z"
                         ></path>
                       </svg>
-                      <p>{job.contactNumber}</p>
+                      <p>{internship.contactNumber}</p>
                     </li>
                     <li>
                       <svg
@@ -249,7 +250,7 @@ const JobOfferView = () => {
                           fill="#444"
                         ></path>
                       </svg>
-                      <p>{job.jobAdress}</p>
+                      <p>{internship.jobAdress}</p>
                     </li>
                   </ul>
                 </div>
@@ -262,17 +263,16 @@ const JobOfferView = () => {
           </div>
           <div className="border bg-white border-gray-200 rounded-lg  p-4 shadow-lg dark:border-gray-700">
             <h3 className="text-lg font-semibold mb-2">Job Details</h3>
-            <p><span className="font-semibold">Description:</span> {job.jobDescription}</p>
-            <p><span className="font-semibold">Required Experience:</span> {job.jobRequiredExperience}</p>
-            <p><span className="font-semibold">Required Skills:</span> {job.jobRequiredSkills}</p>
-            <p><span className="font-semibold">Required Education:</span> {job.jobRequiredEducation}</p>
-            <p><span className="font-semibold">Field:</span> {job.jobfield}</p>
-            <p><span className="font-semibold">Location:</span> {job.jobLocation}</p>
-            <p><span className="font-semibold">Address:</span> {job.jobAdress}</p>
-            <p><span className="font-semibold">Salary:</span> {job.salary} DT</p>
-            <p><span className="font-semibold">Other Information:</span> {job.jobOtherInformation}</p>
+            <p><span className="font-semibold">Description:</span> {internship.interDescription}</p>
+            <p><span className="font-semibold">Required Skills:</span> {internship.interRequiredSkills}</p>
+            <p><span className="font-semibold">Required Education:</span> {internship.interRequiredEducation}</p>
+            <p><span className="font-semibold">Field:</span> {internship.interfield}</p>
+            <p><span className="font-semibold">Location:</span> {internship.interLocation}</p>
+            <p><span className="font-semibold">Address:</span> {internship.interAdress}</p>
+            <p><span className="font-semibold">Internship Type:</span> {internship.interType} DT</p>
+            <p><span className="font-semibold">Other Information:</span> {internship.interOtherInformation}</p>
             <h3 className="text-lg font-semibold mb-2">Contact Information</h3>
-            <p><span className="font-semibold">Contact Number:</span> {job.contactNumber}</p>
+            <p><span className="font-semibold">Contact Number:</span> {internship.contactNumber}</p>
           </div>
 
 
@@ -292,144 +292,108 @@ const JobOfferView = () => {
       </button>
       {isModalOpen && (
         <div
+          id="authentication-modal"
           className="fixed top-10 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-gray-800 bg-opacity-50"
         >
-          <div
-            className="relative flex w-230 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md "
-          >
-            <div
-              className="relative mx-30 -mt-6 mb-4 grid h-28 place-items-center overflow-hidden
-              rounded-xl bg-gradient-to-tr from-red-600 to-red-400 bg-clip-border text-white shadow-lg shadow-red-600/40"
-            >
-              <div className="absolute top-0 right-0 m-4">
-                <button
-                  onClick={toggleModal}
-                  className="text-gray-600  hover:text-gray-800 focus:outline-none"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    ></path>
-                  </svg>
-                </button>
-              </div>
-
-              <h3
-                className="block font-sans text-2xl md:text-xl sm:text-sm
-                font-semibold leading-snug tracking-normal text-white antialiased"
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-xl font-semibold">Job Application Form</h3>
+              <button
+                onClick={toggleModal}
+                className="text-gray-600 hover:text-gray-800 focus:outline-none"
               >
-                Job Application Form
-              </h3>
-
-            </div>
-            <form className="space-y-6 md:flex md:flex-col px-10" onSubmit={handleSubmit}>
-              <div className="flex flex-col space-x-6 md:flex-row">
-                {/* Left side inputs */}
-                <div className="md:w-1/2 pr-4 rounded-lg shadow-lg shadow-red-600/40 ">
-                  <div>
-                    <div className="ml-4 relative my-6">
-                      <input
-                        id="fullName"
-                        name="fullName"
-                        type="text"
-                        className="border-b w-75 border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors focus:outline-none peer bg-inherit"
-                        required
-                      />
-                      <label
-                        htmlFor="fullName"
-                        className="absolute left-0 top-1 cursor-text peer-focus:text-xs peer-focus:-top-4 transition-all peer-focus:text-blue-700"
-                      >
-                        Full Name
-                      </label>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="ml-4 relative my-6">
-                      <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        className="border-b w-75 border-gray-300 py-1 focus:border-b-2 focus:border-blue-700 transition-colors
-                        focus:outline-none peer bg-inherit"
-                        required
-                      />
-                      <label
-                        htmlFor="email"
-                        className="absolute left-0 top-1 cursor-text peer-focus:text-xs peer-focus:-top-4 transition-all
-                        peer-focus:text-blue-700"
-                      >Email</label
-                      >
-                    </div>
-                  </div>
-                  <div className="ml-4 my-6">
-                    <PhoneNumber onChange={(value, isValid) => handlePhoneNumberChange(value, isValid)} />
-                  </div>
-                  <div className="ml-4">
-                    <label htmlFor="resume" className="block font-medium text-black dark:text-white">
-                      Resume (PDF)
-                    </label>
-                    <input
-                      type="file"
-                      name="resume"
-                      id="resume"
-                      accept="application/pdf"
-                      onChange={handleFileChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="md:w-1/2 pl-4 rounded-lg shadow-lg shadow-red-600/40">
-                  <div className="mt-6 mr-4">
-                    <label htmlFor="motivationLetter" className="block mb-3 font-medium text-black dark:text-white">
-                      Motivation Letter
-                    </label>
-                    <textarea
-                      name="motivationLetter"
-                      id="motivationLetter"
-                      rows="12"
-                      className="mb-3 block w-full rounded-md border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                      placeholder="Write your letter of motivation here..."
-                      required
-                    ></textarea>
-                  </div>
-
-                </div>
-              </div>
-
-              <div className="flex  justify-center">
-                <button
-                  data-ripple-light="true"
-                  type="submit"
-                  className="block  mb-5 rounded-lg bg-gradient-to-tr
-                from-red-600 to-red-400 py-3 px-6 text-center align-middle font-sans
-                 text-xs font-bold uppercase text-white shadow-md shadow-red-500/20 transition-all
-                 hover:shadow-lg hover:shadow-red-500/40 "
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  Submit Application
-                </button>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  name="fullName"
+                  id="fullName"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  placeholder="Your Name..."
+                  required
+                />
               </div>
-            </form>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  placeholder="name@example.com"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                  Phone Number
+                </label>
+                <PhoneNumber onChange={(value, isValid) => handlePhoneNumberChange(value, isValid)} />
+              </div>
+              <div>
+                <label htmlFor="motivationLetter" className="block text-sm font-medium text-gray-700">
+                  Motivation Letter
+                </label>
+                <textarea
+                  name="motivationLetter"
+                  id="motivationLetter"
+                  rows="4"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  placeholder="Write your letter of motivation here..."
+                  required
+                ></textarea>
+              </div>
+              <div>
+                <label htmlFor="resume" className="block text-sm font-medium text-gray-700">
+                  Resume (PDF)
+                </label>
+                <input
+                  type="file"
+                  name="resume"
+                  id="resume"
+                  accept="application/pdf"
+                  onChange={handleFileChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  required
+                />
+              </div>
 
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white py-2 rounded-md transition duration-300 ease-in-out hover:bg-blue-700"
+              >
+                Submit Application
+              </button>
+            </form>
 
           </div>
           {successMessage && (
-            <div
-              className="fixed bg-green-200 top-50 justify-center items-center  text-green-800 p-4 rounded-md my-4">{successMessage}</div>
+            <div className="fixed bg-green-200 top-50 justify-center items-center  text-green-800 p-4 rounded-md my-4">{successMessage}</div>
           )}
 
           {errorMessage && (
-            <div
-              className="fixed bg-red-200 top-50 justify-center items-center text-red-800 p-4 rounded-md my-4">{errorMessage}</div>
+            <div className="fixed bg-red-200 top-50 justify-center items-center text-red-800 p-4 rounded-md my-4">{errorMessage}</div>
           )}
         </div>
 
@@ -439,4 +403,4 @@ const JobOfferView = () => {
   );
 };
 
-export default JobOfferView;
+export default InternshipOfferView;

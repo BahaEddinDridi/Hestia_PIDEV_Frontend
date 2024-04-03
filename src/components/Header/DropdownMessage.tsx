@@ -40,14 +40,15 @@ const DropdownMessage = () => {
   });
 
   return (
-    <li className="relative">
+    <li className="relative mr-10">
       <Link
         ref={trigger}
         onClick={() => {
           setNotifying(false);
           setDropdownOpen(!dropdownOpen);
         }}
-        className="relative flex h-8.5 w-8.5 items-center justify-center rounded-full border-[0.5px] border-stroke bg-gray hover:text-primary dark:border-strokedark dark:bg-meta-4 dark:text-white"
+        className="relative flex h-9 w-9 items-center justify-center rounded-full border-[0.5px]
+        border-stroke bg-red-600 text-white hover:text-red-800 dark:border-strokedark dark:bg-meta-4 dark:text-white"
         to="#"
       >
         <span
