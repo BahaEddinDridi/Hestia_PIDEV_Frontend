@@ -4,12 +4,15 @@ import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../ApiSlices/authSlice';
 import PhoneNumber from '../Authentication/SignUpFiles/PhoneNumber';
 import ApplicationService from './API/Services';
+import Pagination from '../../backoffice/pagination/pagination';
+import AppPagination from './AppPagination';
 
 const ApplicationsList = () => {
   const currentUser = useSelector(selectCurrentUser);
-  const applications = currentUser.applications;
+  const [applications, setApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteModel, setDeleteModel] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string | null>(null)
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -17,7 +20,10 @@ const ApplicationsList = () => {
   const [email, setEmail] = useState(selectedApplication?.email || '');
   const [motivationLetter, setMotivationLetter] = useState(selectedApplication?.motivationLetter || '');
   const [jobId, setJobId] = useState(selectedApplication?.job || '')
-
+  const [applicationToDelete, setApplicationToDelete] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalApplications, setTotalApplications] = useState(0);
+  const applicationsPerPage = 5;
 
   useEffect(() => {
     if (selectedApplication) {
@@ -29,6 +35,24 @@ const ApplicationsList = () => {
       setJobId(selectedApplication.jobId || null);
     }
   }, [selectedApplication]);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response  = await ApplicationService.getApplicationsByUsername(currentUser.username);
+        setApplications(response);
+
+      } catch (error) {
+        console.error('Error fetching applications:', error);
+      }
+    }
+
+    fetchData();
+  }, [currentUser,currentPage]);
+
+  const totalPages = Math.ceil(totalApplications / applicationsPerPage);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
   const formatDate = (dateString) => {
     const submitDate = new Date(dateString);
     const year = submitDate.getFullYear();
@@ -50,8 +74,16 @@ const ApplicationsList = () => {
     setIsEditMode(!isEditMode);
   };
 
+  const deleteModal = (application) => {
+    setApplicationToDelete(application);
+    setDeleteModel(true);
+  }
+  const closeDeleteModal = () => {
+    setDeleteModel(false);
+    setApplicationToDelete(null);
+  };
   const handlePhoneNumberChange = (value: string, isValid: boolean) => {
-    setPhoneNumber(value); // Store the phone number in state
+    setPhoneNumber(value);
     console.log('Phone Number:', value);
     console.log('Is Valid:', isValid);
   };
@@ -100,7 +132,23 @@ const ApplicationsList = () => {
     }
     closeModal();
   };
+  const handleDelete = async (application) => {
+    try {
+      console.log(application._id);
+      await ApplicationService.deleteApplication(application._id);
+      const fetchedApplications = await ApplicationService.getApplicationsByUsername(currentUser.username);
+      setApplications(fetchedApplications);
+      setSelectedApplication(null);
+      setApplicationToDelete(null);
+      setDeleteModel(false);
+    } catch (error) {
+      console.error('Error deleting application:', error);
+    }
+  };
 
+const indexOfLastApp = currentPage * applicationsPerPage;
+const indexOfFirstApp = indexOfLastApp - applicationsPerPage;
+const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
   return (
     <DefaultLayout>
       <div className="mx-20 border border-gray-200
@@ -117,7 +165,7 @@ const ApplicationsList = () => {
             </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200 ">
-            {applications.map(application => (
+            {currentApplications.map(application => (
               <tr key={application._id}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -134,32 +182,66 @@ const ApplicationsList = () => {
                 <td className="px-6 py-4 whitespace-nowrap">{application.status}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex space-x-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
-                         stroke="blue" className="w-6 h-6 hover:text-gray-600 cursor-pointer"
-                         onClick={() => openModal(application)}>
-                      <path strokeLinecap="round" strokeLinejoin="round"
-                            d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                    </svg>
-
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
-                         stroke="currentColor" className="w-6 h-6">
-                      <path strokeLinecap="round" strokeLinejoin="round"
-                            d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                    </svg>
-
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
-                         stroke="currentColor" className="w-6 h-6">
-                      <path strokeLinecap="round" strokeLinejoin="round"
-                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                    </svg>
+                    <div onClick={() => openModal(application)} className="cursor-pointer relative  transition-all ease-in duration-75 group-hover:bg-opacity-0
+                    rounded-lg group  from-blue-500 to-green-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white
+                    dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800">
+                      <div className="hidden group-hover:block">
+                        <div
+                          className="group absolute -top-12 left-1/2 z-50 flex -translate-x-1/2 flex-col
+                          items-center rounded-sm text-center text-sm text-white bg-blue-800"
+                        >
+                          <div className="rounded-sm bg-blue-600 py-1 px-2">
+                            <p className="whitespace-nowrap">View/Edit this application</p>
+                          </div>
+                          <div
+                            className="h-0 w-fit border-l-8 border-r-8 border-t-8 border-transparent border-t-blue-600"
+                          ></div>
+                        </div>
+                      </div>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+                           stroke="blue" className="w-6 h-6 hover:text-gray-600 cursor-pointer">
+                        <path strokeLinecap="round" strokeLinejoin="round"
+                              d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                      </svg>
+                    </div>
+                    <div onClick={() => deleteModal(application)} className="cursor-pointer relative  transition-all ease-in duration-75 group-hover:bg-opacity-0
+                    rounded-lg group  from-blue-500 to-green-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white
+                    dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800">
+                      <div className="hidden group-hover:block">
+                        <div
+                          className="group absolute -top-12 left-1/2 z-50 flex -translate-x-1/2 flex-col
+                          items-center rounded-sm text-center text-sm text-white bg-red-800"
+                        >
+                          <div className="rounded-sm bg-red-600 py-1 px-2">
+                            <p className="whitespace-nowrap">Withdraw this application</p>
+                          </div>
+                          <div
+                            className="h-0 w-fit border-l-8 border-r-8 border-t-8 border-transparent border-t-red-600"
+                          ></div>
+                        </div>
+                      </div>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+                           stroke="red" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round"
+                              d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                      </svg>
+                    </div>
                   </div>
                 </td>
               </tr>
             ))}
             </tbody>
           </table>
+
         </div>
+        <div className="">
+          <AppPagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={applications.length}
+        /></div>
+
       </div>
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -193,9 +275,23 @@ const ApplicationsList = () => {
                         <p>{selectedApplication.email}</p>
                       </div>
                     </div>
-                    <div className="mb-1">
+                    <div className="mb-1 ">
                       <label className="block text-sm font-bold text-gray-700">Submitted Phone Number</label>
-                      <p>{selectedApplication.phoneNumber}</p>
+                      <div className="flex space-x-1  items-center">
+                        <span className="[&>svg]:h-5 [&>svg]:w-5 [&>svg]:fill-[#128c7e]">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 448 512">
+                      <path
+                        d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z" />
+                      </svg>
+                      </span>
+                        <a href={`https://wa.me/+${selectedApplication.phoneNumber}`} target="_blank"
+                           rel="noopener noreferrer" className="text-green-500 hover:underline ">
+                          {selectedApplication.phoneNumber}
+                        </a>
+                      </div>
                     </div>
                     <div className="mb-1">
                       <label className="block text-sm font-bold text-gray-700">Resume</label>
@@ -209,10 +305,10 @@ const ApplicationsList = () => {
                   </div>
                   {/* Right side */}
 
-                    <div className="mb-4 h-80 ">
-                      <label className="block text-sm font-medium text-black">Motivation Letter</label>
-                      <p>{selectedApplication.motivationLetter}</p>
-                    </div>
+                  <div className="mb-4 h-80 ">
+                    <label className="block text-sm font-medium text-black">Motivation Letter</label>
+                    <p>{selectedApplication.motivationLetter}</p>
+                  </div>
 
                 </div>
                 <div
@@ -234,7 +330,6 @@ const ApplicationsList = () => {
 
               </>
             ) : (
-              // Update form
               <form onSubmit={handleUpdate}>
                 <div className="flex">
                   <div className="w-1/2 mr-4">
@@ -263,7 +358,6 @@ const ApplicationsList = () => {
                       />
                     </div>
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700">Phone Number</label>
                       <PhoneNumber onChange={(value, isValid) => handlePhoneNumberChange(value, isValid)} />
                     </div>
                     <div>
@@ -312,6 +406,49 @@ const ApplicationsList = () => {
               </form>
             )}
           </div>
+        </div>
+      )}
+      { deleteModel && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div
+          className="group  inset-0 z-50 select-none w-[250px] flex flex-col p-4
+          items-center justify-center bg-white border border-gray-800 shadow-lg rounded-2xl"
+        >
+          <div className="">
+            <div className="text-center p-3 flex-auto justify-center">
+              <svg
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                className="group-hover:animate-bounce w-12 h-12 flex items-center text-gray-600 fill-red-500 mx-auto"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                  fillRule="evenodd"
+                ></path>
+              </svg>
+              <h2 className="text-xl font-bold py-4 text-gray-200">Are you sure?</h2>
+              <p className="font-bold text-sm text-gray-500 px-2">
+                Do you really want to continue ? This process cannot be undone
+              </p>
+            </div>
+            <div className="p-2 mt-2 text-center space-x-1 md:block">
+              <button
+                onClick={closeDeleteModal}
+                className="mb-2 md:mb-0 bg-gray-700 px-5 py-2 text-sm shadow-sm font-medium tracking-wider border-2 border-gray-600 hover:border-gray-700 text-gray-300 rounded-full hover:shadow-lg hover:bg-gray-800 transition ease-in duration-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDelete(applicationToDelete)}
+                className="bg-red-500 hover:bg-transparent px-5 ml-4 py-2 text-sm shadow-sm hover:shadow-lg font-medium tracking-wider border-2 border-red-500 hover:border-red-500 text-white hover:text-red-500 rounded-full transition ease-in duration-300"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
         </div>
       )}
 
