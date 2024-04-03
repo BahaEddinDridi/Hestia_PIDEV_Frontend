@@ -79,7 +79,7 @@ const Header = (props: {
           {/* <!-- Hamburger Toggle BTN --> */}
 
         </div>
-        <Link to="/Offers">
+        <Link to="/">
         <img src={Logo_PIDEV} className='w-26 h-14'  alt="Logo"/>
         </Link>
         <ul className="flex items-center gap-3 2xsm:gap-4">
