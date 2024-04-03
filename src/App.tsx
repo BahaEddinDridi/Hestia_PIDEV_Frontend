@@ -13,6 +13,7 @@ import Settings from './pages/Settings';
 import Tables from './backoffice/pages/Tables';
 import TablesInterships from './backoffice/Tables/TableInterships';
 import TablesJobsOpportunities from './backoffice/Tables/TableJobOpportunities';
+import TablesJobsApplication from './backoffice/Tables/JobApplication';
 import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
 import UpdateProfile from './pages/Profil/Updateprof';
@@ -290,62 +291,43 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/Dashboard/tables-Of-Jobs/Opportunities"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesJobsOpportunities />
-            </>
-          }
-        />
-        <Route
-          path="/Dashboard/tables-Of-Interships"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesInterships />
-            </>
-          }
-        />
-        <Route
-          path="/Dashboard/tables-Of-Jobs/Opportunities"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesJobsOpportunities />
-            </>
-          }
-        />
-        <Route
-          path="/Dashboard/tables-Of-Interships"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesInterships />
-            </>
-          }
-        />
-        <Route
-          path="/Dashboard/tables-Of-Jobs"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesJobsOpportunities />
-            </>
-          }
-        />
-        <Route
-          path="/Dashboard/tables-Of-Interships"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesInterships />
-            </>
-          }
-        />
        
-      
+        <Route
+          path="/Dashboard/tables-Of-Interships"
+          element={
+            <>
+              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <TablesInterships />
+            </>
+          }
+        />
+        <Route
+          path="/Dashboard/tables-Of-Jobs/Opportunities"
+          element={
+            <>
+              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <TablesJobsOpportunities />
+            </>
+          }
+        />
+        <Route
+          path="/Dashboard/tables-Of-Jobs/Applications"
+          element={
+            <>
+              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <TablesJobsApplication />
+            </>
+          }
+        />
+        <Route
+          path="/Dashboard/tables-Of-Interships"
+          element={
+            <>
+              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <TablesInterships />
+            </>
+          }
+        />
          <Route
           path="/Dashboard/ProfileAdmin/:username"
           element={

@@ -423,7 +423,7 @@ const handleUpdateStatus = async (userId: string, status: string,customDeactivat
 
         <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
           {user.phoneNumber ? (
-            <a href={`https://wa.me/+216${user.phoneNumber}`} className="flex items-center text-black dark:text-white">
+            <a href={`https://wa.me/+${user.phoneNumber}`} className="flex items-center text-black dark:text-white">
               <p className="mr-2">{user.phoneNumber}</p>
               <FaWhatsapp width={18} height={18} className="text-green-500" />
             </a>

@@ -305,7 +305,44 @@ export const deleteIntershipByIdAndUsername = async (id:string, username:string)
       throw new Error('Failed to delete job');
   }
 };
-
+//get all Applications Jobs Disponible
+export const fetchApplicationsJobAvailable = async () => {
+  try {
+    const response = await fetch(`http://localhost:3001/application/getJobApplicationAvailable`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Jobs not found');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    throw error;
+  }
+};
+//get all Applications Jobs Disponible
+export const fetchApplicationsJobNotAvailable = async () => {
+  try {
+    const response = await fetch(`http://localhost:3001/application/getJobApplicationNotAvailable`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Jobs not found');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    throw error;
+  }
+};
 
 
 
