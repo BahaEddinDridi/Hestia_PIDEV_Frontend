@@ -30,9 +30,31 @@ interface User{
     gender:string;
     phoneNumber:string;
     coverimage:string;
-    
+    location:string;
+    ProfileStatus:string,
+    Country:string;
+    accountVisibility:string;
+    education: {
+      school: string;
+      degree: string;
+      startDate: string;
+      endDate: string;
+  }[];
+  experience:{
+    title:string;
+    company:string;
+    startDate:string;
+    endDate:string;
+    description:string;
+  }[];
   }
-
+  const formatDate = (dateString: any) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
 const userDetails:React.FC = () => {
 
@@ -59,7 +81,7 @@ const userDetails:React.FC = () => {
 
   return (
     <DefaultLayoutAdmin>
-      <Breadcrumb pageName="Profile" />
+      {/* <Breadcrumb pageName="Profile" /> */}
 
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="relative z-20 h-35 md:h-65">
@@ -85,7 +107,8 @@ const userDetails:React.FC = () => {
                 <div className='rounded-full overflow-hidden'>
                 <img src={profileImage} alt="profile" />
                 </div>
-              <label
+                {/* status en ligne */}
+              {/* <label
                 htmlFor="profile"
                 className={`absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-success text-white  sm:bottom-2 sm:right-2 ${statusColor}`}
               >
@@ -95,7 +118,7 @@ const userDetails:React.FC = () => {
                   id="profile"
                   className="sr-only"
                 />
-              </label>
+              </label> */}
             </div>
           </div>
           <div>
@@ -105,26 +128,7 @@ const userDetails:React.FC = () => {
                   {user && user.username}
                 </h3>
                 <p className="font-medium">{user &&user.role}</p>
-                {/* <div className="mx-auto mt-4.5 mb-5.5 grid max-w-94 grid-cols-3 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
-                  <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
-                    <span className="font-semibold text-black dark:text-white">
-                      259
-                    </span>
-                    <span className="text-sm">Posts</span>
-                  </div>
-                  <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
-                    <span className="font-semibold text-black dark:text-white">
-                      129K
-                    </span>
-                    <span className="text-sm">Followers</span>
-                  </div>
-                  <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row">
-                    <span className="font-semibold text-black dark:text-white">
-                      2K
-                    </span>
-                    <span className="text-sm">Following</span>
-                  </div>
-                </div> */}
+                
                 </div>
             
               
@@ -136,102 +140,149 @@ const userDetails:React.FC = () => {
   
             {/* Profil Information */}
             <div className="w-full lg:w-1/2 px-4">
-                <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-                <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
+                <div className="rounded-sm border border-esprit bg-white shadow-default dark:border-esprit dark:bg-boxdark">
+                <div className="border-b border-esprit py-4 px-6.5 dark:border-esprit">
                     <h3 className="font-medium text-black dark:text-white">
                     Profil Information
                     </h3>
                 </div>
                 <div className="flex flex-col gap-5.5 p-6.5">
                     <div className="flex flex-col">
-                    <span className="text-sm text-gray-500 dark:text-gray-300">Full Name</span>
-                    <label className="text-lg font-semibold text-gray-800 dark:text-white">{user && user.firstName} {user && user.lastName}</label>
+                    <div className="flex items-center  space-x-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                    <path d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 0 0-13.074.003Z" />
+                  </svg>
+
+                    <span className=" text-lg font-semibold text-gray-800 dark:text-white">Full Name</span>
+                    </div>
+                    <label className="text-sm text-gray-500 dark:text-gray-300  ">{user && user.firstName} {user && user.lastName}</label>
                     </div>
                     <div className="flex flex-col">
-                    <span className="text-sm text-gray-500 dark:text-gray-300">Mobile</span>
-                    <label className="text-lg font-semibold text-gray-800 dark:text-white">{user && user.phoneNumber}</label>
+                    <div className="flex items-center space-x-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                    <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 0 1 3.5 2h1.148a1.5 1.5 0 0 1 1.465 1.175l.716 3.223a1.5 1.5 0 0 1-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 0 0 6.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 0 1 1.767-1.052l3.223.716A1.5 1.5 0 0 1 18 15.352V16.5a1.5 1.5 0 0 1-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 0 1 2.43 8.326 13.019 13.019 0 0 1 2 5V3.5Z" clip-rule="evenodd" />
+                  </svg>
+                    <span className="text-lg font-semibold text-gray-800 dark:text-white">Mobile</span>
+                    </div>
+                    <label className="text-sm text-gray-500 dark:text-gray-300">{user && user.phoneNumber}</label>
                     </div>
                     <div className="flex flex-col">
-                    <span className="text-sm text-gray-500 dark:text-gray-300">Email</span>
-                    <label className="text-lg font-semibold text-gray-800 dark:text-white">{user && user.email}</label>
+                    <div className="flex items-center space-x-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                    <path fill-rule="evenodd" d="M5.404 14.596A6.5 6.5 0 1 1 16.5 10a1.25 1.25 0 0 1-2.5 0 4 4 0 1 0-.571 2.06A2.75 2.75 0 0 0 18 10a8 8 0 1 0-2.343 5.657.75.75 0 0 0-1.06-1.06 6.5 6.5 0 0 1-9.193 0ZM10 7.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z" clip-rule="evenodd" />
+                  </svg>
+                    <span className="text-lg font-semibold text-gray-800 dark:text-white">Email</span>
+                    </div>
+                    <label className="text-sm text-gray-500 dark:text-gray-300">{user && user.email}</label>
                     </div>
                     {user && (
                     <div className="flex flex-col">
-                    <span className="text-sm text-gray-500 dark:text-gray-300">Birthdate</span>
-                    <label className="text-lg font-semibold text-gray-800 dark:text-white">{new Date( user.birthDate).toLocaleDateString('fr-FR')}</label>
+                      <div className="flex items-center space-x-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                      <path d="m6.75.98-.884.883a1.25 1.25 0 1 0 1.768 0L6.75.98ZM13.25.98l-.884.883a1.25 1.25 0 1 0 1.768 0L13.25.98ZM10 .98l.884.883a1.25 1.25 0 1 1-1.768 0L10 .98ZM7.5 5.75a.75.75 0 0 0-1.5 0v.464c-1.179.304-2 1.39-2 2.622v.094c.1-.02.202-.038.306-.052A42.867 42.867 0 0 1 10 8.5c1.93 0 3.83.129 5.694.378.104.014.206.032.306.052v-.094c0-1.232-.821-2.317-2-2.622V5.75a.75.75 0 0 0-1.5 0v.318a45.645 45.645 0 0 0-1.75-.062V5.75a.75.75 0 0 0-1.5 0v.256c-.586.01-1.17.03-1.75.062V5.75ZM4.505 10.365A41.36 41.36 0 0 1 10 10c1.863 0 3.697.124 5.495.365C16.967 10.562 18 11.838 18 13.28v.693a3.72 3.72 0 0 1-1.665-.393 5.222 5.222 0 0 0-4.67 0 3.722 3.722 0 0 1-3.33 0 5.222 5.222 0 0 0-4.67 0A3.72 3.72 0 0 1 2 13.972v-.693c0-1.441 1.033-2.717 2.505-2.914ZM15.665 14.92a5.22 5.22 0 0 0 2.335.552V16.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 2 16.5v-1.028c.8 0 1.6-.184 2.335-.551a3.722 3.722 0 0 1 3.33 0c1.47.735 3.2.735 4.67 0a3.722 3.722 0 0 1 3.33 0Z" />
+                    </svg>
+                    <span className="text-lg font-semibold text-gray-800 dark:text-white">Birthdate</span>
+                    </div>
+                    <label className="text-sm text-gray-500 dark:text-gray-300">{new Date( user.birthDate).toLocaleDateString('fr-FR')}</label>
+                   
                     </div>
                     )}
                     <div className="flex flex-col">
-                    <span className="text-lg font-semibold text-gray-800 dark:text-white">CV</span>
-                    <div className=" space-x-3.5">
-                    <button className="hover:text-primary">
-                      <svg
-                        className="fill-current"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 18 18"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M8.99981 14.8219C3.43106 14.8219 0.674805 9.50624 0.562305 9.28124C0.47793 9.11249 0.47793 8.88749 0.562305 8.71874C0.674805 8.49374 3.43106 3.20624 8.99981 3.20624C14.5686 3.20624 17.3248 8.49374 17.4373 8.71874C17.5217 8.88749 17.5217 9.11249 17.4373 9.28124C17.3248 9.50624 14.5686 14.8219 8.99981 14.8219ZM1.85605 8.99999C2.4748 10.0406 4.89356 13.5562 8.99981 13.5562C13.1061 13.5562 15.5248 10.0406 16.1436 8.99999C15.5248 7.95936 13.1061 4.44374 8.99981 4.44374C4.89356 4.44374 2.4748 7.95936 1.85605 8.99999Z"
-                          fill=""
-                        />
-                        <path
-                          d="M9 11.3906C7.67812 11.3906 6.60938 10.3219 6.60938 9C6.60938 7.67813 7.67812 6.60938 9 6.60938C10.3219 6.60938 11.3906 7.67813 11.3906 9C11.3906 10.3219 10.3219 11.3906 9 11.3906ZM9 7.875C8.38125 7.875 7.875 8.38125 7.875 9C7.875 9.61875 8.38125 10.125 9 10.125C9.61875 10.125 10.125 9.61875 10.125 9C10.125 8.38125 9.61875 7.875 9 7.875Z"
-                          fill=""
-                        />
-                      </svg>
-                    </button>
-                    <button className="hover:text-primary">
-                      <svg
-                        className="fill-current"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 18 18"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M16.8754 11.6719C16.5379 11.6719 16.2285 11.9531 16.2285 12.3187V14.8219C16.2285 15.075 16.0316 15.2719 15.7785 15.2719H2.22227C1.96914 15.2719 1.77227 15.075 1.77227 14.8219V12.3187C1.77227 11.9812 1.49102 11.6719 1.12539 11.6719C0.759766 11.6719 0.478516 11.9531 0.478516 12.3187V14.8219C0.478516 15.7781 1.23789 16.5375 2.19414 16.5375H15.7785C16.7348 16.5375 17.4941 15.7781 17.4941 14.8219V12.3187C17.5223 11.9531 17.2129 11.6719 16.8754 11.6719Z"
-                          fill=""
-                        />
-                        <path
-                          d="M8.55074 12.3469C8.66324 12.4594 8.83199 12.5156 9.00074 12.5156C9.16949 12.5156 9.31012 12.4594 9.45074 12.3469L13.4726 8.43752C13.7257 8.1844 13.7257 7.79065 13.5007 7.53752C13.2476 7.2844 12.8539 7.2844 12.6007 7.5094L9.64762 10.4063V2.1094C9.64762 1.7719 9.36637 1.46252 9.00074 1.46252C8.66324 1.46252 8.35387 1.74377 8.35387 2.1094V10.4063L5.40074 7.53752C5.14762 7.2844 4.75387 7.31252 4.50074 7.53752C4.24762 7.79065 4.27574 8.1844 4.50074 8.43752L8.55074 12.3469Z"
-                          fill=""
-                        />
-                      </svg>
-                    </button>
+                    <div className="flex items-center space-x-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                    <path fill-rule="evenodd" d="m9.69 18.933.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 0 0 .281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 1 0 3 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 0 0 2.273 1.765 11.842 11.842 0 0 0 .976.544l.062.029.018.008.006.003ZM10 11.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z" clip-rule="evenodd" />
+                  </svg>
+                    <span className="text-lg font-semibold text-gray-800 dark:text-white">Location</span>
                     </div>
+                    <label className="text-sm text-gray-500 dark:text-gray-300">{user && user.location}</label>
                     </div>
+                    <div className="flex flex-col">
+                    <div className="flex items-center space-x-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" />
+                    </svg>
+                    <span className="text-lg font-semibold text-gray-800 dark:text-white">Profil Status</span>
+                    </div>
+                    <label className="text-sm text-gray-500 dark:text-gray-300">{user && user.ProfileStatus}</label>
+                    </div>
+                    <div className="flex flex-col">
+                    <div className="flex items-center space-x-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-1.5 0a6.5 6.5 0 1 1-11-4.69v.447a3.5 3.5 0 0 0 1.025 2.475L8.293 10 8 10.293a1 1 0 0 0 0 1.414l1.06 1.06a1.5 1.5 0 0 1 .44 1.061v.363a1 1 0 0 0 .553.894l.276.139a1 1 0 0 0 1.342-.448l1.454-2.908a1.5 1.5 0 0 0-.281-1.731l-.772-.772a1 1 0 0 0-1.023-.242l-.384.128a.5.5 0 0 1-.606-.25l-.296-.592a.481.481 0 0 1 .646-.646l.262.131a1 1 0 0 0 .447.106h.188a1 1 0 0 0 .949-1.316l-.068-.204a.5.5 0 0 1 .149-.538l1.44-1.234A6.492 6.492 0 0 1 16.5 10Z" clip-rule="evenodd" />
+                  </svg>
+                    <span className="text-lg font-semibold text-gray-800 dark:text-white">Country</span>
+                    </div>
+                    <label className="text-sm text-gray-500 dark:text-gray-300">{user && user.Country}</label>
+                    </div>
+                    <div className="flex flex-col">
+                    <div className="flex items-center space-x-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                    <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z" clip-rule="evenodd" />
+                  </svg>
+                    <span className="text-lg font-semibold text-gray-800 dark:text-white">Account-Visiblity</span>
+                    </div>
+                    <label className="text-sm text-gray-500 dark:text-gray-300">{user && user.accountVisibility}</label>
+                    </div>
+
+                    
                 </div>
                 </div>
             </div>
             {/* About Me */}
-            <div className="w-full lg:w-1/2 px-4">
-                <h4 className="font-semibold text-black dark:text-white">
-                About Me
-                </h4>
-                <p className="mt-4.5">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Pellentesque posuere fermentum urna, eu condimentum mauris
-                tempus ut. Donec fermentum blandit aliquet. Etiam dictum dapibus
-                ultricies. Sed vel aliquet libero. Nunc a augue fermentum,
-                pharetra ligula sed, aliquam lacus.
-                </p>
-            </div>
+
+<div className="w-full lg:w-1/2 px-4">
+        <ul className="grid gap-4">
+        <div className="border-b border-esprit py-4 px-6.5 dark:border-esprit">
+              <h3 className="font-medium text-black dark:text-white">
+                Educations
+              </h3>
         </div>
+          {user && user.education && user.education.length > 0 && user.education.map((education, index) => (
+            <li key={index} className="relative p-4 border border-gray-200 dark:bg-white dark:text-black rounded-md w-full md:w-100 transition-transform transform hover:scale-105 cursor-pointer">
+              <div className="relative inline-block">
+                <h4 className="text-lg font-semibold text-black dark:text-black">{education.degree}</h4>
+                <p className="text-sm text-gray-500 dark:text-gray-300">{` - ${formatDate(education.startDate)} to ${formatDate(education.endDate)}`}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-300">{education.school}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+        </div>
+  
+        <div className="w-full lg:w-1/2 px-4">
+        <ul className="grid gap-4">
+        <div className="border-b border-esprit py-4 px-6.5 dark:border-esprit">
+              <h3 className="font-medium text-black dark:text-white">
+                Experiences
+              </h3>
+        </div>
+          {user && user.experience && user.experience.length > 0 && user.experience.map((experience, index) => (
+            <li key={index} className="relative p-4 border border-gray-200 dark:bg-white dark:text-black rounded-md w-full md:w-100 transition-transform transform hover:scale-105 cursor-pointer">
+              <div className="relative inline-block">
+                <h4 className="text-lg font-semibold text-black dark:text-black">{experience.title}</h4>
+                <p className="text-sm text-gray-500 dark:text-gray-300">{`${experience.company} - ${formatDate(experience.startDate)} to ${formatDate(experience.endDate)}`}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-300">{experience.description}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+        </div>
+
+
+        </div>
+
+
 
         
 
             
 
             <div className="mt-6.5">
-              <h4 className="mb-3.5 font-medium text-black dark:text-white">
+              {/* <h4 className="mb-3.5 font-medium text-black dark:text-white">
                 Follow me on
-              </h4>
+              </h4> */}
               <div className="flex items-center justify-center gap-3.5">
-                <Link
+                {/* <Link
                   to="#"
                   className="hover:text-primary"
                   aria-label="social-icon"
@@ -256,8 +307,8 @@ const userDetails:React.FC = () => {
                       </clipPath>
                     </defs>
                   </svg>
-                </Link>
-                <Link
+                </Link> */}
+                {/* <Link
                   to="#"
                   className="hover:text-primary"
                   aria-label="social-icon"
@@ -287,8 +338,8 @@ const userDetails:React.FC = () => {
                       </clipPath>
                     </defs>
                   </svg>
-                </Link>
-                <Link
+                </Link> */}
+                {/* <Link
                   to="#"
                   className="hover:text-primary"
                   aria-label="social-icon"
@@ -318,8 +369,8 @@ const userDetails:React.FC = () => {
                       </clipPath>
                     </defs>
                   </svg>
-                </Link>
-                <Link
+                </Link> */}
+                {/* <Link
                   to="#"
                   className="hover:text-primary"
                   aria-label="social-icon"
@@ -344,8 +395,8 @@ const userDetails:React.FC = () => {
                       </clipPath>
                     </defs>
                   </svg>
-                </Link>
-                <Link
+                </Link> */}
+                {/* <Link
                   to="#"
                   className="hover:text-primary"
                   aria-label="social-icon"
@@ -375,7 +426,7 @@ const userDetails:React.FC = () => {
                       </clipPath>
                     </defs>
                   </svg>
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>

@@ -15,9 +15,9 @@ const RederactionRoute =  ( {children } ) => {
       return  children;
     } else if (currentRole  === 'professional' ) {
       return <Navigate to="/Profilecompany" />;
-    }
+     }
     else if (currentRole  === 'admin' ) {
-      return <Navigate to="/Dashboard/ProfileAdmin/${currentUser.username}" />;}
+      return <Navigate to={`/Dashboard`} />;}
   
     return null;
   };

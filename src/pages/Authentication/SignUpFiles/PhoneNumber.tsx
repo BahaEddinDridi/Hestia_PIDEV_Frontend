@@ -1,6 +1,7 @@
 import { useState } from "react";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import PhoneNumberValidation from '../SignUpFiles/PhoneNumber';
 
 interface PhoneNumberProps {
   onChange: (value: string, isValid: boolean) => void;

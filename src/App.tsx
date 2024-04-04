@@ -11,8 +11,10 @@ import FormLayout from './pages/Form/FormLayout';
 
 import Settings from './pages/Settings';
 import Tables from './backoffice/pages/Tables';
-import TablesInterships from './backoffice/Tables/TableInterships';
+import TablesIntershipsOpportunities from './backoffice/Tables/TableInterships';
+import TablesIntershipsApplications from './backoffice/Tables/IntershipApplicationDispo';
 import TablesJobsOpportunities from './backoffice/Tables/TableJobOpportunities';
+import TablesJobsApplication from './backoffice/Tables/JobApplication';
 import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
 import UpdateProfile from './pages/Profil/Updateprof';
@@ -314,61 +316,56 @@ function App() {
             </>
           }
         />
+       
+        <Route
+          path="/Dashboard/tables-Of-Interships/Opportunities"
+          element={
+            <>
+             <AdminRoute>
+             <PageTitle title="List Interships-Opportunities" />
+              <TablesIntershipsOpportunities />
+             </AdminRoute>
+             
+            </>
+          }
+        />
+         <Route
+          path="/Dashboard/tables-Of-Interships/Applications"
+          element={
+            <>
+            <AdminRoute>
+            <PageTitle title="List Interships-Applications" />
+              <TablesIntershipsApplications />
+            </AdminRoute>
+              
+            </>
+          }
+        />
         <Route
           path="/Dashboard/tables-Of-Jobs/Opportunities"
           element={
             <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            <AdminRoute>
+            <PageTitle title="List Jobs-Opportunities" />
               <TablesJobsOpportunities />
+            </AdminRoute>
+             
             </>
           }
         />
         <Route
-          path="/Dashboard/tables-Of-Interships"
+          path="/Dashboard/tables-Of-Jobs/Applications"
           element={
             <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesInterships />
+            <AdminRoute>
+            <PageTitle title="List Jobs-Applications" />
+              <TablesJobsApplication />
+            </AdminRoute>
+              
             </>
           }
         />
-        <Route
-          path="/Dashboard/tables-Of-Jobs/Opportunities"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesJobsOpportunities />
-            </>
-          }
-        />
-        <Route
-          path="/Dashboard/tables-Of-Interships"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesInterships />
-            </>
-          }
-        />
-        <Route
-          path="/Dashboard/tables-Of-Jobs"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesJobsOpportunities />
-            </>
-          }
-        />
-        <Route
-          path="/Dashboard/tables-Of-Interships"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesInterships />
-            </>
-          }
-        />
-
+       
 
          <Route
           path="/Dashboard/ProfileAdmin/:username"
@@ -385,7 +382,7 @@ function App() {
           path="/Dashboard"
           element={
             <>
-              <PageTitle title="Statistics" />
+              <PageTitle title="Dashboard" />
               <AdminRoute>
                 <StatisticPage />
               </AdminRoute>
