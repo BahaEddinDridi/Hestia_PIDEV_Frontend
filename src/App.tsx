@@ -559,15 +559,7 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/auth/reset-password/:_id/:token"
-          element={
-            <>
-              <PageTitle title="Reset Password" />
-              <ResetPasswordPage />
-            </>
-          }
-        />
+        
         <Route
           path='/pages/settings'
           element={
@@ -614,7 +606,7 @@ function App() {
           }
         />
         <Route
-          path="/auth/reset-password/:_id/:token"
+          path="/auth/reset-password/:_id"
           element={
             <>
               <PageTitle title="Reset Password" />

@@ -5,7 +5,7 @@ import Logo from '../../images/logo/Logo_PIDEV.png';
 import { useParams } from 'react-router-dom';
 import {useSelector} from "react-redux";
 import {selectCurrentUsername} from "../../ApiSlices/authSlice";
-
+import {selectCurrentUser} from "../../ApiSlices/authSlice";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -16,7 +16,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const location = useLocation();
   const { pathname } = location;
   const { username } = useParams();
-
+  const currentUser=useSelector(selectCurrentUser);
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
 
@@ -468,7 +468,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Settings --> */}
               <li>
                 <NavLink
-                  to="/settings"
+                   to={currentUser ? `/Dashboard/ProfileAdmin/${currentUser.username}/update` : '#'}
                    className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark hover:text-white dark:hover:bg-meta-4 ${
 
                     pathname.includes('settings') &&

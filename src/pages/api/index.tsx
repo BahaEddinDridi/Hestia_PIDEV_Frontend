@@ -146,9 +146,9 @@ export const sendEmail = async (email: string): Promise<any> => {
         throw new Error('Error sending email');
     }
 };
-export const resetPassword = async (_id: string, token: string, password: string) => {
+export const resetPassword = async (_id: string, password: string) => {
   try {
-    const response = await fetch(`${BASE_URL}/auth/Reset_Passwords_Mail/${_id}/${token}`, {
+    const response = await fetch(`${BASE_URL}/auth/Reset_Passwords_Mail/${_id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -183,11 +183,7 @@ export const resetPassword = async (_id: string, token: string, password: string
         throw new Error('Unknown error occurred while resetting password');
     }
 }
-
-
-  
-};
-  
+}
 
 
   /////////////////////////////////////////////////////////        registerUser          ////////////////////////////////////////////////////////////////////////////
@@ -365,5 +361,36 @@ export const getUserImage = async (username:any) => {
   } catch (error) {
       console.error('Error fetching user image:', error);
       return null;
+  }
+};
+
+/////updateCRM
+export const updateCRM = async (updatedCRMData :any) => {
+  try {
+    const response = await fetch(`http://localhost:3001/CRM/updateCRM`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedCRMData)
+    });
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return { error: 'Internal server error' };
+  }
+};
+
+//getCRM
+export const getCRM = async () => {
+  try {
+    
+    const response = await fetch(`http://localhost:3001/CRM/getCRM`, {
+      method: 'GET'
+    });
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return { error: 'Internal server error' };
   }
 };
