@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import DefaultLayout from "../../../layout/DefaultLayout";
 import JobLocation from '../AddOpp/JobLocation';
 import { UpdateJob, getJobById } from '../../api/opportunity';
+import { selectCurrentUser } from '../../../ApiSlices/authSlice';
+import { useSelector } from 'react-redux';
 
 
 
@@ -18,7 +20,9 @@ const EditJob: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
     const [showModalBack, setShowModalBack] = useState(false);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false); // New state
-
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
+    
+    const currentUser = useSelector(selectCurrentUser);
 
     const handleAddOpportunity = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault(); // Empêche le comportement par défaut du formulaire
@@ -81,7 +85,7 @@ const EditJob: React.FC = () => {
         try {
             if (jobId) { // Vérifier si jobId est défini
                 // Appel de la fonction d'API pour mettre à jour l'offre d'emploi
-                const result = await UpdateJob(jobId, jobData);
+                const result = await UpdateJob(jobId, jobData, currentUser.username);
                 console.log('Profile updated successfully:', result);
                 setShowModal(false);
                 setShowSuccessMessage(true); // Mettre à jour l'état pour afficher le message de succès
@@ -146,6 +150,27 @@ const EditJob: React.FC = () => {
                 </div>
             )}
 
+            {showErrorMessage && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-opacity-50">
+                    <div className="bg-red-400 p-6 rounded-lg">
+                        <p className="text-white">Please verify your informations.</p>
+                        <button
+                            onClick={() => setShowErrorMessage(false)}
+                            className="absolute top-0 right-0 m-4 text-gray-500 hover:text-gray-700 focus:outline-none"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
@@ -222,7 +247,7 @@ const EditJob: React.FC = () => {
                                             <select className="w-full shadow-4 p-4 border-0" name="jobfield"
                                                 value={jobData?.jobfield || ''}
                                                 onChange={handleInputChange}>
-                                                    <option value=""></option>
+                                                <option value=""></option>
                                                 <option value="Computer Science">Computer Science</option>
                                                 <option value="Mechanical Engineering">Mechanical Engineering</option>
                                                 <option value="Electromechanical Engineering">Electromechanical Engineering</option>
@@ -303,8 +328,8 @@ const EditJob: React.FC = () => {
                                             <select className="w-full shadow-4 p-4 border-0" name="jobRequiredEducation"
                                                 value={jobData?.jobRequiredEducation || ''}
                                                 onChange={handleInputChange}>
-                                                    <option value=""></option>
-                                                <option value="Bachelor's degree">Bachelor degree</option>
+                                                <option value=""></option>
+                                                <option value="Bachelor degree">Bachelor degree</option>
                                                 <option value="Engineering degree">Engineering degree</option>
                                             </select>
                                         </div>
@@ -313,7 +338,7 @@ const EditJob: React.FC = () => {
                                             <select className="w-full shadow-4 p-4 border-0" name="jobRequiredExperience"
                                                 value={jobData?.jobRequiredExperience || ''}
                                                 onChange={handleInputChange}>
-                                                    <option value=""></option>
+                                                <option value=""></option>
                                                 <option value="Junior">Junior</option>
                                                 <option value="Senior">Senior</option>
                                                 <option value="Experienced">Experienced</option>

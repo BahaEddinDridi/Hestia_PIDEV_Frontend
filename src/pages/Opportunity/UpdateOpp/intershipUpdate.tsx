@@ -189,7 +189,7 @@ const EditInter: React.FC = () => {
                     <main className="flex-1 md:p-0 lg:pt-8 lg:px-8 md:mx-24 flex flex-col">
                         <section className="bg-white p-4 shadow-6 ">
                             <div className="md:flex items-center justify-center">
-                                <h2 className="text-center text-esprit text-4xl font-bold mb-6">Create A New Intership</h2>
+                                <h2 className="text-center text-esprit text-4xl font-bold mb-6">Edit An Internship</h2>
                             </div>
                             <hr className="w-full border-t border-gray-100 mb-1"></hr>
                             <hr className="w-full border-t border-gray-100 mb-10"></hr>
@@ -197,7 +197,7 @@ const EditInter: React.FC = () => {
                             <form>
                                 <div className="md:flex mb-8">
                                     <div className="md:w-1/3">
-                                        <legend className="uppercase tracking-wide  text-m">Intership Information</legend>
+                                        <legend className="uppercase tracking-wide  text-m">Internship Information</legend>
                                         <p className="text-xs font-light text-esprit">** This entire section is required.</p>
                                     </div>
                                     <div className="md:flex-1 mt-2 mb:mt-0 md:px-3">
@@ -209,7 +209,7 @@ const EditInter: React.FC = () => {
                                         </div>
 
                                         <div className="mb-4">
-                                            <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Intership Field</label>
+                                            <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Internship Field</label>
                                             <select className="w-full shadow-4 p-4 border-0" name="interfield" value={interData?.interfield || ''}
                                                 onChange={handleInputChange}>
                                                     <option value=""></option>
@@ -221,7 +221,7 @@ const EditInter: React.FC = () => {
                                             </select>
                                         </div>
                                         <div className="mb-4">
-                                            <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Intership Type</label>
+                                            <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Internship Type</label>
                                             <select className="w-full shadow-4 p-4 border-0" name="interType" 
                                             value={interData?.interType || ''}
                                             onChange={handleInputChange}>
@@ -266,7 +266,7 @@ const EditInter: React.FC = () => {
                                 <hr className="w-full border-t border-graydouble mb-10"></hr>
                                 <div className="md:flex mb-8">
                                     <div className="md:w-1/3">
-                                        <legend className="uppercase tracking-wide text-m">Intership Requirements</legend>
+                                        <legend className="uppercase tracking-wide text-m">Internship Requirements</legend>
                                         <p className="text-xs font-light text-esprit">** This entire section is required.</p>
                                     </div>
                                     <div className="md:flex-1 mt-2 mb:mt-0 md:px-3">

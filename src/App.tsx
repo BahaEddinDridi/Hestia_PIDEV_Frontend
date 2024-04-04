@@ -42,6 +42,7 @@ import JobOpp from '../src/pages/Opportunity/AddOpp/JobOpp'
 import IntershipOpp from '../src/pages/Opportunity/AddOpp/IntershipOpp'
 import EditJob from '../src/pages/Opportunity/UpdateOpp/jobUpdate'
 import EditInter from '../src/pages/Opportunity/UpdateOpp/intershipUpdate'
+import NotFound from '../src/pages/NotFound'
 
 import AboutUs from './AboutUs/AboutUs';
 import { useSelector } from "react-redux";
@@ -110,6 +111,7 @@ function App() {
             </>
           }
         />
+
         <Route
           path="/Unauthorized"
           element={
@@ -161,7 +163,7 @@ function App() {
             <>
               <PageTitle title="Apply Now!" />
               <ProtectedRoute>
-                <InternshipOfferView/>
+                <InternshipOfferView />
               </ProtectedRoute>
             </>
           } />
@@ -171,11 +173,11 @@ function App() {
             <>
               <PageTitle title="Your Applications" />
               <ProtectedRoute>
-                <ApplicationsList/>
+                <ApplicationsList />
               </ProtectedRoute>
             </>
           } />
-          <Route
+        <Route
           path="/Profile"
           element={
             <>
@@ -370,7 +372,7 @@ function App() {
         />
 
 
-         <Route
+        <Route
           path="/Dashboard/ProfileAdmin/:username"
           element={
             <>
@@ -694,6 +696,16 @@ function App() {
             <>
               <PageTitle title="Edit A Job Opportunity" />
               <EditInter />
+            </>
+          }
+        />
+            {/************** * TOUJOURS LE DERNIER  *************************/}
+        <Route
+          path="/*"
+          element={
+            <>
+              <PageTitle title="NotFound" />
+              <NotFound />
             </>
           }
         />
