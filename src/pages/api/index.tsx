@@ -390,3 +390,41 @@ export const updateproject = async (username:string , projectId:string, updatedP
     throw error;
   }
 };
+export const updateApplicationStatus = async (applicationId:string,newStatus:any) =>{
+  try {
+    const response = await axios.put('http://localhost:3001/application/updatestatus', {
+        applicationId: applicationId,
+        newStatus: newStatus
+    });
+    
+    if (response.status === 200) {
+        console.log(response.data.message); 
+    
+    } else {
+        console.error('Error updating application status:', response.data.error);
+    
+    }
+} catch (error) {
+    console.error('Error updating application status:', error);
+   
+}
+}
+export const updatestatuinter = async (applicationId:string,newStatus:any) =>{
+  try {
+    const response = await axios.put('http://localhost:3001/application/updatestatusinter', {
+        applicationId: applicationId,
+        newStatus: newStatus
+    });
+    
+    if (response.status === 200) {
+        console.log(response.data.message); 
+    
+    } else {
+        console.error('Error updating application status:', response.data.error);
+    
+    }
+} catch (error) {
+    console.error('Error updating application status:', error);
+   
+}
+}

@@ -61,6 +61,7 @@ const ProjectCard = () => {
         description: '',
       });}
       setIsModalOpen(false)
+      window.location.reload()
     } catch (error) {
       console.error('Error adding experience:', error);
     }
@@ -89,6 +90,8 @@ const [isDropdownOpen, setIsDropdownOpen] = useState<{ [key: string]: boolean }>
         const confirmed = window.confirm('Are you sure you want to delete this Experience?');
         if (!confirmed) {
             return;
+        }else{
+          window.location.reload()
         }
         await deleteproject(currentUser.username, projectId);
         setMessage('Experience deleted successfully');

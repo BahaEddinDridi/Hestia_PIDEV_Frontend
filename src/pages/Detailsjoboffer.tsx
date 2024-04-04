@@ -6,8 +6,8 @@ import userfive from '../images/user/user-05.png';
 import { selectCurrentUser } from '../ApiSlices/authSlice';
 import { useParams } from "react-router";
 import { getUserImage } from "./api";
-import { Link } from "react-router-dom";
-import { FaWhatsapp } from "react-icons/fa";
+import { updateApplicationStatus } from "./api";
+
 
 const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -15,16 +15,7 @@ const formatDate = (dateString: string) => {
 }
 const Detailsjoboffer = () => {
 
-    const acceptApplication = (candidateId) => {
-        // Implémentez ici la logique pour accepter la candidature avec l'ID du candidat
-        console.log(`Candidature acceptée pour le candidat avec l'ID ${candidateId}`);
-    }
-
-    // Fonction pour rejeter une candidature
-    const rejectApplication = (candidateId) => {
-        // Implémentez ici la logique pour rejeter la candidature avec l'ID du candidat
-        console.log(`Candidature rejetée pour le candidat avec l'ID ${candidateId}`);
-    }
+ 
     const currentUser = useSelector(selectCurrentUser);
     console.log(currentUser);
     const { jobId } = useParams();
@@ -116,9 +107,50 @@ const Detailsjoboffer = () => {
     const handleSearchChange = (event) => {
         setSearchValue(event.target.value);
     };
-    const filteredApplications = jobApplications.filter((application) =>
-    application.applicantUsername.toLowerCase().includes(searchValue.toLowerCase())
- );
+  
+    const filteredApplications = jobApplications
+    .filter(application => {
+      const lowerStatus = application.status.toLowerCase();
+      const lowerSearchValue = searchValue.toLowerCase();
+      
+      return application.applicantUsername.toLowerCase().includes(lowerSearchValue) ||
+        lowerStatus.includes(lowerSearchValue) ||
+        (lowerSearchValue === 'Accepted' && lowerStatus === 'Accepted');
+    })
+    .filter(application => {
+      if (searchValue.toLowerCase() === 'Accepted') {
+        return jobApplications.some(app => app.status.toLowerCase() === 'Accepted');
+      }
+      return true;
+    });
+ //***************** accept reject application */
+ const [modalOpen, setModalOpen] = useState(false);
+ const [applicationId, setApplicationId] = useState(null);
+ const [newStatus, setNewStatus] = useState('');
+ const [successMessage, setSuccessMessage] = useState<string>('');
+ const [errorMessage, setErrorMessage] = useState<string>('');
+ const openModal = (id, status) => {
+    setApplicationId(id);
+    setNewStatus(status);
+    setModalOpen(true);
+   
+};
+console.log(newStatus);
+const handleConfirm = () => {
+     updateApplicationStatus(applicationId, newStatus);
+    setModalOpen(false);
+    if (newStatus === 'Accepted') {
+        setSuccessMessage('application accepted');
+        setTimeout(() => {
+            setSuccessMessage('');
+        }, 3000);
+    }else if (newStatus === 'Rejected') {
+        setErrorMessage('application rejected');
+        setTimeout(() => {
+            setErrorMessage('');
+        }, 3000);
+    }
+};
     return (
         <>
             <DefaultLayout>
@@ -201,6 +233,16 @@ const Detailsjoboffer = () => {
 
 
                     <div className="p-6 bg-white shadow-md rounded-lg mb-4">
+                    {successMessage && (
+                                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mt-4">
+                                    {successMessage}
+                                </div>
+                            )}
+                            {errorMessage && (
+                                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mt-4">
+                                    {errorMessage}
+                                </div>
+                            )}
                         <h2 className="text-lg font-semibold mb-2 text-black">Applications</h2>
                         <input
                             type="text"
@@ -263,16 +305,18 @@ const Detailsjoboffer = () => {
                                             <td className="px-6 py-4 whitespace-nowrap">{formatDate(application.submitDate)}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
 
-                                                <a href={application.resume} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-900">View CV</a>
+                                            <a href={application.resume} downloadclassName="text-blue-600 hover:text-blue-900" target="_blank" rel="noopener noreferrer">View CV</a>
 
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{application.phoneNumber}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap"><a href={`https://wa.me/+${application.phoneNumber}`}  target="_blank" rel="noopener noreferrer">
+                                                {application.phoneNumber}
+                                            </a></td>
                                             <td className="px-6 flex items-center py-4 whitespace-nowrap">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModal(application._id, 'Accepted')} className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
                                                 </svg>
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mr-2 cursor-pointer text-red-500 dark:text-red-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModal(application._id,'Rejected')} className="w-6 h-6 mr-2 cursor-pointer text-red-500 dark:text-red-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <circle cx="12" cy="12" r="10"></circle>
                                                     <line x1="15" y1="9" x2="9" y2="15"></line>
                                                     <line x1="9" y1="9" x2="15" y2="15"></line>
@@ -313,11 +357,11 @@ const Detailsjoboffer = () => {
                                             </a>
                                             </td>
                                             <td className="px-6 flex items-center py-4 whitespace-nowrap">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModal(application._id, 'Accepted')} className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
                                                 </svg>
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mr-2 cursor-pointer text-red-500 dark:text-red-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModal(application._id,'Rejected')} className="w-6 h-6 mr-2 cursor-pointer text-red-500 dark:text-red-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <circle cx="12" cy="12" r="10"></circle>
                                                     <line x1="15" y1="9" x2="9" y2="15"></line>
                                                     <line x1="9" y1="9" x2="15" y2="15"></line>
@@ -349,15 +393,18 @@ const Detailsjoboffer = () => {
                                             <td className="px-6 py-4 whitespace-nowrap">{application.email}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{formatDate(application.submitDate)}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <a href={application.resume} downloadclassName="text-blue-600 hover:text-blue-900">View CV</a>
+                                            <a href={application.resume} downloadclassName="text-blue-600 hover:text-blue-900" target="_blank" rel="noopener noreferrer">View CV</a>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{application.phoneNumber}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap"><a href={`https://wa.me/+${application.phoneNumber}`}  target="_blank" rel="noopener noreferrer">
+                                                {application.phoneNumber}
+                                            </a>
+                                            </td>
                                             <td className="px-6 flex items-center py-4 whitespace-nowrap">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModal(application._id,'Accepted')} className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
                                                 </svg>
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mr-2 cursor-pointer text-red-500 dark:text-red-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModal(application._id, 'Rejected')} className="w-6 h-6 mr-2 cursor-pointer text-red-500 dark:text-red-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <circle cx="12" cy="12" r="10"></circle>
                                                     <line x1="15" y1="9" x2="9" y2="15"></line>
                                                     <line x1="9" y1="9" x2="15" y2="15"></line>
@@ -451,13 +498,13 @@ const Detailsjoboffer = () => {
                                                             <line x1="12" y1="16" x2="12" y2="16"></line>
                                                         </svg>
                                                     )}
-                                                    {selectedApplication.status === "Accepté" && (
+                                                    {selectedApplication.status === "Accepted" && (
                                                         <svg className="w-6 h-6 text-green-500 mr-2 dark:text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                             <circle cx="12" cy="12" r="10"></circle>
                                                             <path d="M9 12l2 2 4-4"></path>
                                                         </svg>
                                                     )}
-                                                    {selectedApplication.status === "Rejeté" && (
+                                                    {selectedApplication.status === "Rejected" && (
                                                         <svg className="w-6 h-6 text-red-500 mr-2 dark:text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                             <circle cx="12" cy="12" r="10"></circle>
                                                             <line x1="8" y1="8" x2="16" y2="16"></line>
@@ -494,6 +541,63 @@ const Detailsjoboffer = () => {
 
                         </div>
                     )}
+                     {modalOpen && (
+                         <div
+                         id="crud-modal"
+                         tabIndex={-1}
+                         aria-hidden="true"
+                         className="fixed inset-0 z-50 overflow-y-auto"
+                     >
+                         <div className="flex items-center justify-center min-h-screen">
+                             <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+                             <div className="relative p-4 w-full max-w-md">
+                                 <div className="relative bg-white rounded-lg shadow-lg">
+                                     {/* Modal header */}
+                                     <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t bg-apptwofarah text-white dark:border-gray-600">
+                                         <h3 className="text-lg font-semibold  dark:text-black">
+                                            Please Confirm
+                                         </h3>
+                                         <button
+                                             type="button"
+                                             className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+ 
+                                             onClick={() => setModalOpen(false)}
+                                         >
+                                             <svg
+                                                 className="w-3 h-3"
+                                                 aria-hidden="true"
+                                                 xmlns="http://www.w3.org/2000/svg"
+                                                 fill="none"
+                                                 viewBox="0 0 14 14"
+                                             >
+                                                 <path
+                                                     stroke="currentColor"
+                                                     stroke-linecap="round"
+                                                     stroke-linejoin="round"
+                                                     stroke-width="2"
+                                                     d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                                                 />
+                                             </svg>
+                                             <span className="sr-only">Close modal</span>
+                                         </button>
+                                     </div>
+ 
+                                     {/* Modal content  */}
+                                     <div className="modal-container">
+                                         <div className="modal">
+                                             <div className="modal-content">
+                                                 <p className='text-black ml-2'>Do you confirm your action?</p>
+                                                 <button className="ml-2 mt-5 mb-5 px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700" onClick={handleConfirm}>Confirm</button>
+                                                 <button className="px-4 ml-2  py-2 text-sm font-medium text-red-600 border border-red-600 rounded-md hover:bg-red-50" onClick={() => setModalOpen(false)}>Cancel</button>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+              
+            )}
                 </div >
             </DefaultLayout>
         </>);

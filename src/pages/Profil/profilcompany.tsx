@@ -116,8 +116,8 @@ const ProfileCompany = () => {
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   //trie le tableau de intership 
-
-  const sortedintership = [...currentUser.intership].sort((a, b) => {
+  const filteredinter = currentUser.intership.filter(intership => intership && intership.interStartDate);
+  const sortedintership = filteredinter.sort((a: any, b: any) =>{
     const dateA = new Date(a.interStartDate);
     const dateB = new Date(b.interStartDate);
     const currentDate = new Date();
