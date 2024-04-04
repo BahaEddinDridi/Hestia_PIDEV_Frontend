@@ -170,7 +170,7 @@ const closeModal = () => {
       type="text"
       value={searchTerm}
       onChange={(e)=>setSearchTerm(e.target.value)}
-      placeholder="Search Jobs..."
+      placeholder="Search Interships..."
       className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-greenadd focus:border-greenadd w-full"
     />
      </div>
