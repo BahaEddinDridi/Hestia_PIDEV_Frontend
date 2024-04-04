@@ -235,7 +235,7 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
           </table>
 
         </div>
-        <div className="">
+        <div className="flex justify-center bg-red-800">
           <AppPagination
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
