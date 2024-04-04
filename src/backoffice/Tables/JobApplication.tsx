@@ -16,7 +16,7 @@ import Pagination from "../pagination/pagination";
 
 const TableJobApplication = () => {
 //recherche bar
-const [jobs, setJobs] = useState<{ _id:String,jobCommpanyName: string,jobTitle: string,jobApplicationDeadline: string, jobApplications: { fullName: string, email: string, phoneNumber: string, motivationLetter: string, resume: number, submitDate: string, status: string, applicantUsername: string, _id: string }[] }[]>([]);
+const [jobs, setJobs] = useState<{ _id:String,jobCommpanyName: string,jobTitle: string,jobApplicationDeadline: string, jobApplications: { fullName: string, email: string, phoneNumber: string, motivationLetter: string, resume: string, submitDate: string, status: string, applicantUsername: string, _id: string }[] }[]>([]);
   
 const [searchTerm,setSearchTerm]= useState("");
 const [currentPage, setCurrentPage] = useState(1);
@@ -35,9 +35,9 @@ const filteredJobs = jobs
   }))
   .filter((jobArray) => jobArray.jobApplications.length > 0);
 
-  const filteredJobs1 = jobs.filter((job)=>
-    Object.values(job).some((value)=>
-    typeof value =='string' && value.toLowerCase().includes(searchTerm.toLowerCase())));
+  // const filteredJobs1 = jobs.filter((job)=>
+  //   Object.values(job).some((value)=>
+  //   typeof value =='string' && value.toLowerCase().includes(searchTerm.toLowerCase())));
     
     
 
@@ -45,7 +45,7 @@ const filteredJobs = jobs
 const totalJobs = filteredJobs.reduce((acc, jobArray) => acc + jobArray.jobApplications.length, 0);
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
-  const currentJobs = filteredJobs1.slice(indexOfFirstJob,indexOfLastJob);
+  const currentJobs = filteredJobs.slice(indexOfFirstJob,indexOfLastJob);
    
   
 
@@ -341,7 +341,9 @@ const closeModal = () => {
                         </svg>
                       Resume 
                       </div>
-                        {/* <p className='mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-800'>{application.resume}</p> */}</div>
+                      <a href={application.resume} target="_blank" rel="noopener noreferrer"
+                         className="text-blue-500 hover:underline">View Resume</a>
+                       </div>
                       <div className="flex-1 ... mb-2 font-semibold leading-none text-gray-900 dark:text-black">
                       <div className="flex items-center">
                       Status User

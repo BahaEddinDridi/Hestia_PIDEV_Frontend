@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation,useNavigate } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
 import Logo from '../../images/logo/Logo_PIDEV.png';
 import { useParams } from 'react-router-dom';
 import {useSelector} from "react-redux";
 import {selectCurrentUsername} from "../../ApiSlices/authSlice";
-
+import { useSendLogoutMutation } from '../../ApiSlices/authApiSlice';
 
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
 }
+
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const location = useLocation();
@@ -60,7 +61,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       document.querySelector('body')?.classList.remove('sidebar-expanded');
     }
   }, [sidebarExpanded]);
-
+//////////////////////////////////////////
+const [sendLogout, { isLoading }] = useSendLogoutMutation();
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+      // @ts-ignore
+      await sendLogout();
+      console.log('Logout successful');
+      navigate('/auth/signin');
+    } catch (err) {
+      console.error('Logout failed', err);
+    }
+  };
   return (
     <aside
       ref={sidebar}
@@ -420,7 +434,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
                           <li>
                             <NavLink
-                              to="/auth/signin"
+                              to="/Dashboard/tables-Of-Interships/Applications"
                               className={({ isActive }) =>
                                 'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                 (isActive && '!text-white')
@@ -431,7 +445,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           <li>
                             <NavLink
-                              to="/Dashboard/tables-Of-Interships"
+                              to="/Dashboard/tables-Of-Interships/Opportunities"
                               className={({ isActive }) =>
                                 'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                 (isActive && '!text-white')
@@ -597,7 +611,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         }`}
                       >
                         <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
-                          <li>
+                          {/* <li>
                             <NavLink
                               to="/auth/signin"
                               className={({ isActive }) =>
@@ -607,18 +621,35 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             >
                               Login
                             </NavLink>
-                          </li>
+                          </li> */}
                           <li>
-                            <NavLink
-                              to="/"
-                              className={({ isActive }) =>
-                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
-                                (isActive && '!text-white')
-                              }
+                            <button
+                             onClick={() => setShowConfirmation(true)}
                             >
                               Logout
-                            </NavLink>
+                            </button>
                           </li>
+                                      {showConfirmation && (
+                        <div className="translate transform overflow-hidden false p-1">
+                          <div className="bg-white p-6 rounded-md shadow-md">
+                            <p>Are you sure you want to log out?</p>
+                            <div className="mt-4 flex justify-end">
+                              <button
+                                onClick={() => setShowConfirmation(false)}
+                                className="px-4 py-2 mr-2 text-gray-600 hover:text-gray-900 font-semibold"
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                onClick={handleLogout}
+                                className="px-4 py-2 bg-red-500 text-white font-semibold hover:bg-red-600 rounded"
+                              >
+                                Logout
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                         </ul>
                       </div>
                       {/* <!-- Dropdown Menu End --> */}

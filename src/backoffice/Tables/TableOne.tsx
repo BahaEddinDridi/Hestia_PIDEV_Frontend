@@ -442,7 +442,7 @@ const handleUpdateStatus = async (userId: string, status: string,customDeactivat
                   className="bg-transparent hover:bg-success text-success font-semibold hover:text-white py-2 px-4 border border-success hover:border-transparent rounded"
                   onClick={() => updateUserRole()}
                 >
-                  Modifier
+                  modify
                 </button>
                 <button
                   className="bg-transparent hover:bg-danger text-danger font-semibold hover:text-white py-2 px-4 border border-danger hover:border-transparent rounded"
@@ -451,7 +451,7 @@ const handleUpdateStatus = async (userId: string, status: string,customDeactivat
                     setNewUserRole('');
                   }}
                 >
-                  Annuler
+                  Cancel
                 </button>
               </div>
               </div>

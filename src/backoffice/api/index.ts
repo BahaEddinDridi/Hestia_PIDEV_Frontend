@@ -344,6 +344,46 @@ export const fetchApplicationsJobNotAvailable = async () => {
   }
 };
 
+// get all Applications Interships Disponible 
+export const fetchApplicationsIntershipAvailable = async () => {
+  try {
+    const response = await fetch(`http://localhost:3001/application/getIntershipsApplicationAvailable`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Jobs not found');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    throw error;
+  }
+};
+
+//get all Applications Interships Not Disponible
+export const fetchApplicationsIntershipNotAvailable = async () => {
+  try {
+    const response = await fetch(`http://localhost:3001/application/getIntershipsApplicationNotAvailable`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Jobs not found');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    throw error;
+  }
+};
+
 
 
 
