@@ -82,9 +82,7 @@ const Footer = () => {
                 </h4>
                 <ul className="text-gray-500 dark:text-gray-400 font-medium">
                   <li className="mb-4 mr-4">
-                    <a className="text-espritLightRed dark:text-white">
-                      Description :
-                    </a>
+                    <a className="text-espritLightRed dark:text-white">Description :</a>
                     <a className="hover:">{crmData.Description}</a>
                   </li>
                 </ul>
