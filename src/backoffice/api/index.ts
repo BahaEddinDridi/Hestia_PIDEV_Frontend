@@ -482,4 +482,134 @@ export const getUserStatusStats = async () => {
 
 
 
-
+export const LinkeDinScraper = async (job:string,location:string) => {
+  try {
+    const response = await fetch(`http://localhost:3001/Scraping/scraper/${location}/${job}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 120000 // 2 minutes
+    });
+    await delay(5000);
+    const response1=await fetch(`http://localhost:3001/Scraping/scraper/skills`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 240000 // 4 minutes
+    });
+    await delay(5000);
+    const response2 = await fetch(`http://localhost:3001/Scraping/scraper/topSkills`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (response2.ok) {
+      const data = await response2.json();
+      console.log('Top skills', data);
+      return data;
+    } else {
+      console.error('Failed to scrape LinkedIn profile');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error scraping LinkedIn profile:', error);
+    return null;
+  }
+}
+function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+export const TopCompanies = async () => {
+  try {
+    const response = await fetch('http://localhost:3001/Scraping/scraper/topCompanies', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Top companies:', data);
+      return data;
+    } else {
+      console.error('Failed to scrape top companies');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error scraping top companies:', error);
+    return null;
+  }
+}
+export const topLocations = async () => {
+  try {
+    const response = await fetch('http://localhost:3001/Scraping/scraper/topLocations', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Top locations:', data);
+      return data;
+    } else {
+      console.error('Failed to scrape top locations');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error scraping top locations:', error);
+    return null;
+  }
+}
+export const TopSeniorityLevel = async () => {
+  try {
+    const response = await fetch('http://localhost:3001/Scraping/scraper/topSeniorityLevel', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Top seniority levels:', data);
+      return data;
+    } else {
+      console.error('Failed to scrape top seniority levels');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error scraping top seniority levels:', error);
+    return null;
+  }
+}
+export const exportPDFJob=()=>{
+  axios.get('http://localhost:3001/Scraping/scraper/exportPDF',{responseType:'blob'})
+  .then(response=>{
+    const url=window.URL.createObjectURL(new Blob([response.data]));
+    const link=document.createElement('a');
+    link.href=url;
+    link.setAttribute('download','Jobs.pdf');
+    document.body.appendChild(link);
+    link.click();
+  })
+  .catch(error=>{
+    console.error(error);
+  });
+}
+export const exportExcelJob=()=>{
+  axios.get('http://localhost:3001/Scraping/scraper/exportExcel',{responseType:'blob'})
+  .then(response=>{
+    const url=window.URL.createObjectURL(new Blob([response.data]));
+    const link=document.createElement('a');
+    link.href=url;
+    link.setAttribute('download','Jobs.xlsx');
+    document.body.appendChild(link);
+    link.click();
+  })
+  .catch(error=>{
+    console.error(error);
+  });
+}

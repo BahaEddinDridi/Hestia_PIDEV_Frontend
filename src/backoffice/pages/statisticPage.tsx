@@ -11,6 +11,10 @@ import { fetchUserData ,fetchUserRoleStats} from '../api';
 import  { ReactNode, useEffect, useState } from 'react';
 import ChartGender from '../components/ChartGender';
 import ChartStatus from '../components/ChartStatus';
+import ChartSkills from '../components/ChartSkills';
+import ChartCompanies from '../components/ChartCompanies';
+import ChartLocations from '../components/ChartLocation';
+import ChartSeniorityLevel from '../components/ChartSeniority';
 
 
 const StatisticPage: React.FC = () => {
@@ -82,6 +86,10 @@ const StatisticPage: React.FC = () => {
       <ChartThree />
        <ChartGender/> 
        <ChartStatus/> 
+       <ChartSkills/>
+       <ChartCompanies/>
+       <ChartLocations/>
+       <ChartSeniorityLevel/>
         {/* <ChartOne />
         <ChartTwo />
         <ChatCard /> */}
