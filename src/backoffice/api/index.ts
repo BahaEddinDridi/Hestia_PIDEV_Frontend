@@ -522,7 +522,69 @@ export const LinkeDinScraper = async (job:string,location:string) => {
 function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-
+export const TopCompanies = async () => {
+  try {
+    const response = await fetch('http://localhost:3001/Scraping/scraper/topCompanies', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Top companies:', data);
+      return data;
+    } else {
+      console.error('Failed to scrape top companies');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error scraping top companies:', error);
+    return null;
+  }
+}
+export const topLocations = async () => {
+  try {
+    const response = await fetch('http://localhost:3001/Scraping/scraper/topLocations', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Top locations:', data);
+      return data;
+    } else {
+      console.error('Failed to scrape top locations');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error scraping top locations:', error);
+    return null;
+  }
+}
+export const TopSeniorityLevel = async () => {
+  try {
+    const response = await fetch('http://localhost:3001/Scraping/scraper/topSeniorityLevel', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Top seniority levels:', data);
+      return data;
+    } else {
+      console.error('Failed to scrape top seniority levels');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error scraping top seniority levels:', error);
+    return null;
+  }
+}
 export const exportPDFJob=()=>{
   axios.get('http://localhost:3001/Scraping/scraper/exportPDF',{responseType:'blob'})
   .then(response=>{
