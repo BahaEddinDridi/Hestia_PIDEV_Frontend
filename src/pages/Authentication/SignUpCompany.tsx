@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import EspritCareer from '../../images/logo/siteLogo.png'
 import DefaultLayoutLogin from '../../layout/DefaultLayoutLogin';
@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { useGoogleCallbackTeacherMutation } from '../../ApiSlices/authApiSlice';
 import SigninBreadcrumbs from "../../components/Breadcrumbs/SigninBreadcrumbs";
+import LegalModal from '../../components/Footer/LegalModal';
 
 
 
@@ -160,7 +161,65 @@ const SignUpCompany: React.FC = () => {
     setIsChecked(prevState => !prevState);
     setTermError(false);
   };
+ ////////////////////// Terms & Conditions //////////////////////////
+  const [showPrivacyPolicyModal, setShowPrivacyPolicyModal] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [privacyPolicy, setPrivacyPolicy] = useState('');
+  const [termsOfService, setTermsOfService] = useState('');
+  const [crmData, setCrmData] = useState<{
+    Description: string;
+    Location: string;
+    PhoneNumber: string;
+    Email: string;
+    CompanyName: string;
+    SocialMedia: {
+      Facebook: string;
+      Instagram: string;
+      LinkedIn: string;
+      Twitter: string;
+    };
+  } | null>(null);
 
+  const openPrivacyPolicyModal = () => {
+    setShowPrivacyPolicyModal(true);
+  };
+
+  const closePrivacyPolicyModal = () => {
+    setShowPrivacyPolicyModal(false);
+  };
+
+  const openTermsModal = () => {
+    setShowTermsModal(true);
+  };
+
+  const closeTermsModal = () => {
+    setShowTermsModal(false);
+  };
+
+  useEffect(() => {
+    // Fetch CRM data when component mounts
+    fetchCRMData();
+  }, []);
+
+  const fetchCRMData = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/CRM/getCRM');
+      if (response.ok) {
+        const data = await response.json();
+        // Assuming data is an array and contains only one CRM object
+        if (data.length > 0) {
+          setCrmData(data[0]);
+          setPrivacyPolicy(data[0].PrivacyPolicy);
+          setTermsOfService(data[0].TermsOfService);
+        }
+      } else {
+        console.error('Failed to fetch CRM data');
+      }
+    } catch (error) {
+      console.error('Error fetching CRM data:', error);
+    }
+  };
+  ///////////////////////////////////////////////////////////////////
 
   return (
     <DefaultLayoutLogin>
@@ -625,20 +684,35 @@ const SignUpCompany: React.FC = () => {
                         type="checkbox"
                         checked={isChecked}
                         onChange={handleCheckboxChange}
+                        onClick={openTermsModal}
                         className="h-4 w-4 mr-1"
                       />
                       <span className="checkmark"></span>
-                      <span className="checkbox-text block font-medium text-black dark:text-white">Terms and Conditions</span>
+                      <span className="checkbox-text block font-medium text-black dark:text-white">
+                        Terms and Conditions
+                        {showTermsModal && (
+                          <LegalModal
+                            closeModal={closeTermsModal}
+                            title="Terms & Conditions"
+                            content={termsOfService}
+                          />
+                        )}
+                      </span>
                     </label>
                     {TermError && isChecked == false ? (
-                      <label className='text-esprit'>Please accept the Terms and Conditions</label>
+                      <label className="text-esprit">
+                        Please accept the Terms and Conditions
+                      </label>
                     ) : null}
                     {isChecked && (
-                      <div className="modal">
+                      <div className="modal" >
                         <div className="modal-content">
-                          <span className="close" onClick={() => setIsChecked(false)}></span>
-                          <p className='pr-70 pl-2'>
-                            By checking this box, you agree to all our terms and conditions. For further details, please access our conditions through the footer.
+                          <span
+                            className="close"
+                            onClick={() => setIsChecked(false)}
+                          ></span>
+                          <p className="pr-70 pl-2">
+                            I accept the Terms and Conditions
                           </p>
                         </div>
                       </div>
