@@ -6,7 +6,7 @@ import PhoneNumberValidation from '../SignUpFiles/PhoneNumber';
 interface PhoneNumberProps {
   onChange: (value: string, isValid: boolean) => void;
 }
-const PhoneNumber : React.FC<PhoneNumberProps> = ({ onChange }) => {
+const PhoneNumber: React.FC<PhoneNumberProps> = ({ onChange }) => {
 
   const [PhoneNumber, setPhoneNumber] = useState('');
   const [valid, setValid] = useState(true);
@@ -28,16 +28,17 @@ const PhoneNumber : React.FC<PhoneNumberProps> = ({ onChange }) => {
       <label className="mb-2.5 block font-medium text-black dark:text-white">
         Phone Number
 
-          <PhoneInput
-            country={'tn'}
-            value={PhoneNumber}
-            inputProps={{
-              required: true
-            }}
+        <div className=""><PhoneInput
+          country={'tn'}
+          value={PhoneNumber}
+          inputProps={{
+            required: true
+          }}
 
-            onChange={handlechange}
-            placeholder="Enter your phone number" />
-
+          onChange={handlechange}
+          placeholder="Enter your phone number"
+          className="py-2" />
+        </div>
       </label>
       {!valid && <p className="text-esprit">Please enter a valid phone number</p>}
 

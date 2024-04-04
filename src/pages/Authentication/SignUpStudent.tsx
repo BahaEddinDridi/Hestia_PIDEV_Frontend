@@ -825,32 +825,37 @@ const SignUpStudent: React.FC = () => {
                     </span>
                   </button>
 
-                  <div className="mb-5 mt-5 ml-3 w-[700px]">
-                    <button
-                      onClick={(e) => handleSubmit(e)}
-                      type="submit"
-                      className="w-full cursor-pointer rounded-lg border border-esprit bg-esprit p-4 text-white transition hover:bg-opacity-90"
-                    >
-                      Create account
-                    </button>
-                  </div>
-                  {/* **********************************************Sign Up with other acounts********************************************** */}
-                  <div className="mb-5 mt-5">
-                    {/* <!-- Google --> */}
-                    <GoogleLogin
-                      locale="english"
-                      theme="outline"
-                      size="large"
-                      logo_alignment="center"
-                      onSuccess={handleGoogleLoginSuccess}
-                      onError={() => {
-                        console.log('Login Failed');
-                      }}
-                    />
-                  </div>
-                  {/* **********************************************End Sign Up with other acounts********************************************** */}
-                </form>
-              )}
+                                    <div className="mb-5 mt-5">
+                                        <button
+                                            onClick={(e) => handleSubmit(e)}
+
+                                            type="submit"
+                                            className="w-full cursor-pointer rounded-lg border border-esprit bg-esprit p-4 text-white transition hover:bg-opacity-90">
+                                            Create account
+                                        </button>
+                                    </div>
+                                    {/* **********************************************Sign Up with other acounts********************************************** */}
+                                    <div className="flex w-full items-center justify-center
+                                     gap-3.5 rounded-lg border border-stroke bg-gray p-2 hover:bg-opacity-50 dark:border-strokedark
+                                     dark:bg-meta-4 dark:hover:bg-opacity-50">
+                                        <GoogleLogin
+                                            locale="english"
+                                            theme="outline"
+                                            size="large"
+                                            logo_alignment="center"
+                                            onSuccess={handleGoogleLoginSuccess}
+                                            onError={() => {
+                                                console.log('Login Failed');
+                                            }}
+                                        />
+
+                                    </div>
+                                    {/* **********************************************End Sign Up with other acounts********************************************** */}
+
+                                </form>
+
+                            )}
+
 
               <div className="mt-6 text-center">
                 <p>

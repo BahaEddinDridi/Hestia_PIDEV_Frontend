@@ -444,7 +444,7 @@ const SignUpCompany: React.FC = () => {
                     {/* ******************************************************************************************************************************** */}
 
 
-                    <div className='mt-3 mr-4 ml-4'>
+                    <div className='mt-3 mr-4 ml-4 '>
                       <PhoneNumberValidation onChange={handlePhoneNumberChange} />
                       {error && phoneNumber.length <= 0 ?
                           <label className='text-esprit'>Phone Number can't be Empty</label> : ""
@@ -758,9 +758,9 @@ const SignUpCompany: React.FC = () => {
                     </button>
                   </div>
                   {/* **********************************************Sign Up with other acounts********************************************** */}
-                  <div className='mb-5 mt-5'>
-
-                    {/* <!-- Google --> */}
+                  <div className="flex w-full items-center justify-center
+                    gap-3.5 rounded-lg border border-stroke bg-gray p-2 hover:bg-opacity-50 dark:border-strokedark
+                    dark:bg-meta-4 dark:hover:bg-opacity-50">
                     <GoogleLogin
                       locale="english"
                       theme="outline"
@@ -771,7 +771,8 @@ const SignUpCompany: React.FC = () => {
                         console.log('Login Failed');
                       }}
                     />
-                  </div>
+                    
+                    </div>
                   {/* **********************************************End Sign Up with other acounts********************************************** */}
 
 
