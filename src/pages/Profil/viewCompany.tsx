@@ -1,26 +1,86 @@
 import DefaultLayout from "../../layout/DefaultLayout";
 import { useSelector } from 'react-redux';
 import {selectCurrentUser } from '../../ApiSlices/authSlice';
-import {  useState } from 'react';
+import {  useState ,useEffect } from 'react';
 import CoverOne from '../../images/cover/cover-01.png';
 import userSix from '../../images/user/user-06.png';
-
+import { useParams } from 'react-router-dom';
+import { getUserProfile } from '../api';
+const formatDate = (dateString: string) => {
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+  return new Date(dateString).toLocaleDateString('fr-FR', options);
+}
 const ViewCompany = () => {
 
-  const currentUser = useSelector(selectCurrentUser);
+  const { username } = useParams();
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [selectedExperience, setSelectedExperience] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('info');
   const handleTabChange = (tabName: any) => {
     setActiveTab(tabName);
   };
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        if (username) {
+          const data = await getUserProfile(username);
+          console.log('Data from getUserProfile:', data);
+          setUserProfile(data);
+          if (data.experience && data.experience.length > 0) {
+            setSelectedExperience(data.experience[0]);
+          }
+        }
+
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    };
+
+    fetchUserProfile();
+  }, [username]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const cardsPerPage = 3;
+  const prevPage = () => {
+    setCurrentPage(prevPage => prevPage - 1);
+  };
+  const nextPage = () => {
+    setCurrentPage(prevPage => prevPage + 1);
+  };
+  const indexOfLastCard = currentPage * cardsPerPage;
+  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+  const filteredinter = userProfile?.intership?.filter(intership => intership && intership.interStartDate);
+const sortedintership = filteredinter ? filteredinter.sort((a: any, b: any) => {
+  const dateA = new Date(a.interStartDate);
+  const dateB = new Date(b.interStartDate);
+  const currentDate = new Date();
+  const differenceA = Math.abs(dateA - currentDate);
+  const differenceB = Math.abs(dateB - currentDate);
+  return differenceA - differenceB;
+}) : [];
+
+const filteredJobs = userProfile?.job?.filter(job => job && job.jobStartDate);
+const sortedJobs = filteredJobs ? filteredJobs.sort((a: any, b: any) => {
+  const dateA = new Date(a.jobStartDate);
+  const dateB = new Date(b.jobStartDate);
+  const currentDate = new Date();
+  const differenceA = Math.abs(dateA - currentDate);
+  const differenceB = Math.abs(dateB - currentDate);
+  return differenceA - differenceB;
+}) : [];
+
+
+  const currentCards = sortedJobs.slice(indexOfFirstCard, indexOfLastCard);
+  const currentCardstwo = sortedintership.slice(indexOfFirstCard, indexOfLastCard);
   return (
     <>
       <DefaultLayout>
         <div className="relative overflow-hidden rounded-sm border mr-7 ml-7 border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="relative overflow-hidden rounded-sm border mr-7 ml-7 border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="relative z-20  h-48 md:h-80 lg:h-96 overflow-hidden rounded-t-lg">
-              {currentUser.coverimage ? (
+              {userProfile?.coverimage ? (
                 <img
-                  src={currentUser.coverimage}
+                  src={userProfile?.coverimage}
                   alt="profile cover"
                   className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
                 />
@@ -38,8 +98,8 @@ const ViewCompany = () => {
           <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
             <div className="relative z-30 ml-10 -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
               <div className="relative drop-shadow-2">
-                {currentUser.image ? (
-                  <img src={currentUser.image} alt="profile" className='w-50 h-40 rounded-full overflow-hidden object-cover' />
+                {userProfile?.image ? (
+                  <img src={userProfile?.image} alt="profile" className='w-50 h-40 rounded-full overflow-hidden object-cover' />
                 ) : (
                   <img src={userSix} alt="profile" />
                 )
@@ -52,7 +112,7 @@ const ViewCompany = () => {
             <div className="mr-150  ">
               <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
 
-                {currentUser && currentUser.username}
+                {userProfile && userProfile?.username}
               </h3>
 
             </div>
@@ -145,23 +205,23 @@ const ViewCompany = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="mb-4">
                   <h2 className="font-medium">Presentation</h2>
-                  <p>{currentUser && currentUser.title}</p>
+                  <p>{userProfile && userProfile?.title}</p>
                 </div>
                 <div className="mb-4">
                   <h2 className="font-medium">Company Link</h2>
-                  <p>{currentUser && currentUser.CompanyLink}</p>
+                  <p>{userProfile && userProfile?.CompanyLink}</p>
                 </div>
                 <div className="mb-4">
                   <h2 className="font-medium">Phone</h2>
-                  <p>{currentUser && currentUser.phoneNumber}</p>
+                  <p>{userProfile && userProfile?.phoneNumber}</p>
                 </div>
                 <div className="mb-4">
                   <h2 className="font-medium">Date of Creation</h2>
-                  <p>{currentUser && currentUser.birthDate}</p>
+                  <p>{userProfile && userProfile?.birthDate}</p>
                 </div>
                 <div className="mb-4">
                   <h2 className="font-medium">Email</h2>
-                  <p>{currentUser && currentUser.email}</p>
+                  <p>{userProfile && userProfile?.email}</p>
                 </div>
               </div>
             </div>
@@ -169,7 +229,7 @@ const ViewCompany = () => {
         )}
 
 
-        {activeTab === 'job offers' && (
+{activeTab === 'job offers' && (
           <div className="flex mb-10 mx-auto  mt-4 max-w-6xl">
             {/* Card pour l'image et le nom de l'entreprise */}
             <div className="flex-2 mr-4">
@@ -178,14 +238,14 @@ const ViewCompany = () => {
                   <h3 className="font-medium text-lg text-black uppercase">Company Details</h3>
                 </div>
                 {/* Insérer l'image de l'entreprise */}
-                <img src={currentUser.image} alt="profile" className='w-40 h-30 rounded-lg overflow-hidden object-cover' />
+                <img src={userProfile?.image} alt="profile" className='w-40 h-30 rounded-lg overflow-hidden object-cover' />
                 {/* Nom de l'entreprise */}
-                <h2 className="text-xl font-semibold text-black">{currentUser && currentUser.username}</h2>
+                <h2 className="text-xl font-semibold text-black">{userProfile && userProfile?.username}</h2>
               </div>
 
               <div className="bg-white border mt-2 border-stroke shadow-md dark:border-strokedark dark:bg-boxdark p-6 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
-                  <p className="w-32">View a collection of active or past {currentUser && currentUser.username} Engineering Services advertisements.</p>
+                  <p className="w-32">View a collection of active or past {userProfile && userProfile?.username} Engineering Services advertisements.</p>
                 </div>
               </div>
             </div>
@@ -195,41 +255,44 @@ const ViewCompany = () => {
               <div className="bg-white border border-stroke shadow-md dark:border-strokedark dark:bg-boxdark p-6 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-medium text-lg text-black uppercase">Job Offers</h3>
+
                 </div>
                 {/* Liste des offres existantes */}
                 <div className="col-span-full flex justify-center mt-8">
-                  <button className="mr-2 px-3 py-1 bg-gray-200 rounded-md">
+                  <button className="mr-2 px-3 py-1 bg-gray-200 rounded-md" onClick={prevPage}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600 transform rotate-180" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M9.293 4.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L13.586 11H4a1 1 0 110-2h9.586L9.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </button>
-                  <span className="px-3 py-1 bg-gray-200 rounded-md">1</span>
-                  <button className="ml-2 px-3 py-1 bg-gray-200 rounded-md">
+                  <span className="px-3 py-1 bg-gray-200 rounded-md">{currentPage}</span>
+                  <button className="ml-2 px-3 py-1 bg-gray-200 rounded-md" onClick={nextPage}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M10.707 4.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L15.586 11H6a1 1 0 110-2h9.586L10.707 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </button>
                 </div>
                 <div className="flex flex-wrap justify-center ">
-                  {/* Insérer ici le contenu pour afficher les offres existantes */}
-                  {/* Exemple de carte pour une offre */}
-                  <div className="w-80 h-60 mr-4 bg-companybgfarah rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
-                    <div className="w-52 h-30 bg-cardfarah text-white text-center rounded-2xl"><b>Software Developer</b></div>
-                    <div className="">
-                      <p className="text-black">We are hiring a Software Developer with experience in React.js and Node.js. Competitive salary offered.</p>
-                    </div>
-                    <button className="bg-cardfarah font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
-                  </div>
-                  {/* Exemple de carte pour une autre offre */}
-                  <div className="w-80 h-60 bg-companybgfarah rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
-                    <div className="w-52 h-40 bg-cardfarah text-white  text-center rounded-2xl"><b>Product Manager</b></div>
-                    <div className="">
 
-                      <p className="text-black">We are seeking an experienced Product Manager to join our team. Competitive compensation package.</p>
-                    </div>
-                    <button className="bg-cardfarah  font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton  transition-colors">See more</button>
-                  </div>
+                  {currentCards.map((job) => (
 
+                    <div className="w-66 h-66 mr-4 bg-red-800 rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
+
+                      <div className="w-52 h-30 bg-white text-black text-center rounded-2xl"><b>{job.jobTitle}</b></div>
+
+                      <div className="">
+                        <div className="  felex items-center">
+                          <h2 className="font-bold text-white text-base mr-1">Post:</h2>
+                          <p className="text-sm  text-neutral-400">{job.jobPost}</p>
+                        </div>
+                        <div className=" felex items-center">
+                          <h2 className="font-bold  text-white text-base mr-1">Field:</h2>
+                          <p className="text-sm text-neutral-400">{job.jobfield}</p></div>
+                        <div className=" text-black felex items-center">
+                          <h2 className="font-bold  text-white text-base mr-1">Application Deadline:</h2>
+                          <p className="text-sm text-neutral-400 ">{formatDate(job.jobApplicationDeadline)}</p></div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -237,7 +300,8 @@ const ViewCompany = () => {
         )}
 
 
-        {activeTab === 'internship' && (
+   
+         {activeTab === 'internship' && (
           <div className="flex mb-10 mx-auto  mt-4 max-w-6xl">
             {/* Card pour l'image et le nom de l'entreprise */}
             <div className="flex-2 mr-4">
@@ -246,14 +310,14 @@ const ViewCompany = () => {
                   <h3 className="font-medium text-lg text-black uppercase">Company Details</h3>
                 </div>
                 {/* Insérer l'image de l'entreprise */}
-                <img src={currentUser.image} alt="profile" className='w-40 h-30 rounded-lg overflow-hidden object-cover' />
+                <img src={userProfile?.image} alt="profile" className='w-40 h-30 rounded-lg overflow-hidden object-cover' />
                 {/* Nom de l'entreprise */}
-                <h2 className="text-xl font-semibold text-black">{currentUser && currentUser.username}</h2>
+                <h2 className="text-xl font-semibold text-black">{userProfile && userProfile?.username}</h2>
               </div>
 
               <div className="bg-white border mt-2 border-stroke shadow-md dark:border-strokedark dark:bg-boxdark p-6 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
-                  <p className="w-32">View a collection of active or past {currentUser && currentUser.username} Engineering Services advertisements.</p>
+                  <p className="w-32">View a collection of active or past {userProfile && userProfile?.username} Engineering Services advertisements.</p>
                 </div>
               </div>
             </div>
@@ -263,40 +327,46 @@ const ViewCompany = () => {
               <div className="bg-white border border-stroke shadow-md dark:border-strokedark dark:bg-boxdark p-6 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-medium text-lg text-black uppercase">Internship Offers</h3>
+                
                 </div>
                 {/* Liste des offres existantes */}
                 <div className="col-span-full flex justify-center mt-8">
-                  <button className="mr-2 px-3 py-1 bg-gray-200 rounded-md">
+                  <button className="mr-2 px-3 py-1 bg-gray-200 rounded-md" onClick={prevPage}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600 transform rotate-180" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M9.293 4.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L13.586 11H4a1 1 0 110-2h9.586L9.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </button>
-                  <span className="px-3 py-1 bg-gray-200 rounded-md">1</span>
-                  <button className="ml-2 px-3 py-1 bg-gray-200 rounded-md">
+                  <span className="px-3 py-1 bg-gray-200 rounded-md">{currentPage}</span>
+                  <button className="ml-2 px-3 py-1 bg-gray-200 rounded-md" onClick={nextPage}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M10.707 4.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L15.586 11H6a1 1 0 110-2h9.586L10.707 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </button>
                 </div>
                 <div className="flex flex-wrap justify-center ">
-                  {/* Insérer ici le contenu pour afficher les offres existantes */}
-                  {/* Exemple de carte pour une offre */}
-                  <div className="w-80 h-60 mr-4 bg-cardfarah  rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
-                    <div className="w-52 h-30  bg-companybgfarah  text-black text-center rounded-2xl"><b>Software Developer</b></div>
-                    <div className="">
-                      <p className="text-white">We are hiring a Software Developer with experience in React.js and Node.js. Competitive salary offered.</p>
-                    </div>
-                    <button className="bg-companybgfarah  text-black font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
-                  </div>
-                  {/* Exemple de carte pour une autre offre */}
-                  <div className="w-80 h-60 bg-cardfarah rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
-                    <div className="w-52 h-40 bg-companybgfarah text-black  text-center rounded-2xl"><b>Product Manager</b></div>
-                    <div className="">
 
-                      <p className="text-white">We are seeking an experienced Product Manager to join our team. Competitive compensation package.</p>
+                  {currentCardstwo.map((internship) => (
+                    <div className="w-66 h-66 mr-4  bg-companybgfarah rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
+                      <div className="w-52 h-30   bg-red-800 text-white text-center rounded-2xl"><b>{internship.interTitle}</b></div>
+                      <div className="">
+                        <div className="  felex items-center">
+                          <h2 className="font-bold text-black text-base mr-1">Post:</h2>
+                          <p className="text-sm text-neutral-500">{internship.interPost}</p>
+                        </div>
+                        <div className="  felex items-center">
+                          <h2 className="font-bold text-base text-black  mr-1">Field:</h2>
+                          <p className="text-sm text-neutral-500">{internship.interfield}</p></div>
+                        <div className="  felex items-center">
+                          <h2 className="font-bold text-black  text-base mr-1">Application Deadline:</h2>
+                          <p className="text-sm text-neutral-500">{formatDate(internship.interApplicationDeadline)}</p></div>
+
+                      </div>
+                      <div className="group flex justify-center transition-all rounded-full bg-gray-200 p-1">
+                     
+                   
+                      </div>
                     </div>
-                    <button className="bg-companybgfarah  text-black font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton  transition-colors">See more</button>
-                  </div>
+                  ))}
 
                 </div>
               </div>

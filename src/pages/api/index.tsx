@@ -1,5 +1,5 @@
 const BASE_URL = 'http://localhost:3001'; 
-
+import axios from 'axios';
 
 export const getUserProfile = async (username: string) => {
     try {
@@ -346,7 +346,7 @@ export const deactivateAccount = async (username:any, duration:any,password:stri
 };
 export const getUserImage = async (username:any) => {
   try {
-      const response = await fetch(`http://localhost:3001/user/image`, {
+      const response = await fetch(`${BASE_URL}/user/image`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -363,6 +363,67 @@ export const getUserImage = async (username:any) => {
       return null;
   }
 };
+//delete Experience 
+export const deleteproject = async (username:any, projectId:any) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/user/deleteproject/${username}/${projectId}`);
+    console.log('Experience deleted successfully:', response.data);
+  } catch (error) {
+    console.error('Error deleting project:', error.message);
+    throw new Error('Failed to delete project');
+  }
+};
+//upddate
+export const updateproject = async (username:string , projectId:string, updatedProject:any) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:3001/user/updateproject/${username}/${projectId}`,
+      updatedProject
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error updating project:', error.response.data.error);
+    throw error;
+  }
+};
+export const updateApplicationStatus = async (applicationId:string,newStatus:any) =>{
+  try {
+    const response = await axios.put('http://localhost:3001/application/updatestatus', {
+        applicationId: applicationId,
+        newStatus: newStatus
+    });
+    
+    if (response.status === 200) {
+        console.log(response.data.message); 
+    
+    } else {
+        console.error('Error updating application status:', response.data.error);
+    
+    }
+} catch (error) {
+    console.error('Error updating application status:', error);
+   
+}
+}
+export const updatestatuinter = async (applicationId:string,newStatus:any) =>{
+  try {
+    const response = await axios.put('http://localhost:3001/application/updatestatusinter', {
+        applicationId: applicationId,
+        newStatus: newStatus
+    });
+    
+    if (response.status === 200) {
+        console.log(response.data.message); 
+    
+    } else {
+        console.error('Error updating application status:', response.data.error);
+    
+    }
+} catch (error) {
+    console.error('Error updating application status:', error);
+   
+}
+}
 
 /////updateCRM
 export const updateCRM = async (updatedCRMData :any) => {
