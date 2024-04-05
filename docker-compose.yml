@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  db:
+    image: mongo:4.2
+    container_name: db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/dump:/dump
+  app:
+    build: .
+    image: 192.168.100.206:8083/reactapp:1.0.0
+    restart: always
+    container_name: back
+    ports:
+      - "4200:4200"
+    depends_on:
+      - db
+    volumes:
+      - mongo-data:/path/to/mongo/data
+volumes:
+  mongo-data:

@@ -10,7 +10,7 @@ const ResetPasswordPage: React.FC = () => {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
-  const { _id, token } = useParams<{ _id: string; token: string }>();
+  const { _id } = useParams<{ _id: string}>();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,7 +32,7 @@ const ResetPasswordPage: React.FC = () => {
         return;
     }
 
-    const response = await resetPassword(userId, token, password);
+    const response = await resetPassword(userId, password);
     if (response && response.Status === 'Success') {
         setSuccessMessage('Password reset successfully');
         setPassword('');

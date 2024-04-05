@@ -11,6 +11,10 @@ import { fetchUserData ,fetchUserRoleStats} from '../api';
 import  { ReactNode, useEffect, useState } from 'react';
 import ChartGender from '../components/ChartGender';
 import ChartStatus from '../components/ChartStatus';
+import ChartSkills from '../components/ChartSkills';
+import ChartCompanies from '../components/ChartCompanies';
+import ChartLocations from '../components/ChartLocation';
+import ChartSeniorityLevel from '../components/ChartSeniority';
 
 
 const StatisticPage: React.FC = () => {
@@ -64,8 +68,8 @@ const StatisticPage: React.FC = () => {
               key={stat._id} // Utilisez une propriété unique de stat comme clé
               title={`Total ${stat._id} Users`}
               total={stat.count !== null ? stat.count.toString() : 'Loading...'}
-              rate="0.43%"
-              levelUp
+              rate=""
+              
           >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -82,6 +86,10 @@ const StatisticPage: React.FC = () => {
       <ChartThree />
        <ChartGender/> 
        <ChartStatus/> 
+       <ChartSkills/>
+       <ChartCompanies/>
+       <ChartLocations/>
+       <ChartSeniorityLevel/>
         {/* <ChartOne />
         <ChartTwo />
         <ChatCard /> */}

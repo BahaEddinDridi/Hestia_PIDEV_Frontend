@@ -25,9 +25,9 @@ export const AddJob = async (username: any, jobData: any) => {
 };
 
 
-export const UpdateJob = async (jobId: any, jobData: any) => {
+export const UpdateJob = async (jobId: any, jobData: any,username: any,) => {
     try {
-      const response = await fetch(`${BASE_URL}/job/UpdateJob/${jobId}`, {
+      const response = await fetch(`${BASE_URL}/job/UpdateJob/${username}/${jobId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

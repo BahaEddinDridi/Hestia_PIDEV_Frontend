@@ -41,10 +41,16 @@ const SearchBar = () => {
     fetchData();
   }, []);
 
-  const handleEnterOrClick = (username: string) => {
+  const handleEnterOrClick = async(username: string) => {
+    const userData = await getUserProfile(username);
     if (filteredUsers.length > 0) {
+      
       setSearchTerm(username);
-      navigate(`/Otherprofiles/${username}`);
+      if (userData.role === 'jobSeeker' ){
+      navigate(`/Otherprofiles/${username}`);}
+      else if (userData.role === 'professional' ){
+        navigate(`/company/${username}`);
+      }
       
     }
   };

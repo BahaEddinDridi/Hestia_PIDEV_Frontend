@@ -39,7 +39,7 @@ const UpdateProfile = () => {
         if (currentUsername) {
           const data = await getUserProfile(currentUsername);
           setUserProfile(data);
-
+          
           setFormData({
             firstName: data.firstName || '',
             lastName: data.lastName || '',
@@ -125,6 +125,7 @@ const UpdateProfile = () => {
 
         setTimeout(() => {
           navigate('/profile');
+          window.location.reload()
         }, 2000);
       } else {
 
