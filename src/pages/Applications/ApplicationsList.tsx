@@ -128,11 +128,23 @@ const ApplicationsList = () => {
         jobId
       })
       setSuccessMessage('Application updated successfully.');
+
+      setTimeout(async () => {
+        try {
+          const fetchedApplications = await ApplicationService.getApplicationsByUsername(currentUser.username);
+          setApplications(fetchedApplications);
+        } catch (error) {
+          console.error('Error fetching applications:', error);
+        } finally {
+          setSelectedApplication(null);
+          setApplicationToDelete(null);
+          closeModal();
+        }
+      }, 2000);
     }
     catch (error) {
       console.log(error);
     }
-    closeModal();
   };
   const handleDelete = async (application) => {
     try {
@@ -153,11 +165,7 @@ const indexOfFirstApp = indexOfLastApp - applicationsPerPage;
 const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
   return (
     <DefaultLayout>
-      {successMessage && (
-        <div className="absolute top-0 left-0 right-0 bg-green-500 text-white text-center p-4">
-          {successMessage}
-        </div>
-      )}
+
       <div className="mx-20 border border-gray-200
       rounded-lg overflow-hidden shadow-lg hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 font-mono">
         <div className="overflow-x-auto">
@@ -251,7 +259,7 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
 
       </div>
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-50">
           <div className="group flex flex-col justify-start items-start gap-2 w-230 h-125 duration-500 relative
           rounded-lg p-4 bg-white hover:-translate-y-2 hover:shadow-xl shadow-red-400
           ">
@@ -469,6 +477,11 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
             </div>
           </div>
         </div>
+        </div>
+      )}
+      {successMessage && (
+        <div className="absolute z-50 top-0 right-0 bg-green-500 text-white px-4 py-2 m-4 rounded-lg">
+          {successMessage}
         </div>
       )}
 
