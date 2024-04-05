@@ -27,6 +27,13 @@ const DropdownNotification = () => {
     fetchNotifications();
   }, []);
 
+  const formatDate = (dateString) => {
+    const submitDate = new Date(dateString);
+    const year = submitDate.getFullYear();
+    const month = (submitDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = submitDate.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   useEffect(() => {
     const clickHandler = ({ target }) => {
@@ -103,7 +110,7 @@ const DropdownNotification = () => {
                 to={``}
               >
                 <p className="text-sm">{notification.message}</p>
-                <p className="text-xs">{notification.timestamp}</p>
+                <p className="text-xs">{formatDate(notification.timestamp)}</p>
               </Link>
             </li>
           ))}
