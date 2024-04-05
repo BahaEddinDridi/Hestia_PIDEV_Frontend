@@ -1,22 +1,37 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../ApiSlices/authSlice';
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifying, setNotifying] = useState(true);
+  const [notifications, setNotifications] = useState([]);
+  const currentUser = useSelector(selectCurrentUser);
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
 
   useEffect(() => {
-    const clickHandler = ({ target }: MouseEvent) => {
+    const fetchNotifications = async () => {
+      try {
+        const userId = currentUser._id
+        const response = await fetch(`http://localhost:3001/notifications/getNotificationsByUser/${userId}`);
+        const data = await response.json();
+        setNotifications(data.notifications);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
+
+  useEffect(() => {
+    const clickHandler = ({ target }) => {
       if (!dropdown.current) return;
-      if (
-        !dropdownOpen ||
-        dropdown.current.contains(target) ||
-        trigger.current.contains(target)
-      )
-        return;
+      if (!dropdownOpen || dropdown.current.contains(target) || trigger.current.contains(target)) return;
       setDropdownOpen(false);
     };
     document.addEventListener('click', clickHandler);
@@ -25,7 +40,7 @@ const DropdownNotification = () => {
 
   // close if the esc key is pressed
   useEffect(() => {
-    const keyHandler = ({ keyCode }: KeyboardEvent) => {
+    const keyHandler = ({ keyCode }) => {
       if (!dropdownOpen || keyCode !== 27) return;
       setDropdownOpen(false);
     };
@@ -37,10 +52,7 @@ const DropdownNotification = () => {
     <li className="relative">
       <Link
         ref={trigger}
-        onClick={() => {
-          setNotifying(false);
-          setDropdownOpen(!dropdownOpen);
-        }}
+        onClick={() => setDropdownOpen(!dropdownOpen)}
         to="#"
         className="relative flex h-9 w-9 items-center justify-center text-white
         rounded-full border-[0.5px] border-stroke bg-red-600 hover:text-red-800
@@ -83,69 +95,18 @@ const DropdownNotification = () => {
         </div>
 
         <ul className="flex h-auto flex-col overflow-y-auto">
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  Edit your information in a swipe
-                </span>{' '}
-                Sint occaecat cupidatat non proident, sunt in culpa qui officia
-                deserunt mollit anim.
-              </p>
-
-              <p className="text-xs">12 May, 2025</p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  It is a long established fact
-                </span>{' '}
-                that a reader will be distracted by the readable.
-              </p>
-
-              <p className="text-xs">24 Feb, 2025</p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  There are many variations
-                </span>{' '}
-                of passages of Lorem Ipsum available, but the majority have
-                suffered
-              </p>
-
-              <p className="text-xs">04 Jan, 2025</p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  There are many variations
-                </span>{' '}
-                of passages of Lorem Ipsum available, but the majority have
-                suffered
-              </p>
-
-              <p className="text-xs">01 Dec, 2024</p>
-            </Link>
-          </li>
+          {notifications.map(notification => (
+            <li key={notification._id}>
+              <Link
+                className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3
+                hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                to={``}
+              >
+                <p className="text-sm">{notification.message}</p>
+                <p className="text-xs">{notification.timestamp}</p>
+              </Link>
+            </li>
+          ))}
         </ul>
       </div>
     </li>
