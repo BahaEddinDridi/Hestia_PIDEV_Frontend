@@ -13,11 +13,11 @@ services:
       - ./data/dump:/dump
   app:
     build: .
-    image: 192.168.100.206:8083/reactapp:1.0.0
+    image: front
     restart: always
     container_name: back
     ports:
-      - "4200:4200"
+      - "5173:5173"
     depends_on:
       - db
     volumes:
