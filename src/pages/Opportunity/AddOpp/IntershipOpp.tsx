@@ -267,7 +267,7 @@ const IntershipOpp: React.FC = () => {
                                                 <option value="Mechanical Engineering">Mechanical Engineering</option>
                                                 <option value="Electromechanical Engineering">Electromechanical Engineering</option>
                                                 <option value="Civil Engineering">Civil Engineering</option>
-                                                <option value="Business Administration">Business</option>
+                                                <option value="Business">Business</option>
                                             </select>
                                             {error && interfield.length <= 0 && (
                                                 <label className="text-esprit text-xs">Internship field can't be empty</label>

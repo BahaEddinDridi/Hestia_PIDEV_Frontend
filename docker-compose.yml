@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   db:
     image: mongo:4.2
@@ -11,16 +12,18 @@ services:
       - "27017:27017"
     volumes:
       - ./data/dump:/dump
+
   app:
     build: .
-    image: 192.168.100.206:8083/reactapp:1.0.0
+    image: front
     restart: always
-    container_name: back
+    container_name: front
     ports:
-      - "4200:4200"
+      - "5173:5173"  # Port changed to avoid conflict
     depends_on:
       - db
     volumes:
       - mongo-data:/path/to/mongo/data
+
 volumes:
   mongo-data:
