@@ -11,8 +11,10 @@ import FormLayout from './pages/Form/FormLayout';
 
 import Settings from './pages/Settings';
 import Tables from './backoffice/pages/Tables';
-import TablesInterships from './backoffice/Tables/TableInterships';
+import TablesIntershipsOpportunities from './backoffice/Tables/TableInterships';
+import TablesIntershipsApplications from './backoffice/Tables/IntershipApplicationDispo';
 import TablesJobsOpportunities from './backoffice/Tables/TableJobOpportunities';
+import TablesJobsApplication from './backoffice/Tables/JobApplication';
 import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
 import UpdateProfile from './pages/Profil/Updateprof';
@@ -42,6 +44,7 @@ import JobOpp from '../src/pages/Opportunity/AddOpp/JobOpp'
 import IntershipOpp from '../src/pages/Opportunity/AddOpp/IntershipOpp'
 import EditJob from '../src/pages/Opportunity/UpdateOpp/jobUpdate'
 import EditInter from '../src/pages/Opportunity/UpdateOpp/intershipUpdate'
+import NotFound from '../src/pages/NotFound'
 
 import AboutUs from './AboutUs/AboutUs';
 import { useSelector } from "react-redux";
@@ -110,6 +113,7 @@ function App() {
             </>
           }
         />
+
         <Route
           path="/Unauthorized"
           element={
@@ -161,7 +165,7 @@ function App() {
             <>
               <PageTitle title="Apply Now!" />
               <ProtectedRoute>
-                <InternshipOfferView/>
+                <InternshipOfferView />
               </ProtectedRoute>
             </>
           } />
@@ -171,11 +175,11 @@ function App() {
             <>
               <PageTitle title="Your Applications" />
               <ProtectedRoute>
-                <ApplicationsList/>
+                <ApplicationsList />
               </ProtectedRoute>
             </>
           } />
-          <Route
+        <Route
           path="/Profile"
           element={
             <>
@@ -223,7 +227,7 @@ function App() {
             </>
           } />
         <Route
-          path="/detailsintership/:id"
+          path="/detailsintership/:intershipid"
           element={
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
@@ -314,63 +318,58 @@ function App() {
             </>
           }
         />
+       
         <Route
-          path="/Dashboard/tables-Of-Jobs/Opportunities"
+          path="/Dashboard/tables-Of-Interships/Opportunities"
           element={
             <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesJobsOpportunities />
+             <AdminRoute>
+             <PageTitle title="List Interships-Opportunities" />
+              <TablesIntershipsOpportunities />
+             </AdminRoute>
+             
             </>
           }
         />
-        <Route
-          path="/Dashboard/tables-Of-Interships"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesInterships />
-            </>
-          }
-        />
-        <Route
-          path="/Dashboard/tables-Of-Jobs/Opportunities"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesJobsOpportunities />
-            </>
-          }
-        />
-        <Route
-          path="/Dashboard/tables-Of-Interships"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesInterships />
-            </>
-          }
-        />
-        <Route
-          path="/Dashboard/tables-Of-Jobs"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesJobsOpportunities />
-            </>
-          }
-        />
-        <Route
-          path="/Dashboard/tables-Of-Interships"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <TablesInterships />
-            </>
-          }
-        />
-
-
          <Route
+          path="/Dashboard/tables-Of-Interships/Applications"
+          element={
+            <>
+            <AdminRoute>
+            <PageTitle title="List Interships-Applications" />
+              <TablesIntershipsApplications />
+            </AdminRoute>
+              
+            </>
+          }
+        />
+        <Route
+          path="/Dashboard/tables-Of-Jobs/Opportunities"
+          element={
+            <>
+            <AdminRoute>
+            <PageTitle title="List Jobs-Opportunities" />
+              <TablesJobsOpportunities />
+            </AdminRoute>
+             
+            </>
+          }
+        />
+        <Route
+          path="/Dashboard/tables-Of-Jobs/Applications"
+          element={
+            <>
+            <AdminRoute>
+            <PageTitle title="List Jobs-Applications" />
+              <TablesJobsApplication />
+            </AdminRoute>
+              
+            </>
+          }
+        />
+       
+
+        <Route
           path="/Dashboard/ProfileAdmin/:username"
           element={
             <>
@@ -385,7 +384,7 @@ function App() {
           path="/Dashboard"
           element={
             <>
-              <PageTitle title="Statistics" />
+              <PageTitle title="Dashboard" />
               <AdminRoute>
                 <StatisticPage />
               </AdminRoute>
@@ -559,15 +558,7 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/auth/reset-password/:_id/:token"
-          element={
-            <>
-              <PageTitle title="Reset Password" />
-              <ResetPasswordPage />
-            </>
-          }
-        />
+        
         <Route
           path='/pages/settings'
           element={
@@ -614,7 +605,7 @@ function App() {
           }
         />
         <Route
-          path="/auth/reset-password/:_id/:token"
+          path="/auth/reset-password/:_id"
           element={
             <>
               <PageTitle title="Reset Password" />
@@ -694,6 +685,16 @@ function App() {
             <>
               <PageTitle title="Edit A Job Opportunity" />
               <EditInter />
+            </>
+          }
+        />
+            {/************** * TOUJOURS LE DERNIER  *************************/}
+        <Route
+          path="/*"
+          element={
+            <>
+              <PageTitle title="NotFound" />
+              <NotFound />
             </>
           }
         />

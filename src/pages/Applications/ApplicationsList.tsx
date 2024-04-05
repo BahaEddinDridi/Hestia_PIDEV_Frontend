@@ -23,6 +23,7 @@ const ApplicationsList = () => {
   const [applicationToDelete, setApplicationToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalApplications, setTotalApplications] = useState(0);
+  const [successMessage, setSuccessMessage] = useState('');
   const applicationsPerPage = 5;
 
   useEffect(() => {
@@ -126,6 +127,7 @@ const ApplicationsList = () => {
         userId : currentUser._id,
         jobId
       })
+      setSuccessMessage('Application updated successfully.');
     }
     catch (error) {
       console.log(error);
@@ -151,6 +153,11 @@ const indexOfFirstApp = indexOfLastApp - applicationsPerPage;
 const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
   return (
     <DefaultLayout>
+      {successMessage && (
+        <div className="absolute top-0 left-0 right-0 bg-green-500 text-white text-center p-4">
+          {successMessage}
+        </div>
+      )}
       <div className="mx-20 border border-gray-200
       rounded-lg overflow-hidden shadow-lg hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 font-mono">
         <div className="overflow-x-auto">
@@ -251,8 +258,8 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
             {!isEditMode ? (
               <>
                 <h2 className="text-xl font-semibold mb-4">Application Details</h2>
-                <div className="grid grid-cols-2 gap-20">
-                  <div>
+                <div className="grid grid-cols-2 gap-5">
+                  <div className="rounded-lg shadow-lg shadow-red-400 px-6 py-3 flex flex-col">
                     <div className="mb-1">
                       <label className="block text-sm font-bold text-gray-700">Company Name</label>
                       <p>{selectedApplication.companyName}</p>
@@ -305,23 +312,26 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
                   </div>
                   {/* Right side */}
 
-                  <div className="mb-4 h-80 ">
-                    <label className="block text-sm font-medium text-black">Motivation Letter</label>
-                    <p>{selectedApplication.motivationLetter}</p>
+                  <div className="mb-4 w-100 h-80 rounded-lg shadow-lg shadow-red-400 px-6 py-3 flex flex-col">
+                    <div className="mb-1 flex-grow" style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
+                      <label className="block text-sm font-medium text-black">Motivation Letter</label>
+                      <p className="whitespace-pre-line">{selectedApplication.motivationLetter}</p>
+                    </div>
                   </div>
+
 
                 </div>
                 <div
                   className="mt-4 flex justify-center items-center absolute duration-700 shadow-md
                   group-hover:-translate-y-4 group-hover:-translate-x-4 -bottom-10 -right-10 w-60 h-30 rounded-lg bg-red-600">
                   <button
-                    className="bg-blue-500 h-10 hover:bg-blue-600 text-white px-4 py-2 rounded-lg mr-2"
+                    className="bg-white h-10 hover:bg-red-400 text-red-800 px-4 py-2 rounded-lg mr-2"
                     onClick={toggleEditMode}
                   >
                     Update
                   </button>
                   <button
-                    className="bg-gray-300 h-10 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg"
+                    className=" h-10 hover:bg-gray-400 text-white px-4 py-2 rounded-lg "
                     onClick={closeModal}
                   >
                     Close
@@ -332,7 +342,8 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
             ) : (
               <form onSubmit={handleUpdate}>
                 <div className="flex">
-                  <div className="w-1/2 mr-4">
+                  <div className="grid grid-cols-2 gap-5">
+                  <div className="rounded-lg shadow-lg shadow-red-400 px-6 py-3 flex flex-col">
                     {/* Left side */}
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-gray-700">Full Name</label>
@@ -375,7 +386,7 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
                     </div>
                   </div>
                   <div className="w-1/2">
-                    <div className="mb-4">
+                    <div className="mb-4 w-100 h-90 rounded-lg shadow-lg shadow-red-400 px-6 py-3 flex flex-col">
                       <label className="block text-sm font-medium text-gray-700">Motivation Letter</label>
                       <textarea
                         name="motivationLetter"
@@ -385,25 +396,33 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
                         className="mt-1 h-80 focus:ring-blue-500 focus:border-blue-500
                 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
+                      {motivationLetter.length < 250 && (
+                        <p className="text-red-600 text-sm">Minimum 250 characters required</p>
+                      )}
+                      {motivationLetter.length >= 250 && (
+                        <p className="text-white text-sm">{motivationLetter.length} characters</p>
+                      )}
                     </div>
                   </div>
+                </div>
                 </div>
                 <div
                   className="mt-4 flex justify-center items-center absolute duration-700 shadow-md
                   group-hover:-translate-y-4 group-hover:-translate-x-4 -bottom-10 -right-10 w-60 h-30 rounded-lg bg-red-600">
                   <button
-                    className="bg-blue-500 h-10 hover:bg-blue-600 text-white px-4 py-2 rounded-lg mr-2"
+                    className="bg-white h-10 hover:bg-red-400 text-red-800 px-4 py-2 rounded-lg mr-2"
                     type="submit"
                   >
                     Update
                   </button>
                   <button
-                    className="bg-gray-300 h-10 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg"
+                    className=" h-10 hover:bg-gray-400 text-white px-4 py-2 rounded-lg "
                     onClick={closeModal}
                   >
                     Close
                   </button>
                 </div>
+
               </form>
             )}
           </div>

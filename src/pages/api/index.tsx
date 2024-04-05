@@ -1,5 +1,5 @@
 const BASE_URL = 'http://localhost:3001'; 
-
+import axios from 'axios';
 
 export const getUserProfile = async (username: string) => {
     try {
@@ -146,9 +146,9 @@ export const sendEmail = async (email: string): Promise<any> => {
         throw new Error('Error sending email');
     }
 };
-export const resetPassword = async (_id: string, token: string, password: string) => {
+export const resetPassword = async (_id: string, password: string) => {
   try {
-    const response = await fetch(`${BASE_URL}/auth/Reset_Passwords_Mail/${_id}/${token}`, {
+    const response = await fetch(`${BASE_URL}/auth/Reset_Passwords_Mail/${_id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -183,11 +183,7 @@ export const resetPassword = async (_id: string, token: string, password: string
         throw new Error('Unknown error occurred while resetting password');
     }
 }
-
-
-  
-};
-  
+}
 
 
   /////////////////////////////////////////////////////////        registerUser          ////////////////////////////////////////////////////////////////////////////
@@ -350,7 +346,7 @@ export const deactivateAccount = async (username:any, duration:any,password:stri
 };
 export const getUserImage = async (username:any) => {
   try {
-      const response = await fetch(`http://localhost:3001/user/image`, {
+      const response = await fetch(`${BASE_URL}/user/image`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -365,5 +361,97 @@ export const getUserImage = async (username:any) => {
   } catch (error) {
       console.error('Error fetching user image:', error);
       return null;
+  }
+};
+//delete Experience 
+export const deleteproject = async (username:any, projectId:any) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/user/deleteproject/${username}/${projectId}`);
+    console.log('Experience deleted successfully:', response.data);
+  } catch (error) {
+    console.error('Error deleting project:', error.message);
+    throw new Error('Failed to delete project');
+  }
+};
+//upddate
+export const updateproject = async (username:string , projectId:string, updatedProject:any) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:3001/user/updateproject/${username}/${projectId}`,
+      updatedProject
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error updating project:', error.response.data.error);
+    throw error;
+  }
+};
+export const updateApplicationStatus = async (applicationId:string,newStatus:any) =>{
+  try {
+    const response = await axios.put('http://localhost:3001/application/updatestatus', {
+        applicationId: applicationId,
+        newStatus: newStatus
+    });
+    
+    if (response.status === 200) {
+        console.log(response.data.message); 
+    
+    } else {
+        console.error('Error updating application status:', response.data.error);
+    
+    }
+} catch (error) {
+    console.error('Error updating application status:', error);
+   
+}
+}
+export const updatestatuinter = async (applicationId:string,newStatus:any) =>{
+  try {
+    const response = await axios.put('http://localhost:3001/application/updatestatusinter', {
+        applicationId: applicationId,
+        newStatus: newStatus
+    });
+    
+    if (response.status === 200) {
+        console.log(response.data.message); 
+    
+    } else {
+        console.error('Error updating application status:', response.data.error);
+    
+    }
+} catch (error) {
+    console.error('Error updating application status:', error);
+   
+}
+}
+
+/////updateCRM
+export const updateCRM = async (updatedCRMData :any) => {
+  try {
+    const response = await fetch(`http://localhost:3001/CRM/updateCRM`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedCRMData)
+    });
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return { error: 'Internal server error' };
+  }
+};
+
+//getCRM
+export const getCRM = async () => {
+  try {
+    
+    const response = await fetch(`http://localhost:3001/CRM/getCRM`, {
+      method: 'GET'
+    });
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return { error: 'Internal server error' };
   }
 };

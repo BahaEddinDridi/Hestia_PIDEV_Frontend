@@ -10,6 +10,7 @@ import DatePickerOne from '../../components/Forms/DatePicker/DatePickerOne';
 import { deleteEducation } from '../api/index';
 import { updateEducation } from '../api/index';
 import axios from 'axios';
+import { validateFormEducation } from '../../pages/Profil/validation';
 
 
 
@@ -189,9 +190,21 @@ useEffect(() => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+  const [errors, setErrors] = useState({
+    degree: '',
+    school: '',
+    startDate: '',
+    endDate: ''
+  });
   const handleSaveModal: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
     try {
+      const errors = validateFormEducation(educationData);
+      if (Object.keys(errors).length > 0) {
+        setErrors(errors);
+        return;
+    }else{
+
       const result = await addUserEducation(currentUsername, educationData);
       console.log('Education added successfully:', result);
       setEducationList((prevList) => [...prevList, { ...educationData }]);
@@ -201,7 +214,7 @@ useEffect(() => {
         degree: '',
         startDate: '',
         endDate: '',
-      });
+      });}
       handleCloseModal();
     
     } catch (error) {
@@ -345,6 +358,7 @@ useEffect(() => {
                   value={educationData.degree}
                   onChange={handleChange}
                   className="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:border-red-800 dark:border-gray-500 dark:bg-gray-600 dark:text-black" />
+                {errors.degree && <p className="text-red-500">{errors.degree}</p>}
                 <label className="mb-2 text-sm font-medium block uppercase text-black dark:text-black">
                   school
                 </label>
@@ -355,6 +369,7 @@ useEffect(() => {
                   value={educationData.school}
                   onChange={handleChange}
                   className="w-full py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:border-red-800 dark:border-gray-500 dark:bg-gray-600 dark:text-black" />
+                   {errors.school && <p className="text-red-500">{errors.school}</p>}
                 <label className="mb-2 text-sm font-medium  uppercase block text-black dark:text-black">
                   startDate
                 </label>
@@ -366,6 +381,7 @@ useEffect(() => {
                     onChange={handleChange}
                     name="startDate" 
                   />
+                    {errors.startDate && <p className="text-red-500">{errors.startDate}</p>}
                 <label className="mb-2 text-sm font-medium  uppercase block text-black dark:text-black">
                   endDate
                 </label>
@@ -377,7 +393,7 @@ useEffect(() => {
                     onChange={handleChange}
                     name="endDate" 
                   />
-
+                {errors.endDate && <p className="text-red-500">{errors.endDate}</p>}
 
                 <div className="flex mt-4 justify-center gap-4.5 mb-5">
                   <button

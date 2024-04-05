@@ -1,10 +1,11 @@
 import DefaultLayout from "../layout/DefaultLayout";
 import { useSelector } from 'react-redux';
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import userSix from '../images/user/user-06.png';
 import userfive from '../images/user/user-05.png';
 import { selectCurrentUser } from '../ApiSlices/authSlice';
 import { useParams } from "react-router";
+import { updatestatuinter } from "./api";
 interface Job {
     _id: string;
     jobTitle: string;
@@ -27,7 +28,7 @@ const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR', options);
 }
 const Detailsintership = () => {
-    const currentUser = useSelector(selectCurrentUser);
+   
     const acceptApplication = (candidateId) => {
         // Implémentez ici la logique pour accepter la candidature avec l'ID du candidat
         console.log(`Candidature acceptée pour le candidat avec l'ID ${candidateId}`);
@@ -38,15 +39,109 @@ const Detailsintership = () => {
         // Implémentez ici la logique pour rejeter la candidature avec l'ID du candidat
         console.log(`Candidature rejetée pour le candidat avec l'ID ${candidateId}`);
     }
-    
-    const { id } = useParams();
-    console.log(id);
+    const currentUser = useSelector(selectCurrentUser);
+    const { intershipid } = useParams();
+    console.log(intershipid);
 
-    const offer = currentUser?.intership.find(intership => intership._id === id);
+    const offer = currentUser?.intership.find(intership => intership._id === intershipid);
     console.log(offer);
     if (!offer) {
         return <div>Loading...</div>;
     }
+    const [intershipApplications, setintershipapp] = useState([]);
+    useEffect(() => {
+
+        const fetchintershipApplications = async () => {
+            try {
+                const response = await fetch(`http://localhost:3001/intership/getapp/${intershipid}`, {
+                    method: 'GET',
+
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch intership applications');
+                }
+                const data = await response.json();
+                setintershipapp(data);
+            } catch (error) {
+                console.error('Error fetching intership applications:', error);
+            }
+        };
+
+        fetchintershipApplications();
+
+    }, [intershipid]);
+        //*************************** Modal */
+    const [selectedApplication, setSelectedApplication] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const handleOpenModal = (index) => {
+        setSelectedApplication(intershipApplications[index]);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setSelectedApplication(null);
+        setIsModalOpen(false);
+    };
+      //////////******************** le trie de tableau  */
+      const [sortByDate, setSortByDate] = useState(false);
+      const [sortedApplications, setSortedApplications] = useState([...intershipApplications]);
+      const sortByDateApplied = () => {
+          const sorted = [...intershipApplications].sort((a, b) => {
+              const dateA = new Date(a.submitDate);
+              const dateB = new Date(b.submitDate);
+              return dateA - dateB;
+          });
+          setSortedApplications(sorted);
+      };
+      const handleSortByDateChange = () => {
+          setSortByDate(!sortByDate);
+          if (!sortByDate) {
+              sortByDateApplied();
+          } else {
+              setSortedApplications([...intershipApplications]);
+          }
+      };
+       ///////////////////////////////commmaintaire dans le modale 
+    const [comments, setCommentaire] = useState('');
+    const saveComments = () => {
+        // Mettre en œuvre la logique pour sauvegarder les commentaires dans la base de données
+    };
+     ///////////////////////////////search bar 
+     const [searchValue, setSearchValue] = useState('');
+     const handleSearchChange = (event) => {
+         setSearchValue(event.target.value);
+     };
+     const filteredApplications = intershipApplications.filter((application) =>
+     application.applicantUsername.toLowerCase().includes(searchValue.toLowerCase())
+  );
+  //***************** accept reject application */
+ const [modalOpen, setModalOpen] = useState(false);
+ const [applicationId, setApplicationId] = useState(null);
+ const [newStatus, setNewStatus] = useState('');
+ const [successMessage, setSuccessMessage] = useState<string>('');
+ const [errorMessage, setErrorMessage] = useState<string>('');
+ const openModal = (id, status) => {
+    setApplicationId(id);
+    setNewStatus(status);
+    setModalOpen(true);
+   
+};
+console.log(newStatus);
+const handleConfirm = () => {
+    updatestatuinter(applicationId, newStatus);
+    setModalOpen(false);
+    if (newStatus === 'Accepted') {
+        setSuccessMessage('application accepted');
+        setTimeout(() => {
+            setSuccessMessage('');
+        }, 3000);
+    }else if (newStatus === 'Rejected') {
+        setErrorMessage('application rejected');
+        setTimeout(() => {
+            setErrorMessage('');
+        }, 3000);
+    }
+};
     return (
         <>
             <DefaultLayout>
@@ -129,14 +224,43 @@ const Detailsintership = () => {
 
 
                     <div className="p-6 bg-white shadow-md rounded-lg mb-4">
+                    {successMessage && (
+                                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mt-4">
+                                    {successMessage}
+                                </div>
+                            )}
+                            {errorMessage && (
+                                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mt-4">
+                                    {errorMessage}
+                                </div>
+                            )}
                         <h2 className="text-lg font-semibold mb-2 text-black">Applications</h2>
                         <input
                             type="text"
                             placeholder="Search..."
-                            value=""
-
+                            value={searchValue}
+                            onChange={handleSearchChange}
                             className="p-2 border border-gray-300 rounded-lg mb-4"
                         />
+                        <div className="flex items-center  md:flex-row items-center md:items-start  ml-[900px]  mt-2">
+                            <label className="inline-flex mr-4 items-center cursor-pointer text-base text-gray-700 transition-colors duration-300 hover:text-gray-600 focus:outline-none">
+                                <input type="checkbox" className="hidden" checked={sortByDate} onChange={handleSortByDateChange} />
+                                <span className={`relative flex-shrink-0 w-5 h-5 mr-1 border-2 border-gray-300 rounded-md transition-colors duration-300 bg-white ${sortByDate ? 'bg-gray-700 border-transparent' : ''}`}>
+                                    {sortByDate && (
+                                        <span className="absolute inset-0 flex items-center justify-center text-black">
+                                            <svg className="w-6 h-6 text-black fill-current" viewBox="0 0 24 24">
+                                                <path d="M10 17l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+                                            </svg>
+                                        </span>
+                                    )}
+                                </span>
+                                Sort by Date Applied
+                            </label>
+                            <div className="text-sm font-semibold text-gray-700 mr-2">Total Applications:</div>
+                            <div className="text-lg font-bold text-appthre">{intershipApplications.length}</div>
+
+                        </div>
+                        <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gradient-to-r  from-appfarah via-apptwofarah to-appthre  text-white">
                                 <tr>
@@ -144,52 +268,299 @@ const Detailsintership = () => {
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Date Applied</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">CV</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Phone number</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                <tr className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center">
-                                            <div className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0">
-                                                <img src={userSix} alt="User Avatar" className="w-full h-full rounded-full" />
-                                            </div>
-                                            <span className="ml-3 font-semibold text-gray-800">John Doe</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">john.doe@example.com</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">2024-03-25</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <a href="#" className="text-blue-600 hover:text-blue-900">View CV</a>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <button onClick={() => acceptApplication(2)} className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Accept</button>
-                                        <button onClick={() => rejectApplication(2)} className="bg-red-500 text-white px-4 py-2 rounded-md ml-2 hover:bg-red-600">Reject</button>
-                                    </td>
-                                </tr>
-                                <tr className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center">
-                                            <div className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0">
-                                                <img src={userfive} alt="User Avatar" className="w-full h-full rounded-full" />
-                                            </div>
-                                            <span className="ml-3 font-semibold text-gray-800">Jane Smith</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">jane.smith@example.com</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">2024-03-26</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <a href="#" className="text-blue-600 hover:text-blue-900">View CV</a>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <button onClick={() => acceptApplication(2)} className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Accept</button>
-                                        <button onClick={() => rejectApplication(2)} className="bg-red-500 text-white px-4 py-2 rounded-md ml-2 hover:bg-red-600">Reject</button>
-                                    </td>
-                                </tr>
+                                {sortByDate ? (
+                                    sortedApplications.map((application, index) => (
+
+                                        <tr key={index} className="hover:bg-gray-50">
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                              
+                                                 
+                                                    <span className="ml-3 font-semibold text-gray-800">{application.applicantUsername}</span>
+                                            
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{application.email}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{formatDate(application.submitDate)}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+
+                                                <a href={application.resume} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-900">View CV</a>
+
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{application.phoneNumber}</td>
+                                            <td className="px-6 flex items-center py-4 whitespace-nowrap">
+                                                <svg xmlns="http://www.w3.org/2000/svg"  onClick={() => openModal(application._id,'Accepted')} className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                </svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModal(application._id, 'Rejected')} className="w-6 h-6 mr-2 cursor-pointer text-red-500 dark:text-red-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                                </svg>
+                                                <svg onClick={() => handleOpenModal(index)} className="w-6 h-6 text-blue-500 cursor-pointer dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+                                                    <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                </svg>
+
+                                            </td>
+                                        </tr>
+                                       ))
+
+                                       ) : ( filteredApplications.length > 0 ? (
+                                        filteredApplications.map((application, index) => (
+                                            <tr key={index} className="hover:bg-gray-50">
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                              
+                                                   
+                                                    <span className="ml-3 font-semibold text-gray-800">{application.applicantUsername}</span>
+                                                
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{application.email}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{formatDate(application.submitDate)}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <a href={application.resume} downloadclassName="text-blue-600 hover:text-blue-900" target="_blank" rel="noopener noreferrer">View CV</a>
+                                            </td>
+                                            
+                                            <td className="px-6 py-4  whitespace-nowrap">
+                                            <a href={`https://wa.me/+${application.phoneNumber}`}  target="_blank" rel="noopener noreferrer">
+                                                {application.phoneNumber}
+                                            </a>
+                                            </td>
+                                            <td className="px-6 flex items-center py-4 whitespace-nowrap">
+                                                <svg xmlns="http://www.w3.org/2000/svg"  onClick={() => openModal(application._id,'Accepted')} className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                </svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModal(application._id, 'Rejected')} className="w-6 h-6 mr-2 cursor-pointer text-red-500 dark:text-red-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                                </svg>
+                                                <svg onClick={() => handleOpenModal(index)} className="w-6 h-6 text-blue-500 cursor-pointer dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+                                                    <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                </svg>
+
+                                            </td>
+                                            </tr>
+                                        ))
+                                ) : (
+
+                                    intershipApplications.map((application, index) => (
+                                        <tr key={index} className="hover:bg-gray-50">
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                               
+                                                  
+                                                    <span className="ml-3 font-semibold text-gray-800">{application.applicantUsername}</span>
+                                              
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{application.email}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{formatDate(application.submitDate)}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <a href={application.resume} downloadclassName="text-blue-600 hover:text-blue-900">View CV</a>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{application.phoneNumber}</td>
+                                            <td className="px-6 flex items-center py-4 whitespace-nowrap">
+                                                <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModal(application._id,'Accepted')} className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                </svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModal(application._id, 'Rejected')} className="w-6 h-6 mr-2 cursor-pointer text-red-500 dark:text-red-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                                </svg>
+                                                <svg onClick={() => handleOpenModal(index)} className="w-6 h-6 text-blue-500 cursor-pointer dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+                                                    <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                </svg>
+
+                                            </td>
+                                        </tr>
+
+                                    ))
+                                    ) 
+                                    )}
+
                             </tbody>
                         </table>
-                        
+                        </div>
                     </div>
+                    {isModalOpen && selectedApplication && (
+                        <div id="crud-modal" tabIndex={-1} aria-hidden="true" className="fixed inset-0 top-19  z-50 overflow-y-auto">
+                            <div className="flex items-center justify-center min-h-screen">
+                                <div className="fixed inset-0 bg-black bg-opacity-50"></div>
+                                <div className="relative p-4 w-full max-w-5xl mx-auto" >
+                                    <div className="relative bg-white rounded-lg shadow">
+                                        {/* Modal header */}
+                                        <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 bg-apptwofarah text-white">
+                                            <h3 className="text-lg font-semibold">Detail of Application</h3>
+                                            <button
+                                                type="button"
+                                                className="text-gray-200 bg-transparent hover:bg-gray-300 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                                                data-modal-toggle="crud-modal"
+                                                onClick={handleCloseModal}
+                                            >
+                                                <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                    <path
+                                                        stroke="currentColor"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                                                    />
+                                                </svg>
+                                                <span className="sr-only">Close modal</span>
+                                            </button>
+                                        </div>
+
+                                        {/* Modal content */}
+                                        <div className="p-6">
+                                            <div className="mb-4">
+                                                <div className="flex items-center mb-2">
+                                                    <svg className="w-6 h-6 text-red-800 mr-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path fill-rule="evenodd" d="M12 20a7.966 7.966 0 0 1-5.002-1.756l.002.001v-.683c0-1.794 1.492-3.25 3.333-3.25h3.334c1.84 0 3.333 1.456 3.333 3.25v.683A7.966 7.966 0 0 1 12 20ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10c0 5.5-4.44 9.963-9.932 10h-.138C6.438 21.962 2 17.5 2 12Zm10-5c-1.84 0-3.333 1.455-3.333 3.25S10.159 13.5 12 13.5c1.84 0 3.333-1.455 3.333-3.25S13.841 7 12 7Z" clip-rule="evenodd" />
+                                                    </svg>
+
+                                                    <p className="text-lg font-semibold text-red-800 mb-0">Username:</p>
+                                                </div>
+                                                <p className="text-sm ml-6 text-gray-600 mb-2">{selectedApplication.applicantUsername}</p>
+                                                <div className="flex items-center mb-2">
+                                                    <svg className="w-6 h-6 text-red-800 mr-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16v-5.5A3.5 3.5 0 0 0 7.5 7m3.5 9H4v-5.5A3.5 3.5 0 0 1 7.5 7m3.5 9v4M7.5 7H14m0 0V4h2.5M14 7v3m-3.5 6H20v-6a3 3 0 0 0-3-3m-2 9v4m-8-6.5h1" />
+                                                    </svg>
+
+                                                    <p className="text-lg font-semibold text-red-800 mb-0">Email:</p>
+                                                </div>
+                                                <p className="text-sm ml-6  text-gray-600 mb-2">{selectedApplication.email}</p>
+                                                <div className="flex items-center mb-2">
+                                                    <svg className="w-6 h-6 text-red-800 mr-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.427 14.768 17.2 13.542a1.733 1.733 0 0 0-2.45 0l-.613.613a1.732 1.732 0 0 1-2.45 0l-1.838-1.84a1.735 1.735 0 0 1 0-2.452l.612-.613a1.735 1.735 0 0 0 0-2.452L9.237 5.572a1.6 1.6 0 0 0-2.45 0c-3.223 3.2-1.702 6.896 1.519 10.117 3.22 3.221 6.914 4.745 10.12 1.535a1.601 1.601 0 0 0 0-2.456Z" />
+                                                    </svg>
+
+                                                    <p className="text-lg font-semibold text-red-800  mb-0">Phone Number:</p>
+                                                </div>
+                                                <p className="text-sm ml-6 text-gray-600 mb-2">{selectedApplication.phoneNumber}</p>
+                                                <div className="flex items-center mb-2">
+                                                    <svg className="w-6 h-6 text-red-800 mr-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-4m5-13v4a1 1 0 0 1-1 1H5m0 6h9m0 0-2-2m2 2-2 2" />
+                                                    </svg>
+
+                                                    <p className="text-lg font-semibold text-red-800 mb-0">Motivation Letter:</p>
+                                                </div>
+                                                <p className="text-sm ml-6  text-gray-600 mb-4">{selectedApplication.motivationLetter}</p>
+                                                <div className="flex items-center mb-2">
+                                                    {selectedApplication.status === "Pending" && (
+                                                        <svg className="w-6 h-6 text-yellow-500 mr-2 dark:text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                            <circle cx="12" cy="12" r="10"></circle>
+                                                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                                                            <line x1="12" y1="16" x2="12" y2="16"></line>
+                                                        </svg>
+                                                    )}
+                                                    {selectedApplication.status === "Accepted" && (
+                                                        <svg className="w-6 h-6 text-green-500 mr-2 dark:text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                            <circle cx="12" cy="12" r="10"></circle>
+                                                            <path d="M9 12l2 2 4-4"></path>
+                                                        </svg>
+                                                    )}
+                                                    {selectedApplication.status === "Rejected" && (
+                                                        <svg className="w-6 h-6 text-red-500 mr-2 dark:text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                            <circle cx="12" cy="12" r="10"></circle>
+                                                            <line x1="8" y1="8" x2="16" y2="16"></line>
+                                                            <line x1="8" y1="16" x2="16" y2="8"></line>
+                                                        </svg>
+                                                    )}
+
+                                                    <p className="text-lg font-semibold text-red-800 mb-0">Statut :</p>
+                                                </div>
+                                                <p className="text-sm ml-6 text-gray-600 mb-4">{selectedApplication.status}</p>
+                                            </div>
+                                            <div className="mb-4">
+                                                <label htmlFor="comments" className="block text-lg font-semibold text-red-800 mb-2">Add comments:</label>
+                                                <textarea
+                                                    id="comments"
+                                                    className="w-full h-24 border-gray-300 rounded-md focus:ring-indigo-500 focus:border-red-600 sm:text-sm"
+                                                    placeholder="Enter your comments here..."
+                                                    value={comments}
+                                                    onChange={(e) => setCommentaire(e.target.value)} // Gérer le changement de la valeur des commentaires
+                                                ></textarea>
+                                            </div>
+
+                                            {/* Bouton pour sauvegarder les commentaires */}
+                                            <button
+                                                className="bg-apptwofarah text-white font-semibold py-2 px-4 rounded hover:bg-red-800"
+                                                onClick={saveComments}
+                                            >
+                                                Add comments
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    )}
+                     {modalOpen && (
+                         <div
+                         id="crud-modal"
+                         tabIndex={-1}
+                         aria-hidden="true"
+                         className="fixed inset-0 z-50 overflow-y-auto"
+                     >
+                         <div className="flex items-center justify-center min-h-screen">
+                             <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+                             <div className="relative p-4 w-full max-w-md">
+                                 <div className="relative bg-white rounded-lg shadow-lg">
+                                     {/* Modal header */}
+                                     <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t bg-apptwofarah text-white dark:border-gray-600">
+                                         <h3 className="text-lg font-semibold  dark:text-black">
+                                            Please Confirm
+                                         </h3>
+                                         <button
+                                             type="button"
+                                             className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+ 
+                                             onClick={() => setModalOpen(false)}
+                                         >
+                                             <svg
+                                                 className="w-3 h-3"
+                                                 aria-hidden="true"
+                                                 xmlns="http://www.w3.org/2000/svg"
+                                                 fill="none"
+                                                 viewBox="0 0 14 14"
+                                             >
+                                                 <path
+                                                     stroke="currentColor"
+                                                     stroke-linecap="round"
+                                                     stroke-linejoin="round"
+                                                     stroke-width="2"
+                                                     d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                                                 />
+                                             </svg>
+                                             <span className="sr-only">Close modal</span>
+                                         </button>
+                                     </div>
+ 
+                                     {/* Modal content  */}
+                                     <div className="modal-container">
+                                         <div className="modal">
+                                             <div className="modal-content">
+                                                 <p className='text-black ml-2'>Do you confirm your action?</p>
+                                                 <button className="ml-2 mt-5 mb-5 px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700" onClick={handleConfirm}>Confirm</button>
+                                                 <button className="px-4 ml-2  py-2 text-sm font-medium text-red-600 border border-red-600 rounded-md hover:bg-red-50" onClick={() => setModalOpen(false)}>Cancel</button>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+              
+            )}
                 </div >
             </DefaultLayout>
         </>);

@@ -5,6 +5,9 @@ import { ChangeEvent, useState } from 'react';
 import CoverOne from '../../images/cover/cover-01.png';
 import userSix from '../../images/user/user-06.png';
 import { Link } from "react-router-dom";
+import { deleteJobByIdAndUsername } from "../../backoffice/api/index";
+import { deleteIntershipByIdAndUsername } from "../../backoffice/api/index";
+
 const formatDate = (dateString: string) => {
   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
   return new Date(dateString).toLocaleDateString('fr-FR', options);
@@ -116,8 +119,8 @@ const ProfileCompany = () => {
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   //trie le tableau de intership 
-
-  const sortedintership = [...currentUser.intership].sort((a, b) => {
+  const filteredinter = currentUser.intership.filter(intership => intership && intership.interStartDate);
+  const sortedintership = filteredinter.sort((a: any, b: any) =>{
     const dateA = new Date(a.interStartDate);
     const dateB = new Date(b.interStartDate);
     const currentDate = new Date();
@@ -150,6 +153,85 @@ const ProfileCompany = () => {
   const handleButtonAddIntership = () => {
     window.location.href = `Profilecompany/${currentUser.username}/Opportunity/intership`;
   };
+
+
+  /////////////////////////////Sarra Delete/////////////////////////////////////
+  const [jobs, setJobs] = useState<{ _id: String, username: string, jobs: { jobTitle: string, jobAdress: string, jobLocation: string, jobDescription: string, salary: number, jobPost: string, jobfield: string, jobStartDate: string, jobApplicationDeadline: string, jobRequiredSkills: string, jobRequiredEducation: string, jobRequiredExperience: string, contactNumber: Number, jobOtherInformation: string, _id: string }[] }[]>([]);
+  const [showAlert, setShowAlert] = useState(false);
+
+  const handleDeleteJob = async (id: string, username: string) => {
+    try {
+      const confirmDelete = window.confirm("Are you sure you want to delete this opportunity? ?");
+
+      if (confirmDelete) {
+        await deleteJobByIdAndUsername(id, username);
+
+        // Filtrer la liste pour exclure l'emploi supprimé
+        const updatedJobs = jobs.map(user => ({
+          ...user,
+          jobs: user.jobs.filter(job => job._id !== id)
+        }));
+
+        // Mettre à jour l'état avec la nouvelle liste
+        setJobs(updatedJobs);
+
+        // Afficher l'alerte de succès
+        setShowAlert(true);
+
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 3000);
+
+        // Rafraîchir la page après la suppression réussie
+        window.location.reload();
+        // Ajouter le console.log ici
+        console.log("Emplois mis à jour :", updatedJobs);
+      } else {
+        console.log("La suppression a été annulée.");
+      }
+    } catch (error) {
+      console.error(error);
+      // Gérer les erreurs de suppression de l'emploi
+    }
+  };
+
+  const [interships, setInterships] = useState<{ _id:String,username: string, interships: { interTitle: string, interAdress: string, interLocation: string, interDescription: string, interPost: number, interfield: string, interStartDate: string, interApplicationDeadline: string, interRequiredSkills: string, interRequiredEducation: string, contactNumber: Number, interOtherInformation: string, _id: string }[] }[]>([]);
+
+const handleDeleteinter = async (id: string, username: string) => {
+  try {
+    const confirmDelete = window.confirm("Are you sure you want to delete this opportunity?");
+
+    if (confirmDelete) {
+      await deleteIntershipByIdAndUsername(id, username);
+
+      // Filtrer la liste pour exclure l'emploi supprimé
+      const updatedInterships = interships.map(user => ({
+        ...user,
+        interships: user.interships.filter(intership => intership._id !== id)
+      }));
+
+      // Mettre à jour l'état avec la nouvelle liste
+      setInterships(updatedInterships);
+
+      // Afficher l'alerte de succès
+      setShowAlert(true);
+
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+      // Rafraîchir la page après la suppression réussie
+      window.location.reload();
+
+      // Ajouter le console.log ici
+      console.log("Emplois mis à jour :", updatedInterships);
+    } else {
+      console.log("La suppression a été annulée.");
+    }
+  } catch (error) {
+    console.error(error);
+    // Gérer les erreurs de suppression de l'emploi
+  }
+};
 
   return (
     <>
@@ -468,9 +550,24 @@ const ProfileCompany = () => {
                             <span
                               className="absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm"
                             >Update</span>
-
+                            
                           </div>
                         </section>
+
+                        <section className="relative flex justify-center items-center ">
+                          <div className="group flex justify-center transition-all rounded-full bg-gray-200 p-1">
+                            <button onClick={() => handleDeleteJob(job._id, currentUser.username)} className="focus:outline-none">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4">
+                                <path fill="currentColor" d="M20.625 4.975h-3.438v-1.9a1.275 1.275 0 0 0-1.275-1.275h-4.975a1.275 1.275 0 0 0-1.275 1.275v1.9H3.375a.843.843 0 0 0-.843.843a.844.844 0 0 0 .843.843h.3l.839 13.775a2.7 2.7 0 0 0 2.7 2.477h9.15a2.7 2.7 0 0 0 2.7-2.7L20.325 6.66h.3a.844.844 0 0 0 .843-.843a.843.843 0 0 0-.843-.843zm-11.067-.874h3.112v1.101H9.558V4.101zm4.112 0v1.101h-2.22V4.101h2.22zM5.08 6.545h13.905L17.61 18.774H6.375l-1.295-12.229zM5.756 21.975a1.006 1.006 0 0 1-1.006-1.006c0-.555.45-1.006 1.006-1.006h12.488a1.006 1.006 0 0 1 1.006 1.006c0 .555-.45 1.006-1.006 1.006h-1.686a.844.844 0 0 1-.843-.843a.843.843 0 0 1 .843-.843h1.686c.093 0 .169.076.169.169c0 .093-.076.169-.169.169h-12.488a.169.169 0 0 0-.169.169c0 .093.076.169.169.169h.843a.844.844 0 0 1 .843.843a.844.844 0 0 1-.843.843H5.756z" />
+                              </svg>
+                            </button>
+                            <span
+                              onClick={() => handleDeleteJob(job._id, currentUser.username)}
+                              className="absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm"
+                            >Delete</span>
+                          </div>
+                        </section>
+
                       </div>
 
 
@@ -543,11 +640,11 @@ const ProfileCompany = () => {
                           <p className="text-sm text-neutral-500">{formatDate(internship.interApplicationDeadline)}</p></div>
 
                       </div>
-                      <div className="group flex justify-center transition-all rounded-full bg-gray-200 p-1">
+                      <div className="flex justify-between items-center">
                         <Link to={`/detailsintership/${internship._id}`} >
-
                           <button className="bg-red-800  text-white font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
                         </Link>
+
                         <section className="relative flex justify-center items-center ml-15">
                           <div className="group flex justify-center transition-all rounded-full bg-gray-200 p-1">
                             <Link to={`/Profilecompany/Opportunity/EditInternship/${internship._id}`}>
@@ -559,9 +656,21 @@ const ProfileCompany = () => {
                               </svg>
                             </Link>
                             <span
-                              className="absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm text-red-800"
+                              className="text-red-800 absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm"
                             >Update</span>
-
+                          </div>
+                        </section>
+                        <section className="relative flex justify-center items-center ">
+                          <div className="group flex justify-center transition-all rounded-full bg-gray-200 p-1">
+                            <button onClick={() => handleDeleteinter(internship._id, currentUser.username)} className="focus:outline-none">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4 text-red-800">
+                                <path fill="currentColor" d="M20.625 4.975h-3.438v-1.9a1.275 1.275 0 0 0-1.275-1.275h-4.975a1.275 1.275 0 0 0-1.275 1.275v1.9H3.375a.843.843 0 0 0-.843.843a.844.844 0 0 0 .843.843h.3l.839 13.775a2.7 2.7 0 0 0 2.7 2.477h9.15a2.7 2.7 0 0 0 2.7-2.7L20.325 6.66h.3a.844.844 0 0 0 .843-.843a.843.843 0 0 0-.843-.843zm-11.067-.874h3.112v1.101H9.558V4.101zm4.112 0v1.101h-2.22V4.101h2.22zM5.08 6.545h13.905L17.61 18.774H6.375l-1.295-12.229zM5.756 21.975a1.006 1.006 0 0 1-1.006-1.006c0-.555.45-1.006 1.006-1.006h12.488a1.006 1.006 0 0 1 1.006 1.006c0 .555-.45 1.006-1.006 1.006h-1.686a.844.844 0 0 1-.843-.843a.843.843 0 0 1 .843-.843h1.686c.093 0 .169.076.169.169c0 .093-.076.169-.169.169h-12.488a.169.169 0 0 0-.169.169c0 .093.076.169.169.169h.843a.844.844 0 0 1 .843.843a.844.844 0 0 1-.843.843H5.756z" />
+                              </svg>
+                            </button>
+                            <span
+                              onClick={() => handleDeleteinter(internship._id, currentUser.username)}
+                              className="text-red-800 absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm"
+                            >Delete</span>
                           </div>
                         </section>
                       </div>

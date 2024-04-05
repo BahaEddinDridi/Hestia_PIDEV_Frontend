@@ -2,6 +2,7 @@ import  { useState, ReactNode } from 'react';
 import * as React from 'react';
 import Sidebar from "../sidebarAdmin";
 import Header from './navbar/index';
+import ChatbotComponent from '../../components/ChatBot/ChatbotComponent';
 
 
 const DefaultLayoutAdmin: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -26,6 +27,8 @@ const DefaultLayoutAdmin: React.FC<{ children: ReactNode }> = ({ children }) => 
                     <main>
                         <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
                             {children}
+                        {/* Include the ChatbotComponent */}
+                        <ChatbotComponent />
                         </div>
                     </main>
                     {/* <!-- ===== Main Content End ===== --> */}

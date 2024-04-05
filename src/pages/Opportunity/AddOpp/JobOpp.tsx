@@ -15,18 +15,20 @@ import { Link } from 'react-router-dom';
 const JobOpp: React.FC = () => {
 
     const [jobCommpanyName, setjobCommpanyName] = useState('')
+    const [jobCompanyId, setjobCompanyId] = useState('')
+    
     const [jobTitle, setjobTitle] = useState('')
     const [jobAdress, setjobAdress] = useState('')
-    const [jobLocation, setjobLocation] = useState()
+    const [jobLocation, setjobLocation] = useState('')
     const [jobDescription, setjobDescription] = useState('')
     const [salary, setsalary] = useState('')
     const [jobPost, setjobPost] = useState('')
-    const [jobfield, setjobfield] = useState()
+    const [jobfield, setjobfield] = useState('')
     const [jobStartDate, setjobStartDate] = useState('')
     const [jobApplicationDeadline, setjobApplicationDeadline] = useState('')
     const [jobRequiredSkills, setjobRequiredSkills] = useState('')
-    const [jobRequiredEducation, setjobRequiredEducation] = useState()
-    const [jobRequiredExperience, setjobRequiredExperience] = useState()
+    const [jobRequiredEducation, setjobRequiredEducation] = useState('')
+    const [jobRequiredExperience, setjobRequiredExperience] = useState('')
     const [contactNumber, setcontactNumber] = useState('')
     const [jobOtherInformation, setjobOtherInformation] = useState('')
     const [jobImage, setjobImage] = useState('')
@@ -36,11 +38,12 @@ const JobOpp: React.FC = () => {
     const [showModalBack, setShowModalBack] = useState(false);
 
     const [showSuccessMessage, setShowSuccessMessage] = useState(false); // New state
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
 
     const currentUser = useSelector(selectCurrentUser);
     //const currentUser = useSelector(selectCurrentUser) || defaultUser;
 
-    const [errors, setErrors] = useState({});
+    const [error, setError] = useState({});
 
 
     
@@ -48,10 +51,30 @@ const JobOpp: React.FC = () => {
 
 
     const handleAddOpportunity = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault(); // Empêche le comportement par défaut du formulaire
+        e.preventDefault();
+        if (
+            jobTitle.length === 0 ||
+            jobAdress.length === 0 ||
+            salary.length === 0 ||
+            jobDescription.length === 0 ||
+            jobPost.length === 0 ||
+            jobRequiredEducation.length === 0 ||
+            jobApplicationDeadline.length === 0 ||
+            jobfield.length === 0 ||
+            contactNumber.length === 0 ||
+            jobRequiredSkills.length === 0 ||
+            jobRequiredExperience.length === 0
+        ) {
+            setShowErrorMessage(true); // Affiche le message d'erreur si des données sont manquantes
+            setTimeout(() => {
+                setShowErrorMessage(false);
+            }, 2000);
+            setError(true);
+        } else {
             setShowModal(true);
-
+        }
     };
+
 
     const handleCancel = () => {
         setShowModal(false);
@@ -64,6 +87,7 @@ const JobOpp: React.FC = () => {
             const currentDate = new Date();
             const formattedDate = currentDate.toISOString();
             const jobData = {
+                jobCompanyId:currentUser._id,
                 jobCommpanyName: currentUser.username,
                 jobImage: currentUser.image,
                 jobTitle: jobTitle,
@@ -91,6 +115,12 @@ const JobOpp: React.FC = () => {
 
             console.log("Job added successfully");
         } catch (error: any) {
+            setShowModal(false);
+            setShowErrorMessage(true); // Affiche le message d'erreur si une erreur survient
+            setTimeout(() => {
+                setShowErrorMessage(false);
+            }, 2000);
+
             console.error('An error occurred while adding job:', error);
         }
     };
@@ -136,6 +166,27 @@ const JobOpp: React.FC = () => {
                                     strokeWidth={2}
                                     d="M6 18L18 6M6 6l12 12"
                                 />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            )}
+            {showErrorMessage && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-opacity-50">
+                    <div className="bg-red-400 p-6 rounded-lg">
+                        <p className="text-white">Please verify your informations.</p>
+                        <button
+                            onClick={() => setShowErrorMessage(false)}
+                            className="absolute top-0 right-0 m-4 text-gray-500 hover:text-gray-700 focus:outline-none"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
                     </div>
@@ -211,6 +262,9 @@ const JobOpp: React.FC = () => {
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-xs font-bold text-OppSarra2R">Title</label>
                                             <input onChange={e => setjobTitle(e.target.value)} className="w-full shadow-4 p-4 border-0 xs" type="text" name="name" placeholder=" Acme Mfg. Co." />
+                                            {error && jobTitle.length <= 0 && (
+                                                <label className="text-esprit text-xs">Job title can't be empty</label>
+                                            )}
                                             
                                         </div>
 
@@ -225,27 +279,49 @@ const JobOpp: React.FC = () => {
                                                 <option value="Civil Engineering">Civil Engineering</option>
                                                 <option value="Business">Business</option>
                                             </select>
+                                            {error && jobfield.length <= 0 && (
+                                                <label className="text-esprit text-xs">Job field can't be empty</label>
+                                            )}
                                         </div>
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-xs font-bold text-OppSarra2R">Post</label>
                                             <input className="w-full shadow-4 p-4 border-0 xs" type="text" name="name" placeholder=" Acme Mfg. Co." onChange={e => setjobPost(e.target.value)} />
-                                            
+                                            {error && jobPost.length <= 0 && (
+                                                <label className="text-esprit text-xs">Job Post can't be empty</label>
+                                            )}
+
                                         </div>
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Application Deadline</label>
                                             <input className="w-full shadow-4 p-4 border-0" type="date" name="address_number" placeholder="#3" onChange={e => setjobApplicationDeadline(e.target.value)} />
-                                            
+                                            {error && jobApplicationDeadline.length <= 0 && (
+                                                <label className="text-esprit text-xs">Application Deadline can't be empty</label>
+                                            )}
+                                            {error && new Date(jobApplicationDeadline) <= new Date() && jobApplicationDeadline.length > 0 && (
+                                                <label className="text-esprit text-xs">Application Deadline must be greater than the current date</label>
+                                            )}
                                         </div>
                                         <div className="md:flex mb-4">
                                             <div className="md:flex-1 md:pr-3">
                                                 <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Salary</label>
                                                 <input className="w-full shadow-4 p-4 border-0" type="text" name="lat" placeholder="30.0455542" onChange={e => setsalary(e.target.value)} />
-                                                
+                                                {error && salary.length <= 0 && (
+                                                    <label className="text-esprit text-xs">Salary can't be empty</label>
+                                                )}
+                                                {error && !/^\d+$/.test(salary) && salary.length > 0 && (
+                                                    <label className="text-esprit text-xs">Salary must contain only numbers</label>
+                                                )}
+
                                             </div>
                                             <div className="md:flex-1 md:pl-3">
                                                 <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Reference Contact</label>
                                                 <input className="w-full shadow-4 p-4 border-0" type="tel" name="lon" placeholder="(555) 555-5555" onChange={e => setcontactNumber(e.target.value)} />
-                                                
+                                                {error && contactNumber.length <= 0 && (
+                                                    <label className="text-esprit text-xs">Contact Number can't be empty</label>
+                                                )}
+                                                {error && !/^\d+$/.test(contactNumber) && contactNumber.length > 0 && (
+                                                    <label className="text-esprit text-xs">Contact Number must contain only numbers</label>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
@@ -258,7 +334,9 @@ const JobOpp: React.FC = () => {
                                     </div>
                                     <div className="md:flex-1 mt-2 mb:mt-0 md:px-3">
                                         <textarea className="w-full shadow-4 p-4 border-0" placeholder="We build fine acmes." rows="2" onChange={e => setjobDescription(e.target.value)}></textarea>
-                                        
+                                        {error && jobDescription.length <= 0 && (
+                                            <label className="text-esprit text-xs">Description can't be empty</label>
+                                        )}
                                     </div>
                                 </div>
                                 <hr className="w-full border-t border-graydouble mb-10"></hr>
@@ -272,7 +350,9 @@ const JobOpp: React.FC = () => {
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-xs font-bold text-OppSarra2R">Address</label>
                                             <input className="w-full shadow-4 p-4 border-0 xs" type="text" name="name" placeholder=" Acme Mfg. Co." onChange={e => setjobAdress(e.target.value)} />
-                                            
+                                            {error && jobAdress.length <= 0 && (
+                                                <label className="text-esprit text-xs">Address can't be empty</label>
+                                            )}
                                         </div>
                                         <JobLocation
                                             value={jobLocation}
@@ -283,16 +363,22 @@ const JobOpp: React.FC = () => {
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required skills</label>
                                             <textarea className="w-full shadow-4 p-4 border-0" placeholder="required skills" rows="2" onChange={e => setjobRequiredSkills(e.target.value)}></textarea>
-                                            
+                                            {error && jobRequiredSkills.length <= 0 && (
+                                                <label className="text-esprit text-xs">Required Skills can't be empty</label>
+                                            )}
+
                                         </div>
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required education</label>
                                             <select className="w-full shadow-4 p-4 border-0" name="jobType" value={jobRequiredEducation}
                                                 onChange={e => setjobRequiredEducation(e.target.value)}>
-                                                <option value="Bachelor's degree">Bachelor degree</option>
+                                                    <option value=""></option>
+                                                <option value="Bachelor degree">Bachelor degree</option>
                                                 <option value="Engineering degree">Engineering degree</option>
                                             </select>
-                                            
+                                            {error && jobRequiredEducation.length <= 0 && (
+                                                <label className="text-esprit text-xs">Required Education can't be empty</label>
+                                            )}
                                         </div>
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required experience</label>
@@ -303,7 +389,9 @@ const JobOpp: React.FC = () => {
                                                 <option value="Senior">Senior</option>
                                                 <option value="Experienced">Experienced</option>
                                             </select>
-                                            
+                                            {error && jobRequiredExperience.length <= 0 && (
+                                                <label className="text-esprit text-xs">Required Experience can't be empty</label>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

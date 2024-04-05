@@ -4,6 +4,7 @@ import React, { useState,useEffect } from 'react';
 import { ajoutUser } from '../api';
 import { Link } from 'react-router-dom';
 
+import PhoneNumberValidation from '../../pages/Authentication/SignUpFiles/PhoneNumber';
 
 
 
@@ -14,7 +15,7 @@ const FormLayout = () => {
   useEffect(()=>{
     if (showSuccessAlert){
       setTimeout(()=>{
-        window.location.href='/tables';
+        window.location.href='/Dashboard/tables-Of-Users';
       },2000);
     }
   },[showSuccessAlert]);
@@ -51,6 +52,10 @@ const FormLayout = () => {
     retypePassword: '',
    
   });
+  const handlePhoneNumberChange = (value: string, isValid: boolean) => {
+    setUserData({...userData, phoneNumber: value});
+    setErrors({ ...errors, phoneNumber: isValid ? '' : 'Phone number is not valid' });
+  };
 
   const handleChange=(e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement>)=>{
     const{name,value}=e.target;
@@ -59,10 +64,10 @@ const FormLayout = () => {
       setErrors({ ...errors, [name]: '' });
   
       // Vérification pour le numéro de téléphone
-    if (name === 'phoneNumber' && !/^\d{8}$/.test(value)) {
+    if (name === 'phoneNumber' && !/^\d{10}$/.test(value)) {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        phoneNumber: 'Phone number must be 8 digits',
+        phoneNumber: 'Phone number must be 10 digits',
       }));
       
     }
@@ -468,14 +473,18 @@ const FormLayout = () => {
                   <label className="mb-2.5 block text-black dark:text-white">
                     Phone Number <span className="text-meta-1">*</span>
                   </label>
-                  <input
+                  <PhoneNumberValidation
+            
+            onChange={handlePhoneNumberChange} />
+
+                  {/* <input
                     type="text"
                     placeholder="Enter your phone number"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     value={userData.phoneNumber}
                     onChange={handleChange} 
                     name="phoneNumber"                
-                 />
+                 /> */}
                  {errors.phoneNumber && (
                       <p className="text-danger">{errors.phoneNumber}</p>
                     )}
@@ -525,7 +534,7 @@ const FormLayout = () => {
                   )}
                 </div>
 
-                <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90" type='submit'>
+                <button className="flex w-full justify-center rounded bg-esprit p-3 font-medium text-gray hover:bg-opacity-90" type='submit'>
                   Add User  
                 </button>
               </div>
@@ -535,48 +544,10 @@ const FormLayout = () => {
       </div>
      {/* alert */}
      {showSuccessAlert && (
-            <div className="fixed inset-0 flex items-center justify-center z-50">
-              <div className="max-w-xs w-full p-4 bg-white rounded-lg shadow-md">
-                <div className="flex items-center">
-                  <div className="w-8 h-8 flex items-center justify-center text-green-500 bg-green-100 rounded-lg">
-                    <svg
-                      className="w-5 h-5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-3 text-sm text-gray-800 font-medium">User added successfully.</div>
-                </div>
-                <button
-                  className="mt-2 ml-auto -mr-2 -mt-2 bg-white text-gray-400 hover:text-gray-700 rounded-full p-1.5 focus:ring-2 focus:ring-gray-300 hover:bg-gray-100"
-                  onClick={() => setShowSuccessAlert(false)}
-                  aria-label="Close"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 14 14"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                    />
-                  </svg>
-                </button>
+
+            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+                <span className="font-medium">User added successfully.</span> 
               </div>
-            </div>
           )}
 
 

@@ -13,9 +13,11 @@ const RederactionRoute =  ( {children } ) => {
  
     if (currentRole === 'jobSeeker' ) {
       return  children;
-    } else if (currentRole  === 'professional' ) {
+    } else if (currentRole  === 'professional' || currentRole ==='teacher' ) {
       return <Navigate to="/Profilecompany" />;
-    }
+     }
+    else if (currentRole  === 'admin' ) {
+      return <Navigate to={`/Dashboard`} />;}
   
     return null;
   };

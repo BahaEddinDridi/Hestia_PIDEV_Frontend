@@ -146,7 +146,7 @@ const SignIn: React.FC = () => {
       setSuccessMessage(successMessageText);
       setTimeout(() => {
         setSuccessMessage('');
-        navigate(currentUser.role === 'admin' ? `/Dashboard/ProfileAdmin/${currentUser.username}` : '/Profile');
+        navigate(currentUser.role === 'admin' ? `/Dashboard` : '/Profile');
       }, 3000);
     } catch (err) {
       if (!err.status) {
