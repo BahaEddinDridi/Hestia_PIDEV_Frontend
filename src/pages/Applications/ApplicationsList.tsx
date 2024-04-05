@@ -320,7 +320,9 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
                   </div>
                   {/* Right side */}
 
-                  <div className="mb-4 w-100 h-80 rounded-lg shadow-lg shadow-red-400 px-6 py-3 flex flex-col">
+                  <div
+                    className="mb-4 w-100 h-80 rounded-lg shadow-lg shadow-red-400 px-6 py-3 flex flex-col  overflow-auto"
+                    style={{ paddingRight: '10px' }}>
                     <div className="mb-1 flex-grow" style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
                       <label className="block text-sm font-medium text-black">Motivation Letter</label>
                       <p className="whitespace-pre-line">{selectedApplication.motivationLetter}</p>
