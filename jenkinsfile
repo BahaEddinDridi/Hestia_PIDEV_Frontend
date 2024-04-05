@@ -10,7 +10,7 @@ pipeline {
         stage('git pull') {
             steps {
                 script {
-                    sh 'git pull'
+                    sh 'git pull origin maain'
                 }
             }
         }
