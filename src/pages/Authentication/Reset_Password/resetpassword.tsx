@@ -24,26 +24,18 @@ const ResetPasswordPage: React.FC = () => {
     }
 
     try {
-    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-    const userId = storedUser._id;
-
-    if (!userId) {
-        setError('User ID not found');
-        return;
-    }
-
-    const response = await resetPassword(userId, password);
-    if (response && response.Status === 'Success') {
+      const response = await resetPassword(_id, password);
+      if (response && response.Status === 'Success') {
         setSuccessMessage('Password reset successfully');
         setPassword('');
         setConfirmPassword('');
         setTimeout(() => {
-            navigate('/auth/signin');
+          navigate('/auth/signin');
         }, 3000);
-    } else {
+      } else {
         setError(response && response.Status ? response.Status : 'Error resetting password. Please try again.');
-    }
-} catch (error) {
+      }
+    } catch (error) {
     setError('Error resetting password');
 }
   };
