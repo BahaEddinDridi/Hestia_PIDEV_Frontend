@@ -152,7 +152,7 @@ const JobOfferView = () => {
                   className="avatar w-full pt-5 flex items-center justify-center flex-col gap-1"
                 >
                   <div
-                    className="img_container w-full flex items-center justify-center relative z-40 after:absolute
+                    className="img_container w-full flex items-center justify-center relative z-30 after:absolute
                     after:h-[6px] after:w-full after:bg-red-900 after:top-4 after:group-hover:size-[1%] after:delay-300
                     after:group-hover:delay-0 after:group-hover:transition-all after:group-hover:duration-300
                     after:transition-all after:duration-300 before:absolute before:h-[6px] before:w-full
@@ -275,17 +275,17 @@ const JobOfferView = () => {
           </div>
           <div className="border bg-white border-gray-200 rounded-lg  p-4 shadow-lg dark:border-gray-700">
             <h3 className="text-lg font-semibold mb-2">Job Details</h3>
-            <p><span className="font-semibold">Description:</span> {job.jobDescription}</p>
-            <p><span className="font-semibold">Required Experience:</span> {job.jobRequiredExperience}</p>
-            <p><span className="font-semibold">Required Skills:</span> {job.jobRequiredSkills}</p>
-            <p><span className="font-semibold">Required Education:</span> {job.jobRequiredEducation}</p>
-            <p><span className="font-semibold">Field:</span> {job.jobfield}</p>
-            <p><span className="font-semibold">Location:</span> {job.jobLocation}</p>
-            <p><span className="font-semibold">Address:</span> {job.jobAdress}</p>
-            <p><span className="font-semibold">Salary:</span> {job.salary} DT</p>
-            <p><span className="font-semibold">Other Information:</span> {job.jobOtherInformation}</p>
+            <p className="mb-2"><span className="font-semibold">Description:</span> {job.jobDescription}</p>
+            <p className="mb-2"><span className="font-semibold">Required Experience:</span> {job.jobRequiredExperience}</p>
+            <p className="mb-2"><span className="font-semibold">Required Skills:</span> {job.jobRequiredSkills}</p>
+            <p className="mb-2"><span className="font-semibold">Required Education:</span> {job.jobRequiredEducation}</p>
+            <p className="mb-2"><span className="font-semibold">Field:</span> {job.jobfield}</p>
+            <p className="mb-2"><span className="font-semibold">Location:</span> {job.jobLocation}</p>
+            <p className="mb-2"><span className="font-semibold">Address:</span> {job.jobAdress}</p>
+            <p className="mb-2"><span className="font-semibold">Salary:</span> {job.salary} DT</p>
+            <p className="mb-2"><span className="font-semibold">Other Information:</span> {job.jobOtherInformation}</p>
             <h3 className="text-lg font-semibold mb-2">Contact Information</h3>
-            <p><span className="font-semibold">Contact Number:</span> {job.contactNumber}</p>
+            <p className="mb-2"><span className="font-semibold">Contact Number:</span> {job.contactNumber}</p>
           </div>
 
 
