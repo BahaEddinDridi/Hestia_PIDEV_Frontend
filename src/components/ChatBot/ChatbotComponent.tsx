@@ -40,7 +40,7 @@ const ChatbotComponent = () => {
     };
 
     return (
-    <div className={`fixed ${expanded ? 'z-40 bottom-4 right-4' : 'bottom-8 right-8'}`}>
+    <div className={`fixed ${expanded ? 'z-40 bottom-4 left-4' : 'bottom-8 left-8'}`}>
         {expanded ? (
             <div className="bg-white p-4 rounded-lg border border-[#e5e7eb] w-[380px] h-[564px]">
                 {/* Chat Container */}
