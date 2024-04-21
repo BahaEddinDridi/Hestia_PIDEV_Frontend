@@ -63,6 +63,7 @@ import JobOfferView from './pages/Opportunity/JobOfferView';
 import Detailsintership from './pages/Detailsintership';
 import ApplicationsList from './pages/Applications/ApplicationsList';
 import InternshipOfferView from './pages/Opportunity/InternshipOfferView';
+import Messenger from './pages/Messenger/messenger'
 
 function App() {
   const navigate = useNavigate();
@@ -685,6 +686,17 @@ function App() {
             <>
               <PageTitle title="Edit A Job Opportunity" />
               <EditInter />
+            </>
+          }
+        />
+        <Route
+          path='/chat'
+          element={
+            <>
+              <PageTitle title="Chat" />
+              <ProtectedRoute>
+              <Messenger/>
+              </ProtectedRoute>
             </>
           }
         />
