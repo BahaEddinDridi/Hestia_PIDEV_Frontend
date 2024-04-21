@@ -33,7 +33,7 @@ const ProfileCard = () => {
         if (response.ok) {
           const result = await response.json();
           setSelectedImage(result.secure_url);
-          window.location.reload();
+          //window.location.reload();
           localStorage.setItem(`userImage_${currentUser.username}`, result.secure_url);
           await fetch('http://localhost:3001/user/upload-image', {
             method: 'POST',
@@ -75,7 +75,7 @@ const ProfileCard = () => {
         if (response.ok) {
           const result = await response.json();
           setSelectedCoverImage(result.secure_url);
-          window.location.reload();
+         // window.location.reload();
           localStorage.setItem(`userImage_${currentUser.username}`, result.secure_url);
           await fetch('http://localhost:3001/user/upload-coverimage', {
             method: 'POST',

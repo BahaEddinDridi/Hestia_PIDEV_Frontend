@@ -1,110 +1,88 @@
-import { Link } from 'react-router-dom';
-import { Chat } from '../../types/chat';
-import UserOne from '../../images/user/user-01.png';
-import UserTwo from '../../images/user/user-02.png';
-import UserThree from '../../images/user/user-03.png';
-import UserFour from '../../images/user/user-04.png';
-import UserFive from '../../images/user/user-05.png';
+import React, { useState } from 'react';
 
-const chatData: Chat[] = [
-  {
-    avatar: UserOne,
-    name: 'Devid Heilo',
-    text: 'How are you?',
-    time: 12,
-    textCount: 3,
-    color: '#10B981',
-  },
-  {
-    avatar: UserTwo,
-    name: 'Henry Fisher',
-    text: 'Waiting for you!',
-    time: 12,
-    textCount: 0,
-    color: '#DC3545',
-  },
-  {
-    avatar: UserFour,
-    name: 'Jhon Doe',
-    text: "What's up?",
-    time: 32,
-    textCount: 0,
-    color: '#10B981',
-  },
-  {
-    avatar: UserFive,
-    name: 'Jane Doe',
-    text: 'Great',
-    time: 32,
-    textCount: 2,
-    color: '#FFBA00',
-  },
-  {
-    avatar: UserOne,
-    name: 'Jhon Doe',
-    text: 'How are you?',
-    time: 32,
-    textCount: 0,
-    color: '#10B981',
-  },
-  {
-    avatar: UserThree,
-    name: 'Jhon Doe',
-    text: 'How are you?',
-    time: 32,
-    textCount: 3,
-    color: '#FFBA00',
-  },
-];
-
-const ChatCard = () => {
+const ConversationList = ({ conversations, setActiveConversation }) => {
   return (
-    <div className="col-span-12 rounded-sm border border-stroke bg-white py-6 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
-      <h4 className="mb-6 px-7.5 text-xl font-semibold text-black dark:text-white">
-        Chats
-      </h4>
-
-      <div>
-        {chatData.map((chat, key) => (
-          <Link
-            to="/"
-            className="flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4"
-            key={key}
+    <div className="flex flex-col w-1/4 border-r border-gray-200">
+      <div className="px-4 py-2 border-b border-gray-200 bg-gray-100 flex items-center">
+        <span className="text-lg font-semibold">Conversations</span>
+        <span className="ml-auto text-gray-500 hover:text-gray-700">
+          <i className="fas fa-pencil-alt"></i>
+        </span>
+      </div>
+      <div className="flex-1 overflow-y-auto">
+        {conversations.map((conversation, index) => (
+          <div
+            key={index}
+            className="px-4 py-3 cursor-pointer hover:bg-gray-200"
+            onClick={() => setActiveConversation(index)}
           >
-            <div className="relative h-14 w-14 rounded-full">
-              <img src={chat.avatar} alt="User" />
-              <span
-                className="absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white"
-                style={{backgroundColor: chat.color}}
-              ></span>
+            <div className="flex items-center justify-between">
+              <div className="text-lg font-semibold">{conversation.name}</div>
+              <div className="text-sm text-gray-500">{conversation.lastMessageTime}</div>
             </div>
-
-            <div className="flex flex-1 items-center justify-between">
-              <div>
-                <h5 className="font-medium text-black dark:text-white">
-                  {chat.name}
-                </h5>
-                <p>
-                  <span className="text-sm text-black dark:text-white">
-                    {chat.text}
-                  </span>
-                  <span className="text-xs"> . {chat.time} min</span>
-                </p>
-              </div>
-              {chat.textCount !== 0 && (
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary">
-                  <span className="text-sm font-medium text-white">
-                    {' '}
-                    {chat.textCount}
-                  </span>
-                </div>
-              )}
-            </div>
-          </Link>
+            <div className="text-gray-600 truncate">{conversation.lastMessage}</div>
+          </div>
         ))}
       </div>
     </div>
   );
 };
 
-export default ChatCard;
+const ConversationView = ({ conversation }) => {
+  return (
+    <div className="flex-1 border-r border-l border-gray-200 overflow-y-auto">
+      <div className="px-4 py-2 border-b border-gray-200 bg-gray-100 flex items-center">
+        <span className="text-lg font-semibold">{conversation.name}</span>
+        <span className="ml-auto text-gray-500 hover:text-gray-700">
+          <i className="fas fa-info-circle"></i>
+        </span>
+      </div>
+      <div className="px-4 py-3">
+        {conversation.messages.map((message, index) => (
+          <div key={index} className="mb-2">
+            <div className={`p-2 rounded-lg ${message.sender === 'Me' ? 'bg-blue-500 text-white self-end' : 'bg-gray-200 text-gray-700'}`}>
+              {message.text}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="px-4 py-100  flex items-center">
+        <input
+          type="text"
+          className="flex-1 mr-3 border border-gray-300 rounded-md py-1 px-3 focus:outline-none focus:border-blue-500"
+          placeholder="Type a message..."
+        />
+        <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none">
+          Send
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const App = () => {
+  const [activeConversation, setActiveConversation] = useState(0);
+  const [conversations, setConversations] = useState([
+    {
+      name: 'John Doe',
+      lastMessage: 'Hello!',
+      lastMessageTime: '10:30 AM',
+      messages: [{ sender: 'John Doe', text: 'Hello!' }],
+    },
+    {
+      name: 'Jane Smith',
+      lastMessage: 'Hi there!',
+      lastMessageTime: '11:00 AM',
+      messages: [{ sender: 'Jane Smith', text: 'Hi there!' }],
+    },
+  ]);
+
+  return (
+    <div className="flex h-screen bg-white">
+      <ConversationList conversations={conversations} setActiveConversation={setActiveConversation} />
+      <ConversationView conversation={conversations[activeConversation]} />
+    </div>
+  );
+};
+
+export default App;

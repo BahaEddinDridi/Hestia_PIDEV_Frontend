@@ -63,7 +63,7 @@ import JobOfferView from './pages/Opportunity/JobOfferView';
 import Detailsintership from './pages/Detailsintership';
 import ApplicationsList from './pages/Applications/ApplicationsList';
 import InternshipOfferView from './pages/Opportunity/InternshipOfferView';
-
+import ChatCard from './components/Chat/ChatCard';
 function App() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
@@ -639,6 +639,15 @@ function App() {
               <ProtectedRoute>
                 <Offers />
               </ProtectedRoute>
+            </>
+          }
+        />
+          <Route
+          path='chatcard'
+          element={
+            <>
+              <PageTitle title="Offers" />
+              <ChatCard/>
             </>
           }
         />
