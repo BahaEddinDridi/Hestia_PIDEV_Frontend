@@ -6,6 +6,7 @@ import { AddIntership } from '../../api/opportunity';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../../ApiSlices/authSlice';
 import { Link } from 'react-router-dom';
+import { skill } from '../../Profil/skills';
 
 //Essai avant de lié avec un compte user
 // const defaultUser = {
@@ -26,7 +27,7 @@ const IntershipOpp: React.FC = () => {
     const [interfield, setinterfield] = useState('')
     const [interStartDate, setinterStartDate] = useState('')
     const [interApplicationDeadline, setinterApplicationDeadline] = useState('')
-    const [interRequiredSkills, setinterRequiredSkills] = useState('')
+    const [interRequiredSkills, setinterRequiredSkills] = useState<string[]>([]);
     const [interRequiredEducation, setinterRequiredEducation] = useState('')
     const [contactNumber, setcontactNumber] = useState('')
     const [interOtherInformation, setinterOtherInformation] = useState('')
@@ -130,7 +131,16 @@ const IntershipOpp: React.FC = () => {
 
 
 
-    //const currentUser = useSelector(selectCurrentUser) || defaultUser;
+    const handleSkillSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const interRequiredSkill = e.target.value;
+        setinterRequiredSkills([...interRequiredSkills, interRequiredSkill]);
+
+    };
+
+    const handleSkillRemove = (skillToRemove: string) => {
+        const updatedSkills = interRequiredSkills.filter(skill => skill !== skillToRemove);
+        setinterRequiredSkills(updatedSkills);
+    };
 
 
 
@@ -349,8 +359,24 @@ const IntershipOpp: React.FC = () => {
 
 
                                         <div className="mb-4">
-                                            <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required skills</label>
-                                            <textarea className="w-full shadow-4 p-4 border-0" placeholder="required skills" rows="2" onChange={e => setinterRequiredSkills(e.target.value)}></textarea>
+                                        <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required skills</label>                                            <select
+                                                multiple
+                                                value={interRequiredSkills}
+                                                onChange={handleSkillSelect}
+                                                className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-red-500"
+                                            >
+                                                {skill.map(skill => (
+                                                    <option key={skill} value={skill}>{skill}</option>
+                                                ))}
+                                            </select>
+                                            <div className="mt-2">
+                                                {interRequiredSkills.map(skill => (
+                                                    <div key={skill} className="inline-block bg-gray-200 rounded-full px-3 py-1 m-1">
+                                                        {skill}
+                                                        <button className="ml-1" onClick={() => handleSkillRemove(skill)}>x</button>
+                                                    </div>
+                                                ))}
+                                            </div>
                                             {error && interRequiredSkills.length <= 0 && (
                                                 <label className="text-esprit text-xs">Required Skills can't be empty</label>
                                             )}
