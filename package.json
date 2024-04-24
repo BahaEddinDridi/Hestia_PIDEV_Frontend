@@ -63,6 +63,7 @@
     "react-tooltip": "^5.26.3",
     "reaptcha": "^1.12.1",
     "simplex-noise": "^4.0.1",
+    "socket.io-client": "^4.7.5",
     "sort-by": "^0.0.2",
     "tailwind-merge": "^2.2.1",
     "tw-elements-react": "^1.0.0-alpha2",
