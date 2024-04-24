@@ -22,6 +22,7 @@ import UserDetails from './backoffice/pages/UserDetails';
 import ProfileAdmin from './backoffice/pages/ProfileAdmin';
 import StatisticPage from './backoffice/pages/statisticPage';
 import SettingsAdmin from './backoffice/pages/settingsAdmin';
+import CalandrierAdmin from './backoffice/pages/calandrier';
 import UpdateProfileAdmin from './backoffice/pages/updateProfAdmin';
 import AccountSecurityAdmin from './backoffice/pages/AccountSecurityAdmin';
 import AddUser from './backoffice/pages/Adduser';
@@ -315,6 +316,18 @@ function App() {
               <AdminRoute>
                 <Tables />
               </AdminRoute>
+            </>
+          }
+        />
+        <Route
+          path="/Dashboard/calendar"
+          element={
+            <>
+            <AdminRoute>
+            <PageTitle title="List Interships-Applications" />
+              <CalandrierAdmin />
+            </AdminRoute>
+              
             </>
           }
         />
