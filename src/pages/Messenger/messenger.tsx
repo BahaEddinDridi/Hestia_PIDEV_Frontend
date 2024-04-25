@@ -22,6 +22,7 @@ type DefaultEventsMap = {
 
 export default function Messenger() {
     const [conversations, setConversations] = useState([]);
+    const [onLineUsers, setOnLineUsers] = useState([]);
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState("");
     const [arrivalMessage, setArrivalMessage] = useState(null);
@@ -52,7 +53,7 @@ export default function Messenger() {
         if (socket.current) {
             socket.current.emit("addUser", currentUser._id);
             socket.current.on("getUsers", users => {
-                console.log(users);
+                setOnLineUsers(users);
             });
         }
     }, [currentUser]);
@@ -145,7 +146,8 @@ export default function Messenger() {
                                 <div className="chatBoxTop">
                                     {messages.map((m) => (
                                         // Correction : Ajout d'une clé 'key' pour chaque élément de la liste
-                                        <div ref={scrollRef}>
+                                        <div >
+                                            {/* ref={scrollRef} */}
                                             <TopMessage key={m._id} message={m} own={m.sender === currentUser._id} />
                                         </div>
                                     ))}
@@ -178,7 +180,11 @@ export default function Messenger() {
 
             <div className="chatOnline">
                 <div className="chatOnlineWrapper">
-                    <ChatOnline />
+                    <ChatOnline 
+                    onLineUsers={onLineUsers} 
+                    currentId={currentUser._id} 
+                    setCurrentChat={setCurrentChat}
+                    />
                 </div>
             </div>
 

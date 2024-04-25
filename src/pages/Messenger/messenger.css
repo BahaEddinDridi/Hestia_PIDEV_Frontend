@@ -4,7 +4,9 @@
 }
 
 .chatMenu{
-    flex: 3.5;
+    flex: 4;
+    max-height: 80vh; /* Hauteur maximale de 80% de la hauteur de la fenêtre */
+    overflow-y: auto; /* Activation du défilement vertical si nécessaire */
 }
 .chatMenuInput{
     width: 90%;
@@ -21,6 +23,7 @@
     flex-direction: column;
     justify-content: space-between;
     position: relative;
+    height: 85%;
 }
 .chatBoxTop {
     height: auto;

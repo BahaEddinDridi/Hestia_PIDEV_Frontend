@@ -5,6 +5,9 @@
     cursor: pointer;
     margin-top: 10px;
 }
+.chatOnlineFriend:hover {
+    color: #C62828; /* Changer la couleur du texte au survol */
+}
 
 .chatOnlineImg{
     width: 40px;
@@ -18,12 +21,8 @@
     position: relative;
     margin-right: 10px;
 }
-.chatOnlineBadge{
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: limegreen;
-    position: absolute;
-    top: 2px;
-    right: 2px;
-}
+.chatOnline {
+    flex: 3.5; 
+    overflow-y: auto; /* Activation du défilement vertical si nécessaire */
+  }
+  

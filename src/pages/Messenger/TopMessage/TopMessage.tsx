@@ -11,7 +11,9 @@ interface TopMessageProps {
 const TopMessage: React.FC<TopMessageProps> = ({ message, own }) => {
   const currentUser = useSelector(selectCurrentUser);
   const createdAtString = message.createdAt.toString();
+  
   return (
+    
     <div className={own ? "message own" : "message"}>
       <div className="messageTop">
         <img className='messageImg' src={currentUser.image} alt="User" />
