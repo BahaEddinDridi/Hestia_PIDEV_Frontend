@@ -70,7 +70,8 @@ socket.on("disconnect", () => {
 
 socket.on("hello", (arg) => {
   console.log(arg); // world
-});import ChatCard from './components/Chat/ChatCard';
+});
+//import ChatCard from './components/Chat/ChatCard';
 import Calendrie from './components/Cards/calendrie';
 function App() {
   const navigate = useNavigate();
