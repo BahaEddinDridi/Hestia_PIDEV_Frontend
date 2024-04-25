@@ -119,8 +119,6 @@ const EditJob: React.FC = () => {
         setShowModalBack(false); // Fermer le modal sans effectuer d'action
     };
 
-
-
     return (
         <DefaultLayout>
             {showSuccessMessage && (
