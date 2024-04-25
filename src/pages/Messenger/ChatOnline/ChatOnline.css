@@ -24,5 +24,6 @@
 .chatOnline {
     flex: 3.5; 
     overflow-y: auto; /* Activation du défilement vertical si nécessaire */
+    height: auto;
   }
   
