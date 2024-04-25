@@ -63,8 +63,8 @@ import JobOfferView from './pages/Opportunity/JobOfferView';
 import Detailsintership from './pages/Detailsintership';
 import ApplicationsList from './pages/Applications/ApplicationsList';
 import InternshipOfferView from './pages/Opportunity/InternshipOfferView';
-import Messenger from './pages/Messenger/messenger'
 import ChatCard from './components/Chat/ChatCard';
+import Calendrie from './components/Cards/calendrie';
 function App() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
@@ -124,6 +124,15 @@ function App() {
           }
         />
         <Route
+          path="/calendar/:username"
+          element={<Calendrie type="candidate" />}
+        />
+        <Route
+          path="/calendarcompany/:companyName"
+          element={<Calendrie type="company" />}
+        />
+        
+        <Route
           path="/welcome"
           element={
             <>
@@ -180,6 +189,7 @@ function App() {
               </ProtectedRoute>
             </>
           } />
+
         <Route
           path="/Profile"
           element={
@@ -319,28 +329,28 @@ function App() {
             </>
           }
         />
-       
+
         <Route
           path="/Dashboard/tables-Of-Interships/Opportunities"
           element={
             <>
-             <AdminRoute>
-             <PageTitle title="List Interships-Opportunities" />
-              <TablesIntershipsOpportunities />
-             </AdminRoute>
-             
+              <AdminRoute>
+                <PageTitle title="List Interships-Opportunities" />
+                <TablesIntershipsOpportunities />
+              </AdminRoute>
+
             </>
           }
         />
-         <Route
+        <Route
           path="/Dashboard/tables-Of-Interships/Applications"
           element={
             <>
-            <AdminRoute>
-            <PageTitle title="List Interships-Applications" />
-              <TablesIntershipsApplications />
-            </AdminRoute>
-              
+              <AdminRoute>
+                <PageTitle title="List Interships-Applications" />
+                <TablesIntershipsApplications />
+              </AdminRoute>
+
             </>
           }
         />
@@ -348,11 +358,11 @@ function App() {
           path="/Dashboard/tables-Of-Jobs/Opportunities"
           element={
             <>
-            <AdminRoute>
-            <PageTitle title="List Jobs-Opportunities" />
-              <TablesJobsOpportunities />
-            </AdminRoute>
-             
+              <AdminRoute>
+                <PageTitle title="List Jobs-Opportunities" />
+                <TablesJobsOpportunities />
+              </AdminRoute>
+
             </>
           }
         />
@@ -360,15 +370,15 @@ function App() {
           path="/Dashboard/tables-Of-Jobs/Applications"
           element={
             <>
-            <AdminRoute>
-            <PageTitle title="List Jobs-Applications" />
-              <TablesJobsApplication />
-            </AdminRoute>
-              
+              <AdminRoute>
+                <PageTitle title="List Jobs-Applications" />
+                <TablesJobsApplication />
+              </AdminRoute>
+
             </>
           }
         />
-       
+
 
         <Route
           path="/Dashboard/ProfileAdmin/:username"
@@ -559,7 +569,7 @@ function App() {
             </>
           }
         />
-        
+
         <Route
           path='/pages/settings'
           element={
@@ -643,15 +653,7 @@ function App() {
             </>
           }
         />
-          <Route
-          path='chatcard'
-          element={
-            <>
-              <PageTitle title="Offers" />
-              <ChatCard/>
-            </>
-          }
-        />
+
         <Route
           path='AboutUs'
           element={
@@ -698,18 +700,8 @@ function App() {
             </>
           }
         />
-        <Route
-          path='/chat'
-          element={
-            <>
-              <PageTitle title="Chat" />
-              <ProtectedRoute>
-              <Messenger/>
-              </ProtectedRoute>
-            </>
-          }
-        />
-            {/************** * TOUJOURS LE DERNIER  *************************/}
+
+        {/************** * TOUJOURS LE DERNIER  *************************/}
         <Route
           path="/*"
           element={

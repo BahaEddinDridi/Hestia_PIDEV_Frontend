@@ -386,11 +386,12 @@ export const updateproject = async (username:string , projectId:string, updatedP
     throw error;
   }
 };
-export const updateApplicationStatus = async (applicationId:string,newStatus:any) =>{
+export const updateApplicationStatus = async (applicationId:string,newStatus:any,DateInterview:any) =>{
   try {
     const response = await axios.put('http://localhost:3001/application/updatestatus', {
         applicationId: applicationId,
-        newStatus: newStatus
+        newStatus: newStatus,
+        DateInterview: DateInterview
     });
     
     if (response.status === 200) {
