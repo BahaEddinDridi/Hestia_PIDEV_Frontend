@@ -70,7 +70,8 @@ socket.on("disconnect", () => {
 
 socket.on("hello", (arg) => {
   console.log(arg); // world
-});
+});import Messenger from './pages/Messenger/messenger'
+
 function App() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
@@ -701,6 +702,17 @@ function App() {
             <>
               <PageTitle title="Edit A Job Opportunity" />
               <EditInter />
+            </>
+          }
+        />
+        <Route
+          path='/chat'
+          element={
+            <>
+              <PageTitle title="Chat" />
+              <ProtectedRoute>
+              <Messenger/>
+              </ProtectedRoute>
             </>
           }
         />

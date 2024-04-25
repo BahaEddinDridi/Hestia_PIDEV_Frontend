@@ -6,6 +6,8 @@ import { AddJob } from '../../api/opportunity';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../../ApiSlices/authSlice';
 import { Link } from 'react-router-dom';
+import { skill } from '../../Profil/skills';
+
 
 // //Essai avant de lié avec un compte user
 // const defaultUser = {
@@ -16,7 +18,7 @@ const JobOpp: React.FC = () => {
 
     const [jobCommpanyName, setjobCommpanyName] = useState('')
     const [jobCompanyId, setjobCompanyId] = useState('')
-    
+
     const [jobTitle, setjobTitle] = useState('')
     const [jobAdress, setjobAdress] = useState('')
     const [jobLocation, setjobLocation] = useState('')
@@ -26,7 +28,7 @@ const JobOpp: React.FC = () => {
     const [jobfield, setjobfield] = useState('')
     const [jobStartDate, setjobStartDate] = useState('')
     const [jobApplicationDeadline, setjobApplicationDeadline] = useState('')
-    const [jobRequiredSkills, setjobRequiredSkills] = useState('')
+    const [jobRequiredSkills, setjobRequiredSkills] = useState<string[]>([]); // Initialisez avec un tableau vide
     const [jobRequiredEducation, setjobRequiredEducation] = useState('')
     const [jobRequiredExperience, setjobRequiredExperience] = useState('')
     const [contactNumber, setcontactNumber] = useState('')
@@ -46,7 +48,7 @@ const JobOpp: React.FC = () => {
     const [error, setError] = useState({});
 
 
-    
+
 
 
 
@@ -87,7 +89,7 @@ const JobOpp: React.FC = () => {
             const currentDate = new Date();
             const formattedDate = currentDate.toISOString();
             const jobData = {
-                jobCompanyId:currentUser._id,
+                jobCompanyId: currentUser._id,
                 jobCommpanyName: currentUser.username,
                 jobImage: currentUser.image,
                 jobTitle: jobTitle,
@@ -141,7 +143,16 @@ const JobOpp: React.FC = () => {
     };
 
 
+    const handleSkillSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const jobRequiredSkill = e.target.value;
+        setjobRequiredSkills([...jobRequiredSkills, jobRequiredSkill]);
 
+    };
+
+    const handleSkillRemove = (skillToRemove: string) => {
+        const updatedSkills = jobRequiredSkills.filter(skill => skill !== skillToRemove);
+        setjobRequiredSkills(updatedSkills);
+    };
 
     return (
         <DefaultLayout>
@@ -265,14 +276,14 @@ const JobOpp: React.FC = () => {
                                             {error && jobTitle.length <= 0 && (
                                                 <label className="text-esprit text-xs">Job title can't be empty</label>
                                             )}
-                                            
+
                                         </div>
 
                                         <div className="mb-4">
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">Job Field</label>
                                             <select className="w-full shadow-4 p-4 border-0" name="jobType" value={jobfield}
                                                 onChange={e => setjobfield(e.target.value)}>
-                                                    <option value=""></option>
+                                                <option value=""></option>
                                                 <option value="Computer Science">Computer Science</option>
                                                 <option value="Mechanical Engineering">Mechanical Engineering</option>
                                                 <option value="Electromechanical Engineering">Electromechanical Engineering</option>
@@ -361,8 +372,25 @@ const JobOpp: React.FC = () => {
 
 
                                         <div className="mb-4">
-                                            <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required skills</label>
-                                            <textarea className="w-full shadow-4 p-4 border-0" placeholder="required skills" rows="2" onChange={e => setjobRequiredSkills(e.target.value)}></textarea>
+                                        <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required skills</label>                                            <select
+                                                multiple
+                                                value={jobRequiredSkills}
+                                                onChange={handleSkillSelect}
+                                                className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-red-500"
+                                            >
+                                                {skill.map(skill => (
+                                                    <option key={skill} value={skill}>{skill}</option>
+                                                ))}
+                                            </select>
+                                            <div className="mt-2">
+                                                {jobRequiredSkills.map(skill => (
+                                                    <div key={skill} className="inline-block bg-gray-200 rounded-full px-3 py-1 m-1">
+                                                        {skill}
+                                                        <button className="ml-1" onClick={() => handleSkillRemove(skill)}>x</button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            
                                             {error && jobRequiredSkills.length <= 0 && (
                                                 <label className="text-esprit text-xs">Required Skills can't be empty</label>
                                             )}
@@ -372,7 +400,7 @@ const JobOpp: React.FC = () => {
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required education</label>
                                             <select className="w-full shadow-4 p-4 border-0" name="jobType" value={jobRequiredEducation}
                                                 onChange={e => setjobRequiredEducation(e.target.value)}>
-                                                    <option value=""></option>
+                                                <option value=""></option>
                                                 <option value="Bachelor degree">Bachelor degree</option>
                                                 <option value="Engineering degree">Engineering degree</option>
                                             </select>
@@ -384,7 +412,7 @@ const JobOpp: React.FC = () => {
                                             <label className="block uppercase tracking-wide text-charcoal-darker text-xs font-bold text-OppSarra2R">required experience</label>
                                             <select className="w-full shadow-4 p-4 border-0" name="jobType" value={jobRequiredExperience}
                                                 onChange={e => setjobRequiredExperience(e.target.value)}>
-                                                    <option value=""></option>
+                                                <option value=""></option>
                                                 <option value="Junior">Junior</option>
                                                 <option value="Senior">Senior</option>
                                                 <option value="Experienced">Experienced</option>

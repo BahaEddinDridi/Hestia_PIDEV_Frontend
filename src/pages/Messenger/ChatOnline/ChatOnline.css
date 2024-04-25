@@ -1,0 +1,28 @@
+.chatOnlineFriend{
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.chatOnlineFriend:hover {
+    color: #C62828; /* Changer la couleur du texte au survol */
+}
+
+.chatOnlineImg{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid white;
+}
+
+.chatOnlineImgContainer{
+    position: relative;
+    margin-right: 10px;
+}
+.chatOnline {
+    flex: 3.5; 
+    overflow-y: auto; /* Activation du défilement vertical si nécessaire */
+  }
+  
