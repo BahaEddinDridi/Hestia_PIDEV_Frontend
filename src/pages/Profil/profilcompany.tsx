@@ -120,7 +120,7 @@ const ProfileCompany = () => {
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   //trie le tableau de intership 
   const filteredinter = currentUser.intership.filter(intership => intership && intership.interStartDate);
-  const sortedintership = filteredinter.sort((a: any, b: any) =>{
+  const sortedintership = filteredinter.sort((a: any, b: any) => {
     const dateA = new Date(a.interStartDate);
     const dateB = new Date(b.interStartDate);
     const currentDate = new Date();
@@ -195,43 +195,43 @@ const ProfileCompany = () => {
     }
   };
 
-  const [interships, setInterships] = useState<{ _id:String,username: string, interships: { interTitle: string, interAdress: string, interLocation: string, interDescription: string, interPost: number, interfield: string, interStartDate: string, interApplicationDeadline: string, interRequiredSkills: string, interRequiredEducation: string, contactNumber: Number, interOtherInformation: string, _id: string }[] }[]>([]);
+  const [interships, setInterships] = useState<{ _id: String, username: string, interships: { interTitle: string, interAdress: string, interLocation: string, interDescription: string, interPost: number, interfield: string, interStartDate: string, interApplicationDeadline: string, interRequiredSkills: string, interRequiredEducation: string, contactNumber: Number, interOtherInformation: string, _id: string }[] }[]>([]);
 
-const handleDeleteinter = async (id: string, username: string) => {
-  try {
-    const confirmDelete = window.confirm("Are you sure you want to delete this opportunity?");
+  const handleDeleteinter = async (id: string, username: string) => {
+    try {
+      const confirmDelete = window.confirm("Are you sure you want to delete this opportunity?");
 
-    if (confirmDelete) {
-      await deleteIntershipByIdAndUsername(id, username);
+      if (confirmDelete) {
+        await deleteIntershipByIdAndUsername(id, username);
 
-      // Filtrer la liste pour exclure l'emploi supprimé
-      const updatedInterships = interships.map(user => ({
-        ...user,
-        interships: user.interships.filter(intership => intership._id !== id)
-      }));
+        // Filtrer la liste pour exclure l'emploi supprimé
+        const updatedInterships = interships.map(user => ({
+          ...user,
+          interships: user.interships.filter(intership => intership._id !== id)
+        }));
 
-      // Mettre à jour l'état avec la nouvelle liste
-      setInterships(updatedInterships);
+        // Mettre à jour l'état avec la nouvelle liste
+        setInterships(updatedInterships);
 
-      // Afficher l'alerte de succès
-      setShowAlert(true);
+        // Afficher l'alerte de succès
+        setShowAlert(true);
 
-      setTimeout(() => {
-        setShowAlert(false);
-      }, 3000);
-      // Rafraîchir la page après la suppression réussie
-      window.location.reload();
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 3000);
+        // Rafraîchir la page après la suppression réussie
+        window.location.reload();
 
-      // Ajouter le console.log ici
-      console.log("Emplois mis à jour :", updatedInterships);
-    } else {
-      console.log("La suppression a été annulée.");
+        // Ajouter le console.log ici
+        console.log("Emplois mis à jour :", updatedInterships);
+      } else {
+        console.log("La suppression a été annulée.");
+      }
+    } catch (error) {
+      console.error(error);
+      // Gérer les erreurs de suppression de l'emploi
     }
-  } catch (error) {
-    console.error(error);
-    // Gérer les erreurs de suppression de l'emploi
-  }
-};
+  };
 
   return (
     <>
@@ -356,7 +356,7 @@ const handleDeleteinter = async (id: string, username: string) => {
               </h3>
 
             </div>
-            <div className="flex  ml-[1100px] mt-4">
+            <div className="flex  ml-[871px] mt-4">
               <button
 
                 className="group ml-10 flex p-2 rounded-md drop-shadow-xl  from-gray-800  font-semibold hover:translate-y-3 hover:rounded-[50%] transition-all duration-500 hover:from-[#331029] hover:to-[#310413]"
@@ -404,6 +404,53 @@ const handleDeleteinter = async (id: string, username: string) => {
                   GitHub
                 </span>
               </button>
+              <div className="group relative mx-2">
+                <button>
+                  <svg
+                    stroke-linejoin="round"
+                    stroke-linecap="round"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    height="44"
+                    width="44"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-8 hover:scale-125 duration-200 hover:stroke-esprit"
+                    fill="none"
+                  >
+                    <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+                    <path d="M8 9h8"></path>
+                    <path d="M8 13h6"></path>
+                    <path
+                      d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z"
+                    ></path>
+                  </svg>
+                </button>
+                <span
+                  className="absolute -top-14 left-[50%] -translate-x-[50%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100"
+                >Chat <span> </span
+                ></span>
+              </div>
+              <Link to={`/calendarcompany/${(currentUser.username)}`}>
+                <button className="flex justify-center items-center gap-2 px-3 h-10 w-48 rounded-full bg-gradient-to-br from-red-200 to-red-300  text-blackgray font-sans font-medium text-base shadow-md hover:bg-red-600 transition-colors">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    viewBox="0 0 24 24"
+                    height="24"
+                    fill="none"
+                    className="w-6 h-6 stroke-current "
+                  >
+                    <g strokeWidth="2" strokeLinecap="round" stroke="#000">
+                      <rect y="5" x="4" width="16" rx="2" height="16"></rect>
+                      <path d="m8 3v4"></path>
+                      <path d="m16 3v4"></path>
+                      <path d="m4 11h16"></path>
+                    </g>
+                  </svg>
+                  <span className="text-lg">see the calendar</span>
+                </button>
+              </Link>
             </div>
           </div>
 
@@ -550,7 +597,7 @@ const handleDeleteinter = async (id: string, username: string) => {
                             <span
                               className="absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm"
                             >Update</span>
-                            
+
                           </div>
                         </section>
 
