@@ -29,7 +29,7 @@ export default function ChatOnline({ onLineUsers, currentId, setCurrentChat }) {
         chatOnline.style.maxHeight = `${maxHeight}px`;
       }
     };
-
+/////////////////////////////////////////
     window.addEventListener('resize', updateMaxHeight);
     updateMaxHeight(); // Appeler la fonction de mise à jour initiale lors du premier rendu
 
