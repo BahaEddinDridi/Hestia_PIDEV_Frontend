@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { button } from '@material-tailwind/react';
 import { io, Socket } from "socket.io-client";
+import { getUsers } from "../api";
 
 
 interface Message {
@@ -20,6 +21,18 @@ type DefaultEventsMap = {
     [key: string]: (...args: any[]) => void;
 };
 
+interface User {
+    _id: string;
+    username: string;
+    email: string;
+    role: string;
+    birthDate: string;
+    image: string;
+    gender: string;
+    phoneNumber: string;
+    ProfileStatus: string;
+    deactivationExpiresAt?: Date | null;
+}
 export default function Messenger() {
     const [conversations, setConversations] = useState([]);
     const [onLineUsers, setOnLineUsers] = useState([]);
@@ -31,6 +44,31 @@ export default function Messenger() {
     const socket = useRef<Socket<DefaultEventsMap, DefaultEventsMap> | undefined>(undefined);
     const currentUser = useSelector(selectCurrentUser);
     console.log("currentUser", currentUser);
+
+
+    /////recherche
+    const [searchTerm, setSearchTerm] = useState("");
+    const [users, setUsers] = useState<User[]>([]);
+
+    const filteredUsers = users.filter((user) =>
+        Object.values(user).some((value) =>
+            typeof value == 'string' && value.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await getUsers();
+                setUsers(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchData();
+
+    }, []);
+
+
 
 
     useEffect(() => {
@@ -129,7 +167,12 @@ export default function Messenger() {
 
                 <div className="chatMenu">
                     <div className="chatMenuWrapper">
-                        <input placeholder='search for friends' className='chatMenuInput' />
+                        <input
+                            placeholder='search for friends'
+                            className='chatMenuInput'
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)} />
+
                         {conversations.map((c) => (
                             // Correction : Ajout d'une clé 'key' pour chaque élément de la liste
                             <div key={c._id} onClick={() => setCurrentChat(c)}>
@@ -165,30 +208,30 @@ export default function Messenger() {
                                         }}
                                         value={newMessage}
                                     ></textarea>
-                                <button
-                                    className='chatSubmitButton'
-                                    onClick={sendMessage}> {/* Utilisez la fonction sendMessage ici */}
-                                    Send
-                                </button>
-                            </div>
-                    </>
-                    ) : (
-                    <span className='noConversationText'>Open a new conversation to start a chat.</span>
+                                    <button
+                                        className='chatSubmitButton'
+                                        onClick={sendMessage}> {/* Utilisez la fonction sendMessage ici */}
+                                        Send
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            <span className='noConversationText'>Open a new conversation to start a chat.</span>
                         )}
+                    </div>
                 </div>
-            </div>
 
-            <div className="chatOnline">
-                <div className="chatOnlineWrapper">
-                    <ChatOnline 
-                    onLineUsers={onLineUsers} 
-                    currentId={currentUser._id} 
-                    setCurrentChat={setCurrentChat}
-                    />
+                <div className="chatOnline">
+                    <div className="chatOnlineWrapper">
+                        <ChatOnline
+                            onLineUsers={onLineUsers}
+                            currentId={currentUser._id}
+                            setCurrentChat={setCurrentChat}
+                        />
+                    </div>
                 </div>
-            </div>
 
-        </div>
+            </div>
         </DefaultLayout >
     );
 }
