@@ -9,8 +9,9 @@ import { getUserProfile } from '../../pages/api';
 import { updateUserProfile } from "../api";
 import { Link, useNavigate } from "react-router-dom";
 import { useParams } from 'react-router-dom';
-import {useSelector} from "react-redux";
-import {selectCurrentUsername} from "../../ApiSlices/authSlice";
+import { useSelector } from "react-redux";
+import { skill } from './skills';
+import { selectCurrentUsername } from "../../ApiSlices/authSlice";
 const UpdateProfile = () => {
   const [activeSection, setActiveSection] = useState('personal');
   const currentUsername = useSelector(selectCurrentUsername);
@@ -29,7 +30,8 @@ const UpdateProfile = () => {
     location: '',
     phoneNumber: '',
     accountVisibility: '',
-    title:'',
+    title: '',
+    skills: [],
   });
 
   useEffect(() => {
@@ -39,7 +41,7 @@ const UpdateProfile = () => {
         if (currentUsername) {
           const data = await getUserProfile(currentUsername);
           setUserProfile(data);
-          
+
           setFormData({
             firstName: data.firstName || '',
             lastName: data.lastName || '',
@@ -49,7 +51,8 @@ const UpdateProfile = () => {
             location: data.location || '',
             phoneNumber: data.phoneNumber || '',
             accountVisibility: data.accountVisibility || '',
-            title:data.title ||'',
+            title: data.title || '',
+            skills: data.skills || [],
           });
         }
       } catch (error) {
@@ -114,7 +117,8 @@ const UpdateProfile = () => {
           phoneNumber: formData.phoneNumber,
           email: formData.email,
           accountVisibility: formData.accountVisibility,
-          title:formData.title,
+          title: formData.title,
+          skills: formData.skills,
         }));
 
         setSuccessMessage('Profile updated successfully');
@@ -142,6 +146,19 @@ const UpdateProfile = () => {
       ...prevFormData,
       accountVisibility: e.target.value,
     }));
+  };
+  const [selectedSkills, setSelectedSkills] = useState([]);
+
+  const handleSkillSelect = (e) => {
+    const selectedSkill = e.target.value;
+    setSelectedSkills([...selectedSkills, selectedSkill]);
+    handleInputChange({ target: { name: 'skills', value: [...selectedSkills, selectedSkill] } });
+  };
+
+  const handleSkillRemove = (skillToRemove) => {
+    const updatedSkills = selectedSkills.filter(skill => skill !== skillToRemove);
+    setSelectedSkills(updatedSkills);
+    handleInputChange({ target: { name: 'skills', value: updatedSkills } });
   };
 
   return (
@@ -304,7 +321,28 @@ const UpdateProfile = () => {
                             onChange={handleInputChange}
                             className={`w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-red-500 `}
                           />
-                         
+
+                        </div>
+                        <div>
+                          <label className="mb-3 block text-black dark:text-white">Skills</label>
+                          <select
+                            multiple
+                            value={selectedSkills}
+                            onChange={handleSkillSelect}
+                            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-red-500"
+                          >
+                            {skill.map(skill => (
+                              <option key={skill} value={skill}>{skill}</option>
+                            ))}
+                          </select>
+                          <div className="mt-2">
+                            {selectedSkills.map(skill => (
+                              <div key={skill} className="inline-block bg-gray-200 rounded-full px-3 py-1 m-1">
+                                {skill}
+                                <button className="ml-1" onClick={() => handleSkillRemove(skill)}>x</button>
+                              </div>
+                            ))}
+                          </div>
                         </div>
 
                       </>

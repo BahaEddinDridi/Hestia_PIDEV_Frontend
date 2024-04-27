@@ -36,4 +36,3 @@ export default function Conversation({ conversation, nowuser }: ConversationProp
     </div>
   )
 }
-

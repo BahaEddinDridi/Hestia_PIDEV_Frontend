@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate, BrowserRouter } from 'react-router-dom';
-
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
 import SignIn from './pages/Authentication/SignIn';
@@ -8,7 +7,6 @@ import Calendar from './pages/Calendar';
 import Chart from './pages/Chart';
 import FormElements from './pages/Form/FormElements';
 import FormLayout from './pages/Form/FormLayout';
-
 import Settings from './pages/Settings';
 import Tables from './backoffice/pages/Tables';
 import TablesIntershipsOpportunities from './backoffice/Tables/TableInterships';
@@ -33,7 +31,6 @@ import EmailVerif from './pages/Authentication/Reset_Password/EmailVerif';
 import ResetPasswordPage from './pages/Authentication/Reset_Password/resetpassword';
 import UpdatePassword from './layouts/authentication/components/Security/UpdatePassword/UpdatePassword';
 import AccountSecurity from './layouts/authentication/components/Security/AccountSecurity/AccountSecurity';
-// import ChoiceOne from './pages/Authentication/SignUpFiles/choiceOne';
 import SignUpCompany from './pages/Authentication/SignUpCompany';
 import SignUpTeacher from './pages/Authentication/SignUpTeacher';
 import Profiletest from './pages/Profil/profil';
@@ -45,26 +42,39 @@ import IntershipOpp from '../src/pages/Opportunity/AddOpp/IntershipOpp'
 import EditJob from '../src/pages/Opportunity/UpdateOpp/jobUpdate'
 import EditInter from '../src/pages/Opportunity/UpdateOpp/intershipUpdate'
 import NotFound from '../src/pages/NotFound'
-
 import AboutUs from './AboutUs/AboutUs';
-import { useSelector } from "react-redux";
-import { selectCurrentUsername } from "./ApiSlices/authSlice";
-import { useGetUserInfoQuery } from "./ApiSlices/userApiSlice";
 import DesactiveAccount from './pages/Profil/desactiveaccoun';
 import ProfileCompany from './pages/Profil/profilcompany';
 import RederactionRoute from './pages/Profil/rederection';
 import ViewCompany from './pages/Profil/viewCompany';
 import Detailsjoboffer from './pages/Detailsjoboffer'; import { useRefreshMutation } from './ApiSlices/authApiSlice';
 import ProtectedRoute from './pages/Authentication/ProtectedRoute';
-import PersistLoginRoute from './pages/Authentication/PersistLoginRoute';
 import AdminRoute from './pages/Authentication/SignUpFiles/ProtectedRouteAdmin';
 import OfferBrowsePage from './pages/Browsing/JobOfferBrowsing';
 import JobOfferView from './pages/Opportunity/JobOfferView';
 import Detailsintership from './pages/Detailsintership';
 import ApplicationsList from './pages/Applications/ApplicationsList';
 import InternshipOfferView from './pages/Opportunity/InternshipOfferView';
+import LandingPage from './pages/Landing Page/LandingPage';
 import Messenger from './pages/Messenger/messenger'
+import { io } from "socket.io-client";
 
+
+
+const socket = io("http://localhost:3001");
+socket.on("connect", () => {
+  console.log("Connected to socket.io server");
+});
+
+socket.on("disconnect", () => {
+  console.log("Disconnected from socket.io server");
+});
+
+socket.on("hello", (arg) => {
+  console.log(arg); // world
+});
+//import ChatCard from './components/Chat/ChatCard';
+import Calendrie from './components/Cards/calendrie';
 function App() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
@@ -97,8 +107,6 @@ function App() {
     setTimeout(() => setLoading(false), 1000);
   }, []);
 
-
-
   return loading ? (
     <Loader />
   ) : (
@@ -124,6 +132,15 @@ function App() {
           }
         />
         <Route
+          path="/calendar/:username"
+          element={<Calendrie type="candidate" />}
+        />
+        <Route
+          path="/calendarcompany/:companyName"
+          element={<Calendrie type="company" />}
+        />
+
+        <Route
           path="/welcome"
           element={
             <>
@@ -137,6 +154,17 @@ function App() {
             <>
               <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <Calendar />
+            </>
+          }
+        />
+        <Route
+          path="/Feed"
+          element={
+            <>
+              <PageTitle title="Welcome Back" />
+              <ProtectedRoute>
+                <LandingPage />
+              </ProtectedRoute>
             </>
           }
         />
@@ -180,6 +208,7 @@ function App() {
               </ProtectedRoute>
             </>
           } />
+
         <Route
           path="/Profile"
           element={
@@ -319,28 +348,28 @@ function App() {
             </>
           }
         />
-       
+
         <Route
           path="/Dashboard/tables-Of-Interships/Opportunities"
           element={
             <>
-             <AdminRoute>
-             <PageTitle title="List Interships-Opportunities" />
-              <TablesIntershipsOpportunities />
-             </AdminRoute>
-             
+              <AdminRoute>
+                <PageTitle title="List Interships-Opportunities" />
+                <TablesIntershipsOpportunities />
+              </AdminRoute>
+
             </>
           }
         />
-         <Route
+        <Route
           path="/Dashboard/tables-Of-Interships/Applications"
           element={
             <>
-            <AdminRoute>
-            <PageTitle title="List Interships-Applications" />
-              <TablesIntershipsApplications />
-            </AdminRoute>
-              
+              <AdminRoute>
+                <PageTitle title="List Interships-Applications" />
+                <TablesIntershipsApplications />
+              </AdminRoute>
+
             </>
           }
         />
@@ -348,11 +377,11 @@ function App() {
           path="/Dashboard/tables-Of-Jobs/Opportunities"
           element={
             <>
-            <AdminRoute>
-            <PageTitle title="List Jobs-Opportunities" />
-              <TablesJobsOpportunities />
-            </AdminRoute>
-             
+              <AdminRoute>
+                <PageTitle title="List Jobs-Opportunities" />
+                <TablesJobsOpportunities />
+              </AdminRoute>
+
             </>
           }
         />
@@ -360,15 +389,15 @@ function App() {
           path="/Dashboard/tables-Of-Jobs/Applications"
           element={
             <>
-            <AdminRoute>
-            <PageTitle title="List Jobs-Applications" />
-              <TablesJobsApplication />
-            </AdminRoute>
-              
+              <AdminRoute>
+                <PageTitle title="List Jobs-Applications" />
+                <TablesJobsApplication />
+              </AdminRoute>
+
             </>
           }
         />
-       
+
 
         <Route
           path="/Dashboard/ProfileAdmin/:username"
@@ -559,7 +588,7 @@ function App() {
             </>
           }
         />
-        
+
         <Route
           path='/pages/settings'
           element={
@@ -643,6 +672,7 @@ function App() {
             </>
           }
         />
+
         <Route
           path='AboutUs'
           element={
@@ -689,18 +719,20 @@ function App() {
             </>
           }
         />
+
         <Route
           path='/chat'
           element={
             <>
               <PageTitle title="Chat" />
               <ProtectedRoute>
-              <Messenger/>
+                <Messenger />
               </ProtectedRoute>
             </>
           }
         />
-            {/************** * TOUJOURS LE DERNIER  *************************/}
+
+        {/************** * TOUJOURS LE DERNIER  *************************/}
         <Route
           path="/*"
           element={

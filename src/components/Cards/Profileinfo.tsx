@@ -213,6 +213,10 @@ const ProfileInfo = () => {
                   <span className="text-sm text-white dark:text-black">Location</span>
                   <label className="text-lg font-semibold text-black dark:text-white">{currentUser && `${currentUser.location}`}</label>
                 </div>
+                <div className="flex flex-col">
+                  <span className="text-sm text-white dark:text-black">skills</span>
+                  <label className="text-lg font-semibold text-black dark:text-white">{currentUser && `${currentUser.skills}`}</label>
+                </div>
               </div>
             </div>
 

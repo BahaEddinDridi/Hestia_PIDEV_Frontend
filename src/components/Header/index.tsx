@@ -84,6 +84,7 @@ const Header = (props: {
         </Link>
         <ul className="flex items-center gap-3 2xsm:gap-4">
           <li className="relative">
+            <Link to="/Feed">
             <div className="relative"
             >
               <button
@@ -111,6 +112,7 @@ const Header = (props: {
                     group-hover:text-sm group-hover:-translate-y-10 duration-700">Home</span>
               </button>
             </div>
+            </Link>
           </li>
           {currentRole === 'jobSeeker' && (
             <li>

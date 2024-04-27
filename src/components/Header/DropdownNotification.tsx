@@ -27,6 +27,13 @@ const DropdownNotification = () => {
     fetchNotifications();
   }, []);
 
+  const formatDate = (dateString) => {
+    const submitDate = new Date(dateString);
+    const year = submitDate.getFullYear();
+    const month = (submitDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = submitDate.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   useEffect(() => {
     const clickHandler = ({ target }) => {
@@ -100,10 +107,16 @@ const DropdownNotification = () => {
               <Link
                 className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3
                 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                to={``}
+                to={
+                  notification.type === 'job_application'
+                    ? `/detailsoffer/${notification.jobId}`
+                    : notification.type === 'internship_application'
+                      ? `/detailsinternship/${notification.jobId}`
+                      : '/Applications'
+                }
               >
                 <p className="text-sm">{notification.message}</p>
-                <p className="text-xs">{notification.timestamp}</p>
+                <p className="text-xs">{formatDate(notification.timestamp)}</p>
               </Link>
             </li>
           ))}
