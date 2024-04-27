@@ -56,7 +56,9 @@ import Detailsintership from './pages/Detailsintership';
 import ApplicationsList from './pages/Applications/ApplicationsList';
 import InternshipOfferView from './pages/Opportunity/InternshipOfferView';
 import LandingPage from './pages/Landing Page/LandingPage';
+import Messenger from './pages/Messenger/messenger'
 import { io } from "socket.io-client";
+
 
 
 const socket = io("http://localhost:3001");
@@ -137,7 +139,7 @@ function App() {
           path="/calendarcompany/:companyName"
           element={<Calendrie type="company" />}
         />
-        
+
         <Route
           path="/welcome"
           element={
@@ -714,6 +716,18 @@ function App() {
             <>
               <PageTitle title="Edit A Job Opportunity" />
               <EditInter />
+            </>
+          }
+        />
+
+        <Route
+          path='/chat'
+          element={
+            <>
+              <PageTitle title="Chat" />
+              <ProtectedRoute>
+                <Messenger />
+              </ProtectedRoute>
             </>
           }
         />
