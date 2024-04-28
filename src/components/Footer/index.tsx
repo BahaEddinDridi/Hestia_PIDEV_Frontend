@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Hestia from '../../images/logo/hestia-logo.png';
 import LegalModal from './LegalModal';
 import { Link } from 'react-router-dom';
+import LanguageButton from '../Header/languagebutton';
+
+import {useTranslation} from 'react-i18next';
 
 const Footer = () => {
   const [darkMode, setDarkMode] = useState(false); // State for dark mode
@@ -70,7 +73,9 @@ const Footer = () => {
       console.error('Error fetching CRM data:', error);
     }
   };
-  
+
+  const[t,i18n]=useTranslation();
+
   return (
     <footer className={footerClass}>
       <div className="mt-3 container mx-auto px-6">
@@ -85,76 +90,95 @@ const Footer = () => {
               <div>
                 <h4 className="mb-2 text-lg font-semibold text-red-800 dark:text-white">
                   {crmData.CompanyName}
+                  <div className='mt-5'>
+                  <LanguageButton/>
+                  </div>
+                  
                 </h4>
-                <p className="text-gray-600 dark:text-gray-300">
-                  {crmData.Description}
-                </p>
+                <ul className="text-gray-500 dark:text-gray-400 font-medium">
+                  <li className="mb-4 mr-4">
+                    <a className="text-espritLightRed dark:text-white">Description :</a>
+                    <a className="hover:">{crmData.Description}</a>
+                  </li>
+                </ul>
               </div>
-              <div>
-                <h4 className="mb-2 text-lg font-semibold text-red-700 dark:text-white">
-                  GET IN TOUCH
-                </h4>
-                <ul className="text-gray-600 dark:text-gray-300">
-                  <li className="mb-1">
-                    <span className="font-semibold">Location: </span>
-                    <a href={crmData.Location} className="hover:text-red-500">
+            )}
+          </div>
+          <div>
+            <h4 className="mb-4 font-semibold text-esprit uppercase dark:text-white ">
+            {t('GET IN TOUCH')}
+            </h4>
+            <ul className="text-gray-500 dark:text-gray-400 font-medium">
+              {crmData && (
+                <div>
+                  <li className="mb-4">
+                    <a className="text-espritLightRed dark:text-white">
+                    {t('Location')}:
+                    </a>
+                    <a className="hover:underline" href={crmData.Location}>
                       {crmData.Location}
                     </a>
                   </li>
-                  <li className="mb-1">
-                    <span className="font-semibold">Phone Number: </span>
-                    <a href={`tel:${crmData.PhoneNumber}`} className="hover:text-red-500">
-                      {crmData.PhoneNumber}
+                  <li className="mb-4">
+                    <a className="text-espritLightRed dark:text-white">
+                    {t('Phone Number')}:
                     </a>
+                    <a className="hover:underline">{crmData.PhoneNumber}</a>
                   </li>
-                  <li className="mb-1">
-                    <span className="font-semibold">Email: </span>
-                    <a href={`mailto:${crmData.Email}`} className="hover:text-red-500">
-                      {crmData.Email}
+                  <li className="mb-4">
+                    <a className="text-espritLightRed dark:text-white">
+                    {t('Email')}:
                     </a>
+                    <a className="hover:underline">{crmData.Email}</a>
                   </li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="mb-2 text-lg font-semibold text-red-700 dark:text-white">
-                  LEGAL
-                </h4>
-                <ul className="text-gray-600 dark:text-gray-300">
-                  <li className="mb-1">
-                    <a href="#" className="hover:text-red-500" onClick={openPrivacyPolicyModal}>
-                      Privacy Policy
-                    </a>
-                  </li>
-                  <li className="mb-1">
-                    <a href="#" className="hover:text-red-500" onClick={openTermsModal}>
-                      Terms & Conditions
-                    </a>
-                  </li>
-                </ul>
-              </div>
+                </div>
+              )}
+            </ul>
+          </div>
+          {/* Add modal trigger links */}
+          <div>
+            <div>
+              <h4 className="mb-4 font-semibold text-esprit uppercase dark:text-white">
+              {t('LEGAL')}
+              </h4>
+              <ul className="text-black dark:text-gray-400 font-medium">
+                <li className="mb-4">
+                  <a
+                    href="#"
+                    className="hover:underline text-espritLightRed"
+                    onClick={openPrivacyPolicyModal}
+                  >
+                    {t('Privacy Policy')}
+                  </a>
+                </li>
+                <li className="mb-4">
+                  <a
+                    href="#"
+                    className="hover:underline text-espritLightRed"
+                    onClick={openTermsModal}
+                  >
+                    {t('Terms &amp; Conditions')}
+                  </a>
+                </li>
+              </ul>
             </div>
-          )}
-
-          {/* Render the modals */}
-          {showPrivacyPolicyModal && (
-            <LegalModal
-              closeModal={closePrivacyPolicyModal}
-              title="Privacy Policy"
-              content={privacyPolicy}
-            />
-          )}
-          {showTermsModal && (
-            <LegalModal
-              closeModal={closeTermsModal}
-              title="Terms & Conditions"
-              content={termsOfService}
-            />
-          )}
+            {/* Render the modals */}
+            {showPrivacyPolicyModal && (
+              <LegalModal
+                closeModal={closePrivacyPolicyModal}
+                title="Privacy Policy"
+                content={privacyPolicy}
+              />
+            )}
+            {showTermsModal && (
+              <LegalModal
+                closeModal={closeTermsModal}
+                title="Terms & Conditions"
+                content={termsOfService}
+              />
+            )}
+          </div>
         </div>
-
-        
-
-        
       </div>
       <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
 

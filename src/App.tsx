@@ -20,6 +20,7 @@ import UserDetails from './backoffice/pages/UserDetails';
 import ProfileAdmin from './backoffice/pages/ProfileAdmin';
 import StatisticPage from './backoffice/pages/statisticPage';
 import SettingsAdmin from './backoffice/pages/settingsAdmin';
+import CalandrierAdmin from './backoffice/pages/calandrier';
 import UpdateProfileAdmin from './backoffice/pages/updateProfAdmin';
 import AccountSecurityAdmin from './backoffice/pages/AccountSecurityAdmin';
 import AddUser from './backoffice/pages/Adduser';
@@ -57,6 +58,7 @@ import ApplicationsList from './pages/Applications/ApplicationsList';
 import InternshipOfferView from './pages/Opportunity/InternshipOfferView';
 import LandingPage from './pages/Landing Page/LandingPage';
 import Messenger from './pages/Messenger/messenger'
+import '../src/i18n.js'
 import { io } from "socket.io-client";
 
 
@@ -348,7 +350,19 @@ function App() {
             </>
           }
         />
-
+        <Route
+          path="/Dashboard/calendar"
+          element={
+            <>
+            <AdminRoute>
+            <PageTitle title="List Interships-Applications" />
+              <CalandrierAdmin />
+            </AdminRoute>
+              
+            </>
+          }
+        />
+       
         <Route
           path="/Dashboard/tables-Of-Interships/Opportunities"
           element={

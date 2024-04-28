@@ -3,15 +3,21 @@ import { BookOpenIcon, Bars3BottomRightIcon, XMarkIcon } from '@heroicons/react/
 import DarkModeSwitcher from './DarkModeSwitcher';
 import Logo_PIDEV from '../../images/logo/Logo_PIDEV.png';
 import {useNavigate} from "react-router-dom";
-
+import {useTranslation} from 'react-i18next';
 const HomeNavBar = ({signUpRef}) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   let Links =[
-    {name:"HOME",link:"/"},
-    {name:"ABOUT US",link:"/AboutUs"},
-    {name:"CONTACT US",link:"/"},
+    {name:t('HOME'),link:"/"},
+    {name:t('ABOUT US'),link:"/AboutUs"},
+    {name:t('CONTACT US'),link:"/"},
   ];
+  // let Links =[
+  //   {name:"HOME",link:"/"},
+  //   {name:"ABOUT US",link:"/AboutUs"},
+  //   {name:"CONTACT US",link:"/"},
+  // ];
   let [open, setOpen] =useState(false);
 
   const handleSignInClick = () => {
@@ -52,7 +58,7 @@ const HomeNavBar = ({signUpRef}) => {
               focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg
               dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-10 py-3 text-center me-2 mb-2
               dark:from-cyan-950 dark:via-cyan-700 dark:to-cyan-500">
-            Sign Up
+            {t('Sign Up')}
           </button>
           <button type="button"
                   onClick={handleSignInClick}
@@ -60,9 +66,10 @@ const HomeNavBar = ({signUpRef}) => {
               focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg
               dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-10 py-3 text-center me-2 mb-2
               dark:from-cyan-950 dark:via-cyan-700 dark:to-cyan-500">
-            Sign In
+            {t('Sign In')}
           </button>
           <DarkModeSwitcher/>
+
         </ul>
       </div>
     </div>

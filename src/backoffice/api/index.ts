@@ -690,3 +690,18 @@ export const exportExcelJob=()=>{
     console.error(error);
   });
 }
+
+/////////////////////////////API
+export const fetchNotifications = async (userId) => {
+  try {
+    const response = await fetch(`http://localhost:3001/notifications/getNotificationsByUser/${userId}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch notifications');
+    }
+    const data = await response.json();
+    return data.notifications;
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+    return [];
+  }
+};

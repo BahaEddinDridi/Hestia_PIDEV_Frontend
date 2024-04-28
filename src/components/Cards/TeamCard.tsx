@@ -8,6 +8,7 @@ import Oumaima from "../../images/team/Oumaima.jpg"
 import Sarra from "../../images/team/Sarrah.jpg"
 import TeamMemberCard from "./TeamMemberCard";
 import {useState} from "react";
+import {useTranslation} from 'react-i18next';
 
 const TeamCard = () => {
     const [isPopoverVisible, setPopoverVisible] = useState(false);
@@ -82,13 +83,14 @@ const TeamCard = () => {
             LinkedinLink:""
         },
     ];
+    const[t,i18n]=useTranslation();
 
     return (
         <div className="py-20 bg-gray-50 item">
         <div className="container mx-auto px-6 md:px-12 xl:px-12">
             <div className="mb-16 text-center">
                 <h2 className="mb-4 text-center text-2xl text-gray-900 font-bold md:text-4xl">
-                    Meet our team!
+                    {t('Meet our team!')}
                 </h2>
                 <p className="text-gray-600 lg:mx-auto">
                     {/* Your description */}

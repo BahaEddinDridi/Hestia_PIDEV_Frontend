@@ -29,7 +29,29 @@ const filteredInterships = interships
     ),
   }))
   .filter((intershipArray) => intershipArray.interships.length > 0);
+//voice searsh
+const startVoiceSearch = () => {
+  let SpeechRecognition: any;
+  try {
+    SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+  } catch (error) {
+    console.error("La reconnaissance vocale n'est pas prise en charge par votre navigateur.");
+    return;
+  }
 
+  const recognition = new SpeechRecognition();
+
+  recognition.lang = "en-US";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  recognition.onresult = (event: any) => {
+    const transcript = event.results[0][0].transcript;
+    setSearchTerm(transcript);
+  };
+
+  recognition.start();
+};
 //Pagination 
 const totalInterships = filteredInterships.reduce((acc,intershipArray) => acc + intershipArray.interships.length, 0);
 const indexOfLastIntership = currentPage * intershipsPerPage;
@@ -86,16 +108,25 @@ const closeModal = () => {
       
 
  
-      <div className="max-w-full overflow-x-auto">
-        <div className="flex items-center mb-4">
-        {/* barre de recherche  */}
-        <input
-      type="text"
-      value={searchTerm}
-      onChange={(e)=>setSearchTerm(e.target.value)}
-      placeholder="Search Jobs..."
-      className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-red-800 focus:border-red-800 w-full"
-    />
+    <div className="max-w-full overflow-x-auto px-7 py-7">
+    <div className="flex items-center ">
+{/* barre de recherche  */}
+<input
+type="text"
+value={searchTerm}
+onChange={(e)=>setSearchTerm(e.target.value)}
+placeholder="Search Jobs..."
+className="px-3 py-2 my-5 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-greenadd focus:border-greenadd w-full"
+/>
+<div className="group relative">
+<button onClick={startVoiceSearch}>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+<path d="M7 4a3 3 0 0 1 6 0v6a3 3 0 1 1-6 0V4Z" />
+<path d="M5.5 9.643a.75.75 0 0 0-1.5 0V10c0 3.06 2.29 5.585 5.25 5.954V17.5h-1.5a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5h-1.5v-1.546A6.001 6.001 0 0 0 16 10v-.357a.75.75 0 0 0-1.5 0V10a4.5 4.5 0 0 1-9 0v-.357Z" />
+</svg>
+</button>
+<span className="absolute -top-14 left-[50%] -translate-x-[50%] z-10 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100">Voice Search</span>
+</div>
      </div>
         <table className="w-full table-auto">
           <thead>

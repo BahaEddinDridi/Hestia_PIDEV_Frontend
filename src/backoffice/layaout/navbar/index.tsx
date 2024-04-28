@@ -1,6 +1,6 @@
 import { Link,useNavigate } from 'react-router-dom';
 import DropdownMessage from '../../../components/Header/DropdownMessage';
-import DropdownNotification from '../../../components/Header/DropdownNotification';
+import DropdownNotification from './DropdownNotificationAdmin';
 import DropdownUser from './DropDownAdmin';
 import LogoIcon from '../../images/logo/logo-icon.svg';
 import DarkModeSwitcher from '../../../components/Header/DarkModeSwitcher';
@@ -92,7 +92,7 @@ const Header = (props: {
             {/* <!-- Dark Mode Toggler --> */}
 
             {/* <!-- Notification Menu Area --> */}
-            {/* <DropdownNotification /> */}
+            <DropdownNotification />
             {/* <!-- Notification Menu Area --> */}
 
             {/* <!-- Chat Notification Area --> */}

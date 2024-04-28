@@ -90,6 +90,7 @@ const StatisticPage: React.FC = () => {
        <ChartCompanies/>
        <ChartLocations/>
        <ChartSeniorityLevel/>
+      
         {/* <ChartOne />
         <ChartTwo />
         <ChatCard /> */}

@@ -181,7 +181,6 @@ export default function Messenger() {
                         ))}
                     </div>
                 </div>
-
                 <div className="chatBox">
                     <div className="chatBoxWrapper">
                         {currentChat ? (
