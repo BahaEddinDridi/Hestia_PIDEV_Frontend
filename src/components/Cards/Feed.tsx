@@ -43,8 +43,8 @@ const Feed: React.FC = () => {
 
   return (
     <div>
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Recommended Job Offers</h2>
+      <div className="bg-white rounded-lg shadow-md p-6 mb-4">
+        <h2 className="text-2xl font-semibold text-red-800 mb-2">Recommended Job Offers</h2>
         {loading && <p className="text-gray-600">Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
         {!loading && !error && recommendedJobOffers.length === 0 && (
@@ -61,10 +61,11 @@ const Feed: React.FC = () => {
                 <p className="text-gray-600 mb-2">{jobOffer.jobCommpanyName}</p>
                 <p className="text-red-500 font-semibold mb-2">Address:</p>
                 <p className="text-gray-600 mb-2">{jobOffer.jobAdress}</p>
-                <p className="text-gray-600 mb-2">Description: {jobOffer.jobDescription}</p>
+                <p className="text-red-500 font-semibold mb-2">Description: </p>
+                <p className="text-gray-600 mb-2">{jobOffer.jobDescription}</p>
                 <p className="text-red-500 font-semibold mb-2">Salary:</p>
-                <p className="text-gray-600 mb-2">${jobOffer.salary}</p>
-                <p className="text-gray-600 mb-2">Applicants: {jobOffer.jobApplications.length}</p>
+                <p className="text-gray-600 mb-2">{jobOffer.salary} DT</p>
+                <p className="text-red-500 font-semibold mb-2">Applicants:</p><p className="text-gray-600 mb-2">{jobOffer.jobApplications.length}</p> 
                 {/* Add more details as needed */}
               </div>
             ))}
