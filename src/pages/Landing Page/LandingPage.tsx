@@ -1,8 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import DefaultLayout from '../../layout/DefaultLayout';
 import LandingUserCard from '../../components/Cards/LandingUserCard';
 import MeteoCard from '../../components/Cards/MeteoCard';
 import NewsCard from '../../components/Cards/NewsCard';
+import Feed from '../../components/Cards/feed';
+
 
 const LandingPage: React.FC = () => {
   return (
@@ -11,7 +13,9 @@ const LandingPage: React.FC = () => {
         <div className="col-span-1">
           <LandingUserCard />
         </div>
-        <div className="col-span-2"></div>
+        <div className="col-span-2">
+          <Feed />
+        </div>
         <div className="col-span-1 flex flex-col">
           <div className="mb-3">
             <MeteoCard />
