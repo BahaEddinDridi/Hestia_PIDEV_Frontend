@@ -13,7 +13,7 @@ const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
             <div className="flex-1">
                 <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
                 <main className="flex-1">
-                    <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+                    <div className="mx-auto max-w-screen-2xl p-2 md:p-3 2xl:p-6">
                         {children}
                         {/* Include the ChatbotComponent */}
                         <ChatbotComponent />

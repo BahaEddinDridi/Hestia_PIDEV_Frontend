@@ -12,8 +12,13 @@ const LandingUserCard: React.FC = () => {
 
 
     <div
-      className="w-full max-w-sm bg-white shadow dark:bg-black ">
-      <div className="flex flex-col ml-6 pb-10">
+      className="w-full max-w-sm bg-white rounded-lg shadow dark:bg-black "
+      >
+      <div className="flex flex-col rounded-lg ml-6 pb-10"
+           style={{
+             background: "url('src/images/cards/userCard.png')",
+             backgroundSize: '100% 100%',
+           }}>
         <img className="w-24 h-24 my-6 rounded-xl shadow-lg" src={currentUser.image}
              alt="Bonnie image" />
         <h5
@@ -38,12 +43,12 @@ const LandingUserCard: React.FC = () => {
           </svg>
           <span className="text-sm text-gray-500 dark:text-gray-400">{currentUser && `${currentUser.location} `}</span>
         </div>
-        <span className="text-sm text-gray-500 dark:text-gray-400">Email Address</span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">Email Address :</span>
         <span
           className="text-sm text-gray-500 font-bold dark:text-gray-400 mb-3">{currentUser && `${currentUser.email} `}</span>
-        <span className="text-sm text-gray-500 dark:text-gray-400">Phone Number</span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">Phone Number :</span>
         <span
-          className="text-sm text-gray-500 font-bold dark:text-gray-400 mb-3">{currentUser && `${currentUser.phoneNumber} `}</span>
+          className="text-sm text-gray-500 font-bold dark:text-gray-400 mb-3">+ {currentUser && `${currentUser.phoneNumber} `}</span>
       </div>
 
     </div>

@@ -11,12 +11,16 @@ const BrowsingHeader = ({ activeTab, onTabChange, onSearch, searchQuery, onInput
   };
   return (
     <div className="max-w-7xl mx-auto px-4">
-      <header className=" bg-white shadow-lg rounded-lg items-center">
+      <header className=" bg-white shadow-lg rounded-lg items-center"
+              style={{
+                background: "url('src/images/cards/searchBar.png')",
+                backgroundSize: 'cover',
+              }}>
         <div className="p-4">
           <div className="flex items-center justify-between">
             <div className="relative pr-5">
               <button
-                className="overflow-hidden w-24 p-2 h-10 bg-red-800 text-white border-none rounded-md text-sm font-bold cursor-pointer relative z-10 group"
+                className="overflow-hidden w-24 p-2 h-10 bg-red-800 shadow-lg text-white border-none rounded-md text-sm font-bold cursor-pointer relative z-10 group"
                 onClick={onTabChange}
               >
                 {activeTab ? (
@@ -65,15 +69,15 @@ const BrowsingHeader = ({ activeTab, onTabChange, onSearch, searchQuery, onInput
                          placeholder="Search Offers..." required />
                 </div>
                 <button
-                  className="relative border hover:border-red-600 duration-500 group cursor-pointer text-sky-50 overflow-hidden h-11 w-40 rounded-md bg-red-500 p-2 flex justify-center items-center font-extrabold">
+                  className="relative shadow-lg border hover:border-red-600 duration-500 group cursor-pointer text-sky-50 overflow-hidden h-11 w-40 rounded-md bg-red-500 p-2 flex justify-center items-center font-extrabold">
                   <div
                     className="absolute z-10 w-32 h-32 rounded-full group-hover:scale-150 transition-all duration-500 ease-in-out bg-red-700 delay-150 group-hover:delay-150"></div>
                   <div
                     className="absolute z-10 w-24 h-24 rounded-full group-hover:scale-150 transition-all duration-500 ease-in-out bg-red-800 delay-150 group-hover:delay-200"></div>
                   <div
                     className="absolute z-10 w-16 h-16 rounded-full group-hover:scale-150 transition-all duration-500 ease-in-out bg-red-900 delay-150 group-hover:delay-300"></div>
-                  <div className="flex items-center"> {/* Added a flex container */}
-                    <p className="z-10 flex items-center"> {/* Added flex and items-center to the paragraph */}
+                  <div className="flex items-center">
+                    <p className="z-10 flex items-center">
                       <svg className="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                            viewBox="0 0 20 20">
                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"

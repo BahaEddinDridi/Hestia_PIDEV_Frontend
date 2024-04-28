@@ -33,30 +33,39 @@ const JobOfferCard = ({ job }) => {
   };
   return (
     <div
-      className="block rounded-lg bg-white border-red-600 border text-surface shadow-secondary-1 shadow-md
-      dark:bg-surface-dark dark:text-white">
-      <div
-        className="border-b-2 rounded-t-lg bg-gradient-to-r from-red-800 to-red-500 text-center font-bold text-white border-neutral-100 px-6 py-3 dark:border-white/10">
-        Job
-      </div>
-      <div className="p-4 sm:p-6 ">
-        <div className="mb-5 flex items-center justify-start space-x-2">
-          <img
-            src={jobImage}
-            alt="Company Logo"
-            className="w-10 h-10 mr-4 rounded-full object-cover"
-          />
-          <span className="text-xl font-medium text-gray-600">{jobCommpanyName}</span>
+      className="block rounded-lg bg-white text-surface shadow-secondary-1 shadow-md
+      dark:bg-surface-dark dark:text-white"
+      style={{
+        background: "url('src/images/cards/jobCard.png')",
+        backgroundSize: 'cover',
+      }}
+    >
+      <div className="rounded-t-lg font-bold text-white text-xl border-neutral-100 p-6">
+        <div className="grid grid-cols-2 gap-4">
+          {/* First grid container for logo and company name */}
+          <div className="flex items-center bg-gradient-to-r from-white space-x-2 text-xs h-12 font-bold leading-none
+            uppercase p-1.5  shadow-md rounded-full">
+            <img
+              src={jobImage}
+              alt="Company Logo"
+              className="w-10 h-10 rounded-full shadow-md object-cover"
+            />
+            <span className="text-xl font-medium text-black">{jobCommpanyName}</span>
+          </div>
         </div>
+      </div>
 
-        <h5 className="mb-2 text-xl font-medium leading-tight">{jobTitle}</h5>
-        <p className="mb-4 text-base">
+
+      <div className="p-4 sm:p-6 "
+      >
+        <h5 className="mb-2 text-xl text-center font-medium leading-tight">{jobTitle}</h5>
+        <p className="mb-4 text-center text-xl ">
           {jobPost}
         </p>
-        <div className="flex-wrap flex space-y-2 items-end space-x-2 mb-5">
+        <div className="flex-wrap flex  space-y-2 items-end space-x-2 mb-5">
           <span
             className="text-xs inline-flex items-center h-8 font-bold leading-none
-            uppercase px-3 py-1 bg-red-100 text-red-700 rounded-full">
+            uppercase px-3 py-1 bg-gradient-to-r from-[#c1c1c1] text-black shadow-md rounded-full">
              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
                   stroke="currentColor"
                   className="w-6 h-6 mr-1">
@@ -66,7 +75,7 @@ const JobOfferCard = ({ job }) => {
             {salary} DT</span>
           <span
             className="text-xs inline-flex items-center font-bold h-8
-            leading-none uppercase px-3 py-1 bg-red-100 text-red-700 rounded-full">
+            leading-none uppercase px-3 py-1 bg-gradient-to-r from-[#c1c1c1] text-black shadow-md  rounded-full">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
                  stroke="currentColor" className="w-6 h-6 mr-1">
             <path strokeLinecap="round" strokeLinejoin="round"
@@ -76,8 +85,8 @@ const JobOfferCard = ({ job }) => {
             {jobRequiredExperience}</span>
 
           <span
-            className="text-xs inline-flex items-center text-center font-bold leading-none h-8
-            uppercase px-3 py-1 bg-red-100 text-red-700 rounded-full">
+            className="text-xs inline-flex items-center shadow-md text-center font-bold leading-none h-8
+            uppercase px-3 py-1 bg-gradient-to-r from-[#c1c1c1] text-black rounded-full">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
                  stroke="currentColor" className="w-6 h-6 mr-1">
             <path strokeLinecap="round" strokeLinejoin="round"
@@ -86,8 +95,8 @@ const JobOfferCard = ({ job }) => {
 
             {jobfield}</span>
           <span
-            className="text-xs inline-flex items-center font-bold h-8
-            leading-none uppercase px-3 py-1 bg-red-100 text-red-700 rounded-full">
+            className="text-xs inline-flex items-center shadow-md font-bold h-8
+            leading-none uppercase px-3 py-1 bg-gradient-to-r from-[#c1c1c1] text-black rounded-full">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
                  stroke="currentColor" className="w-6 h-6 mr-1">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -96,22 +105,25 @@ const JobOfferCard = ({ job }) => {
             </svg>
             {jobLocation}</span>
         </div>
-
-        <div className="mt-auto flex justify-end">
-
-          <div
-            className={` ${isJobExpired() ? 'opacity-60 pointer-events-none' : ''}`}
-          >
-            {/* Job card content */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex items-center justify-start">
+            <div
+              className="rounded-b-lg text-[#902932] text-lg font-bold text-center
+              text-surface/75 dark:border-white/10 dark:text-neutral-300">
+              {daysAgo}
+            </div>
+          </div>
+          <div className={`flex items-center justify-end ${isJobExpired() ? 'opacity-60 pointer-events-none' : ''}`}>
+            {/* Button container */}
             <button
               type="button"
-              className={`w-30 bg-black h-12 my-3 flex items-center justify-center 
-              rounded-xl cursor-pointer relative overflow-hidden transition-all duration-500 ease-in-out 
-              shadow-md hover:scale-105 hover:shadow-lg before:absolute before:top-0 before:-left-full 
-              before:w-full before:h-full before:bg-gradient-to-r before:from-red-800 before:to-red-400 
-              before:transition-all before:duration-500 
-              before:ease-in-out before:z-[-1] before:rounded-xl hover:before:left-0 text-[#fff] 
-              ${isJobExpired() ? 'bg-gray-600' : ''}`}
+              className={`w-30 bg-black h-12 flex items-center justify-center 
+      rounded-lg cursor-pointer relative overflow-hidden transition-all duration-500 ease-in-out 
+      shadow-md hover:scale-105 hover:shadow-lg before:absolute before:top-0 before:-left-full 
+      before:w-full before:h-full before:bg-gradient-to-r before:from-red-800 before:to-red-400 
+      before:transition-all before:duration-500 
+      before:ease-in-out before:z-[-1] before:rounded-lg hover:before:left-0 text-[#fff] 
+      ${isJobExpired() ? 'bg-gray-600' : ''}`}
               onClick={handleApplyNow}
               disabled={isJobExpired()}
             >
@@ -119,13 +131,7 @@ const JobOfferCard = ({ job }) => {
             </button>
           </div>
         </div>
-      </div>
-      <div
-        className='border-t-2 rounded-b-lg bg-gradient-to-r from-red-800 to-red-500 border-neutral-100 text-white font-bold
-        text-center px-6 py-3 text-surface/75 dark:border-white/10 dark:text-neutral-300'
-      >
 
-        {daysAgo}
       </div>
     </div>
   );

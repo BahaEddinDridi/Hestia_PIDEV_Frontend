@@ -27,7 +27,7 @@ const NewsCard: React.FC = () => {
 
     fetchNewsData();
   }, []);
-
+console.log((newsData))
   // Function to increment the current index to cycle through news
   const nextNews = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % newsData.length);
@@ -49,19 +49,37 @@ const NewsCard: React.FC = () => {
 
   return (
     <div>
-      <div className="relative overflow-hidden h-125 shadow-lg bg-white">
+      <div className="relative overflow-hidden h-96 rounded-lg shadow-lg bg-white "
+           style={{
+             background: "url('src/images/cards/news.gif')",
+             backgroundSize: '100% 100%',
+             display: 'flex',
+             justifyContent: 'center',
+             alignItems: 'center'
+           }}>
         {newsData.map((article: any, index: number) => (
           <div
             key={index}
-            className={`items-center justify-center absolute top-0 left-0 w-full transition-opacity  ease-in-out`}
+            className="items-center justify-center absolute top-0 left-0 w-full h-full  transition-opacity ease-in-out"
             style={{ opacity: currentIndex === index ? 1 : 0 }}
           >
-            <div className="bg-gray-800 bg-opacity-90 backdrop-blur-md rounded-lg p-6">
-              <h3 className="text-xl font-bold text-black">{article.title}</h3>
-              <p className="text-sm text-black">{article.description}</p>
+            <div className="absolute inset-0 backdrop-blur-[2px]  p-6"
+            style={{
+              backgroundImage: `url(${article.urlToImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              justifyContent: 'center',
+            }}>
+              <div className="absolute inset-0 bg-gray-800 bg-white bg-opacity-10 backdrop-blur-[1px]  p-6">
+                <h3 className="text-xl font-bold text-white bg-white bg-opacity-20"
+                    >{article.title}</h3>
+                <p className="text-lg font-bold text-black bg-white bg-opacity-20"
+                   >{article.description}</p>
+              </div>
             </div>
           </div>
         ))}
+
         <div className="absolute bottom-0 justify-center space-x-4 w-full flex p-4">
           <button
             type="button"
