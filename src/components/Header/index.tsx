@@ -16,7 +16,7 @@ const Header = (props: {
   setSidebarOpen: (arg0: boolean) => void;
 }) => {
 
-  const currentRole=useSelector(selectCurrentRole);
+  const currentRole = useSelector(selectCurrentRole);
   const [sendLogout, { isLoading }] = useSendLogoutMutation();
   const [showConfirmation, setShowConfirmation] = useState(false);
   const navigate = useNavigate();
@@ -80,38 +80,38 @@ const Header = (props: {
 
         </div>
         <Link to="/">
-        <img src={Logo_PIDEV} className='w-26 h-14'  alt="Logo"/>
+          <img src={Logo_PIDEV} className='w-26 h-14' alt="Logo" />
         </Link>
         <ul className="flex items-center gap-3 2xsm:gap-4">
           <li className="relative">
             <Link to="/Feed">
-            <div className="relative"
-            >
-              <button
-                className="group flex justify-center border-[0.5px] border-stroke p-2 rounded-md
+              <div className="relative"
+              >
+                <button
+                  className="group flex justify-center border-[0.5px] border-stroke p-2 rounded-md
                 drop-shadow-xl text-gray-2 bg-red-600
                    from-gray-800 to-black font-semibold hover:translate-y-3 hover:rounded-[50%]
                     transition-all duration-500 hover:from-[#331029] hover:to-[#310413] "
-              >
-                <svg
-                  className="fill-current duration-300 ease-in-out"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 18 18"
-                  fill="none"
-
-                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path
-                    d="M9 1.54297L1 9.54297L2.41421 10.9572L9 4.37148L15.5858 10.9572L17 9.54297L9 1.54297ZM3 11.5429V16.5429C3 16.768 3.10536 16.9796 3.29289 17.2071C3.48043 17.4346 3.73886 17.5429 4 17.5429H5V12.5429C5 12.2365 5.17555 11.9426 5.46447 11.7573L9 8.77148L12.5355 11.7573C12.8245 11.9426 13 12.2365 13 12.5429V17.5429H14C14.2611 17.5429 14.5196 17.4346 14.7071 17.2071C14.8946 16.9796 15 16.768 15 16.5429V11.5429L9 5.14297L3 11.5429Z"
-                    fill=""
-                  />
-                </svg>
-                <span
-                  className="absolute opacity-0 text-red-900 group-hover:opacity-100 group-hover:text-gray-700
+                  <svg
+                    className="fill-current duration-300 ease-in-out"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 18 18"
+                    fill="none"
+
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M9 1.54297L1 9.54297L2.41421 10.9572L9 4.37148L15.5858 10.9572L17 9.54297L9 1.54297ZM3 11.5429V16.5429C3 16.768 3.10536 16.9796 3.29289 17.2071C3.48043 17.4346 3.73886 17.5429 4 17.5429H5V12.5429C5 12.2365 5.17555 11.9426 5.46447 11.7573L9 8.77148L12.5355 11.7573C12.8245 11.9426 13 12.2365 13 12.5429V17.5429H14C14.2611 17.5429 14.5196 17.4346 14.7071 17.2071C14.8946 16.9796 15 16.768 15 16.5429V11.5429L9 5.14297L3 11.5429Z"
+                      fill=""
+                    />
+                  </svg>
+                  <span
+                    className="absolute opacity-0 text-red-900 group-hover:opacity-100 group-hover:text-gray-700
                     group-hover:text-sm group-hover:-translate-y-10 duration-700">Home</span>
-              </button>
-            </div>
+                </button>
+              </div>
             </Link>
           </li>
           {currentRole === 'jobSeeker' && (
@@ -124,12 +124,12 @@ const Header = (props: {
                     transition-all duration-500 hover:from-[#331029] hover:to-[#310413]"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                       viewBox="0 0 24 24" strokeWidth={1.5}
-                       stroke="currentColor" width="24"
-                       height="24"
+                    viewBox="0 0 24 24" strokeWidth={1.5}
+                    stroke="currentColor" width="24"
+                    height="24"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round"
-                          d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" />
+                      d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" />
                   </svg>
                   <span
                     className="absolute opacity-0 text-red-900 group-hover:opacity-100 group-hover:text-gray-700
@@ -148,10 +148,10 @@ const Header = (props: {
                     transition-all duration-500 hover:from-[#331029] hover:to-[#310413]"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
-                       stroke="currentColor" width="24"
-                       height="24">
+                    stroke="currentColor" width="24"
+                    height="24">
                     <path strokeLinecap="round" strokeLinejoin="round"
-                          d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0-3-3m3 3 3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                      d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0-3-3m3 3 3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
                   </svg>
                   <span
                     className="absolute opacity-0 text-red-900 group-hover:opacity-100 group-hover:text-gray-700
@@ -160,13 +160,31 @@ const Header = (props: {
               </Link>
             </li>
           )}
+          <li>
+            <Link to="/Chat">
+              <button
+                className="group flex justify-center border-[0.5px] border-stroke p-2 rounded-md drop-shadow-xl
+                  text-gray-2 bg-red-600
+                   from-gray-800 to-black font-semibold hover:translate-y-3 hover:rounded-[50%]
+                    transition-all duration-500 hover:from-[#331029] hover:to-[#310413]"
+              >
+                <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 10.5h.01m-4.01 0h.01M8 10.5h.01M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-6.6a1 1 0 0 0-.69.275l-2.866 2.723A.5.5 0 0 1 8 18.635V17a1 1 0 0 0-1-1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" />
+                </svg>
+
+                <span
+                  className="absolute opacity-0 text-red-900 group-hover:opacity-100 group-hover:text-gray-700
+                    group-hover:text-sm group-hover:-translate-y-10 duration-700">Chat</span>
+              </button>
+            </Link>
+          </li>
         </ul>
         <SearchBar />
 
         <div className="flex items-center gap-3 2xsm:gap-7">
 
           <ul className="flex items-center gap-3 2xsm:gap-4">
-          {/* <!-- Dark Mode Toggler --> */}
+            {/* <!-- Dark Mode Toggler --> */}
 
             {/* <!-- Dark Mode Toggler --> */}
 

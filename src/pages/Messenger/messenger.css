@@ -30,6 +30,7 @@
     max-height: 450px;
     overflow-y: scroll;
     padding-right: 10px;
+    
 }
 
 .chatBoxBottom{
@@ -69,4 +70,8 @@
    color: gray;
    cursor: default;
    line-height: 1.5;
+}
+.input-emoji {
+    width: 500px;
+    margin-bottom: auto;
 }

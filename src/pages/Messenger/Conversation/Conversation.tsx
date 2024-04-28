@@ -1,38 +1,72 @@
-import React, { useEffect, useState } from 'react'
-import'./Conversation.css';
-import Unknown from '../../../images/user/Unknown.png'
-
+import React, { useEffect, useState } from 'react';
+import './Conversation.css';
+import Unknown from '../../../images/user/Unknown.png';
 import axios from 'axios';
-
+import { format } from 'timeago.js'; // Importez la fonction format de date-fns
 
 interface ConversationProps {
-  conversation: any; // Remplacez `any` par le type réel de conversation si possible
-  nowuser: any; // Remplacez `any` par le type réel de nowuser si possible
+  conversation: any;
+  nowuser: any;
 }
+
 export default function Conversation({ conversation, nowuser }: ConversationProps) {
-  const[user,setUser] = useState(null)
+  const [userData, setUserData] = useState(null);
+  const [lastMessage, setLastMessage] = useState(null);
 
-
-
-  useEffect(()=> {
-    const friendId = conversation.members.find((m: any)=>m !== nowuser._id)
-
-    const getUser = async ()=>{
-      try{
-        const res = await axios.get("http://localhost:3001/user/getUserById?userId="+friendId)
-        setUser(res.data)
-        console.log(res)
-      }catch(err){
+  useEffect(() => {
+    const friendId = conversation.members.find((m: any) => m !== nowuser._id);
+    const fetchData = async () => {
+      try {
+        // Récupérer les données de l'utilisateur avec qui l'utilisateur parle
+        const res = await axios.get(`http://localhost:3001/user/getUserById?userId=${friendId}`);
+        setUserData(res.data);
+        // Récupérer le dernier message de la conversation
+        const messageRes = await axios.get(`http://localhost:3001/message/lastMessage/${conversation._id}`);
+        if (messageRes.data) {
+          setLastMessage(messageRes.data);
+        }
+      } catch (err) {
         console.log(err);
       }
     };
-    getUser()
-  }, [conversation,nowuser]);
+
+    fetchData();
+  }, [conversation, nowuser]);
+
+  // Fonction pour tronquer le message si sa longueur dépasse 20 caractères
+  const truncateMessage = (message: string) => {
+    return message.length > 20 ? `${message.slice(0, 20)}...` : message;
+  };
+
+  // Si userData est null, retournez null pour empêcher le rendu de la conversation
+  if (!userData || !lastMessage) {
+    return null;
+  }
 
   return (
     <div className='conversation'>
-        <img className='conversationImg' src={user?.image || Unknown} alt="User" />
-        <span className='conversationName'>{user?.username ?? 'Unknown'}</span>
+
+
+      <img className='conversationImg' src={userData?.image || Unknown} alt="User" />
+
+
+      <div>
+
+        <span className='conversationName text-blackgray'>{userData?.username ?? 'Unknown'}</span>
+        
+        {lastMessage && (
+          <p className='lastMessage'>
+            {lastMessage.sender === nowuser._id ? "You: " : ""}
+            {/* Utilisez la fonction truncateMessage pour afficher le message */}
+            {truncateMessage(lastMessage.text)}
+            {/* Ajoutez la date d'envoi du dernier message avant le texte du message */}
+            <span className="messageDate display: flex" style={{ fontSize: 'small', color: 'darkgrey' }}>{format(new Date(lastMessage.createdAt), 'dd/MM/yyyy HH:mm')}</span>
+          </p>
+        )}
+
+      </div>
+
+
     </div>
-  )
+  );
 }

@@ -7,9 +7,10 @@ import ChatOnline from './ChatOnline/ChatOnline';
 import { selectCurrentUser } from '../../ApiSlices/authSlice';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import { button } from '@material-tailwind/react';
+import { button, navbar } from '@material-tailwind/react';
 import { io, Socket } from "socket.io-client";
-import { getUsers } from "../api";
+import InputEmoji from "react-input-emoji";
+
 
 
 interface Message {
@@ -21,18 +22,8 @@ type DefaultEventsMap = {
     [key: string]: (...args: any[]) => void;
 };
 
-interface User {
-    _id: string;
-    username: string;
-    email: string;
-    role: string;
-    birthDate: string;
-    image: string;
-    gender: string;
-    phoneNumber: string;
-    ProfileStatus: string;
-    deactivationExpiresAt?: Date | null;
-}
+
+
 export default function Messenger() {
     const [conversations, setConversations] = useState([]);
     const [onLineUsers, setOnLineUsers] = useState([]);
@@ -43,31 +34,6 @@ export default function Messenger() {
     const [currentChat, setCurrentChat] = useState(null);
     const socket = useRef<Socket<DefaultEventsMap, DefaultEventsMap> | undefined>(undefined);
     const currentUser = useSelector(selectCurrentUser);
-    console.log("currentUser", currentUser);
-
-
-    /////recherche
-    const [searchTerm, setSearchTerm] = useState("");
-    const [users, setUsers] = useState<User[]>([]);
-
-    const filteredUsers = users.filter((user) =>
-        Object.values(user).some((value) =>
-            typeof value == 'string' && value.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await getUsers();
-                setUsers(data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        fetchData();
-
-    }, []);
-
 
 
 
@@ -158,9 +124,22 @@ export default function Messenger() {
             console.log(err)
         }
     }
+
+
+
+    const messagesContainerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
-        scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+        // Défilez vers le bas lorsque les messages changent
+        if (messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        }
     }, [messages]);
+
+
+    const handleEmoji = (newMessage: any) => {
+        setNewMessage(newMessage)
+    }
+
     return (
         <DefaultLayout>
             <div className='messenger'>
@@ -169,9 +148,7 @@ export default function Messenger() {
                     <div className="chatMenuWrapper">
                         <input
                             placeholder='search for friends'
-                            className='chatMenuInput'
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)} />
+                            className='chatMenuInput' />
 
                         {conversations.map((c) => (
                             // Correction : Ajout d'une clé 'key' pour chaque élément de la liste
@@ -184,20 +161,22 @@ export default function Messenger() {
 
                 <div className="chatBox">
                     <div className="chatBoxWrapper">
+                        <nav>
+                            <img src='' className='' />
+                        </nav>
                         {currentChat ? (
                             <>
-                                <div className="chatBoxTop">
+                                <div className="chatBoxTop" ref={messagesContainerRef}>
+                                    {/* Affichez les messages ici */}
                                     {messages.map((m) => (
-                                        // Correction : Ajout d'une clé 'key' pour chaque élément de la liste
-                                        <div >
-                                            {/* ref={scrollRef} */}
-                                            <TopMessage key={m._id} message={m} own={m.sender === currentUser._id} />
+                                        <div className='mt-10' key={m._id}>
+                                            <TopMessage message={m} own={m.sender === currentUser._id} />
                                         </div>
                                     ))}
                                 </div>
                                 <div className="chatBoxBottom">
-                                    <textarea
-                                        className='chatMessageInput'
+                                    {/* <textarea
+                                        className='chatMessageInput '
                                         placeholder='write something...'
                                         onChange={(e) => setNewMessage(e.target.value)}
                                         onKeyDown={(e) => {
@@ -207,13 +186,32 @@ export default function Messenger() {
                                             }
                                         }}
                                         value={newMessage}
-                                    ></textarea>
+                                    ></textarea> */}
+                                    <div className='input-emoji'>
+                                        <InputEmoji
+                                            onChange={(newMessage) => setNewMessage(newMessage)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' && !e.shiftKey) {
+                                                    e.preventDefault(); // Empêche le saut de ligne
+                                                    sendMessage(); // Envoyer le message
+                                                }
+                                            }}
+                                            value={newMessage}
+                                            shouldReturn={false}
+                                            shouldConvertEmojiToImage={false}
+
+                                        />
+                                    </div>
+
                                     <button
                                         className='chatSubmitButton'
                                         onClick={sendMessage}> {/* Utilisez la fonction sendMessage ici */}
                                         Send
                                     </button>
+
                                 </div>
+
+
                             </>
                         ) : (
                             <span className='noConversationText'>Open a new conversation to start a chat.</span>

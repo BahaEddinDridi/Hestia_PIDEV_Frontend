@@ -21,7 +21,8 @@
     border-radius: 20px;
     background-color: #C62828;
     color: white;
-    max-width: 300px;
+    max-width: auto;
+    white-space: pre-wrap;
 }
 
 .messageButtom{
@@ -35,4 +36,6 @@
 .message.own .messageText{
     background-color: lightgray;
     color: black;
+    max-width: auto;
+    white-space: pre-wrap;
 }
