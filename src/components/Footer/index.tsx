@@ -7,7 +7,6 @@ import LanguageButton from '../Header/languagebutton';
 import {useTranslation} from 'react-i18next';
 
 const Footer = () => {
-  const [darkMode, setDarkMode] = useState(false); // State for dark mode
   const [showPrivacyPolicyModal, setShowPrivacyPolicyModal] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [privacyPolicy, setPrivacyPolicy] = useState('');
@@ -46,14 +45,6 @@ const Footer = () => {
     // Fetch CRM data when component mounts
     fetchCRMData();
   }, []);
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-  const footerClass = darkMode
-    ? "bg-gray-900 text-white shadow-md py-8"
-    : "bg-gray-900 text-gray-800 shadow-md py-8";
-
-
 
   const fetchCRMData = async () => {
     try {
@@ -77,18 +68,21 @@ const Footer = () => {
   const[t,i18n]=useTranslation();
 
   return (
-    <footer className={footerClass}>
-      <div className="mt-3 container mx-auto px-6">
-        <div className="md:flex md:justify-between">
-          <div className="mb-8 md:mb-0">
-  <img src={Hestia} className="max-h-max md:h-16 max-w-max object-contain" alt="Hestia Logo" />
-</div>
+    <footer className="bg-white dark:bg-black">
+      <div className="mx-auto w-full max-w-screen-xl py-6 lg:py-8 h-auto ">
+        <div className="md:flex md:justify-center ">
+          <div>
+            <img
+              src={Hestia}
+              className="h-[200px] mr-[400px] mt-6"
+              alt="FlowBite Logo"
+            />
+          </div>
 
-
-          {crmData && (
-            <div className="grid grid-cols-1 gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <div>
-                <h4 className="mb-2 text-lg font-semibold text-red-800 dark:text-white">
+          <div>
+            {crmData && (
+              <div className="grid grid-cols-1 gap-8 sm:gap-4 sm:grid-cols-3">
+                <h4 className="mb-4 font-semibold text-esprit uppercase dark:text-white ">
                   {crmData.CompanyName}
                   <div className='mt-5'>
                   <LanguageButton/>
@@ -252,13 +246,13 @@ const Footer = () => {
           </a>
         </div>
       </div>
-      <div className="mt-4 text-center text-gray-500 dark:text-gray-400">
-          © 2024{' '}
-          <a href="#" className="hover:underline text-red-500">
-            HESTIA™
-          </a>
-          . All Rights Reserved.
-        </div>
+      <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+        © 2024{' '}
+        <a href="#" className="hover:underline">
+          HESTIA™
+        </a>
+        . All Rights Reserved.
+      </span>
     </footer>
   );
 };
