@@ -13,7 +13,9 @@ const LandingPage: React.FC = () => {
         </div>
         <div className="col-span-2"></div>
         <div className="col-span-1 flex flex-col">
-          <MeteoCard />
+          <div className="mb-3">
+            <MeteoCard />
+          </div>
           <NewsCard/>
         </div>
       </div>

@@ -64,8 +64,12 @@ const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJ
   };
 
   return (
-    <div className="bg-gradient-to-r from-red-400 via-red-600 to-red-800 p-4 rounded-lg shadow-md">
-      <h2 className="text-lg font-semibold text-white text-center mb-4">Filters</h2>
+    <div className="bg-gradient-to-r from-red-400 via-red-600 to-red-800 p-4 rounded-lg shadow-md"
+         style={{
+           background: "url('src/images/cards/filterBar.png')",
+           backgroundSize: 'cover',
+         }}>
+      <h2 className="text-lg font-semibold text-white text-start ml-2 mb-4">Filters</h2>
       <label htmlFor="location" className="font-medium text-white mb-1 ml-2">Location:</label>
       <div className="mb-4 flex flex-wrap bg-white rounded-lg p-1 py-5">
         {renderLocationGroups().map((group, index) => (

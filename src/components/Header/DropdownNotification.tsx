@@ -19,6 +19,8 @@ const DropdownNotification = () => {
         const response = await fetch(`http://localhost:3001/notifications/getNotificationsByUser/${userId}`);
         const data = await response.json();
         setNotifications(data.notifications);
+        const hasUnreadNotifications = data.notifications.some(notification => !notification.read);
+        setNotifying(hasUnreadNotifications);
       } catch (error) {
         console.error('Error fetching notifications:', error);
       }
@@ -26,6 +28,33 @@ const DropdownNotification = () => {
 
     fetchNotifications();
   }, []);
+
+  useEffect(() => {
+    const fetchAndMarkNotificationsAsRead = async () => {
+      try {
+        const userId = currentUser._id;
+        const response = await fetch(`http://localhost:3001/notifications/getNotificationsByUser/${userId}`);
+        const data = await response.json();
+        setNotifications(data.notifications);
+        // Extract notification ids
+        const notificationIds = data.notifications.map(notification => notification._id);
+        // Call markNotificationsAsRead API
+        await fetch('http://localhost:3001/notifications/markNotificationsAsRead', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ notificationIds }),
+        });
+      } catch (error) {
+        console.error('Error fetching notifications or marking as read:', error);
+      }
+    };
+
+    if (dropdownOpen) {
+      fetchAndMarkNotificationsAsRead();
+    }
+  }, [dropdownOpen, currentUser._id]);
 
   const formatDate = (dateString) => {
     const submitDate = new Date(dateString);
@@ -36,9 +65,12 @@ const DropdownNotification = () => {
   };
 
   useEffect(() => {
-    const clickHandler = ({ target }) => {
+    const clickHandler = ({ target }: MouseEvent) => {
       if (!dropdown.current) return;
-      if (!dropdownOpen || dropdown.current.contains(target) || trigger.current.contains(target)) return;
+      if (!dropdownOpen ||
+        dropdown.current.contains(target) ||
+        trigger.current.contains(target)
+      ) return;
       setDropdownOpen(false);
     };
     document.addEventListener('click', clickHandler);
@@ -59,7 +91,10 @@ const DropdownNotification = () => {
     <li className="relative">
       <Link
         ref={trigger}
-        onClick={() => setDropdownOpen(!dropdownOpen)}
+        onClick={() => {
+          setNotifying(false);
+          setDropdownOpen(!dropdownOpen)
+        }}
         to="#"
         className="relative flex h-9 w-9 items-center justify-center text-white
         rounded-full border-[0.5px] border-stroke bg-red-600 hover:text-red-800
