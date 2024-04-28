@@ -4,6 +4,7 @@ import LegalModal from './LegalModal';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
+  const [darkMode, setDarkMode] = useState(false); // State for dark mode
   const [showPrivacyPolicyModal, setShowPrivacyPolicyModal] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [privacyPolicy, setPrivacyPolicy] = useState('');
@@ -42,6 +43,14 @@ const Footer = () => {
     // Fetch CRM data when component mounts
     fetchCRMData();
   }, []);
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+  const footerClass = darkMode
+    ? "bg-gray-900 text-white shadow-md py-8"
+    : "bg-gray-900 text-gray-800 shadow-md py-8";
+
+
 
   const fetchCRMData = async () => {
     try {
@@ -61,109 +70,91 @@ const Footer = () => {
       console.error('Error fetching CRM data:', error);
     }
   };
-
+  
   return (
-    <footer className="bg-white dark:bg-black">
-      <div className="mx-auto w-full max-w-screen-xl py-6 lg:py-8 h-auto ">
-        <div className="md:flex md:justify-center ">
-          <div>
-            <img
-              src={Hestia}
-              className="h-[200px] mr-[400px] mt-6"
-              alt="FlowBite Logo"
-            />
-          </div>
+    <footer className={footerClass}>
+      <div className="mt-3 container mx-auto px-6">
+        <div className="md:flex md:justify-between">
+          <div className="mb-8 md:mb-0">
+  <img src={Hestia} className="max-h-max md:h-16 max-w-max object-contain" alt="Hestia Logo" />
+</div>
 
-          <div>
-            {crmData && (
-              <div className="grid grid-cols-1 gap-8 sm:gap-4 sm:grid-cols-3">
-                <h4 className="mb-4 font-semibold text-esprit uppercase dark:text-white ">
+
+          {crmData && (
+            <div className="grid grid-cols-1 gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div>
+                <h4 className="mb-2 text-lg font-semibold text-red-800 dark:text-white">
                   {crmData.CompanyName}
                 </h4>
-                <ul className="text-gray-500 dark:text-gray-400 font-medium">
-                  <li className="mb-4 mr-4">
-                    <a className="text-espritLightRed dark:text-white">Description :</a>
-                    <a className="hover:">{crmData.Description}</a>
-                  </li>
-                </ul>
+                <p className="text-gray-600 dark:text-gray-300">
+                  {crmData.Description}
+                </p>
               </div>
-            )}
-          </div>
-          <div>
-            <h4 className="mb-4 font-semibold text-esprit uppercase dark:text-white ">
-              GET IN TOUCH
-            </h4>
-            <ul className="text-gray-500 dark:text-gray-400 font-medium">
-              {crmData && (
-                <div>
-                  <li className="mb-4">
-                    <a className="text-espritLightRed dark:text-white">
-                      Location:
-                    </a>
-                    <a className="hover:underline" href={crmData.Location}>
+              <div>
+                <h4 className="mb-2 text-lg font-semibold text-red-700 dark:text-white">
+                  GET IN TOUCH
+                </h4>
+                <ul className="text-gray-600 dark:text-gray-300">
+                  <li className="mb-1">
+                    <span className="font-semibold">Location: </span>
+                    <a href={crmData.Location} className="hover:text-red-500">
                       {crmData.Location}
                     </a>
                   </li>
-                  <li className="mb-4">
-                    <a className="text-espritLightRed dark:text-white">
-                      Phone Number:
+                  <li className="mb-1">
+                    <span className="font-semibold">Phone Number: </span>
+                    <a href={`tel:${crmData.PhoneNumber}`} className="hover:text-red-500">
+                      {crmData.PhoneNumber}
                     </a>
-                    <a className="hover:underline">{crmData.PhoneNumber}</a>
                   </li>
-                  <li className="mb-4">
-                    <a className="text-espritLightRed dark:text-white">
-                      Email:
+                  <li className="mb-1">
+                    <span className="font-semibold">Email: </span>
+                    <a href={`mailto:${crmData.Email}`} className="hover:text-red-500">
+                      {crmData.Email}
                     </a>
-                    <a className="hover:underline">{crmData.Email}</a>
                   </li>
-                </div>
-              )}
-            </ul>
-          </div>
-          {/* Add modal trigger links */}
-          <div>
-            <div>
-              <h4 className="mb-4 font-semibold text-esprit uppercase dark:text-white">
-                LEGAL
-              </h4>
-              <ul className="text-black dark:text-gray-400 font-medium">
-                <li className="mb-4">
-                  <a
-                    href="#"
-                    className="hover:underline text-espritLightRed"
-                    onClick={openPrivacyPolicyModal}
-                  >
-                    Privacy Policy
-                  </a>
-                </li>
-                <li className="mb-4">
-                  <a
-                    href="#"
-                    className="hover:underline text-espritLightRed"
-                    onClick={openTermsModal}
-                  >
-                    Terms &amp; Conditions
-                  </a>
-                </li>
-              </ul>
+                </ul>
+              </div>
+              <div>
+                <h4 className="mb-2 text-lg font-semibold text-red-700 dark:text-white">
+                  LEGAL
+                </h4>
+                <ul className="text-gray-600 dark:text-gray-300">
+                  <li className="mb-1">
+                    <a href="#" className="hover:text-red-500" onClick={openPrivacyPolicyModal}>
+                      Privacy Policy
+                    </a>
+                  </li>
+                  <li className="mb-1">
+                    <a href="#" className="hover:text-red-500" onClick={openTermsModal}>
+                      Terms & Conditions
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
-            {/* Render the modals */}
-            {showPrivacyPolicyModal && (
-              <LegalModal
-                closeModal={closePrivacyPolicyModal}
-                title="Privacy Policy"
-                content={privacyPolicy}
-              />
-            )}
-            {showTermsModal && (
-              <LegalModal
-                closeModal={closeTermsModal}
-                title="Terms & Conditions"
-                content={termsOfService}
-              />
-            )}
-          </div>
+          )}
+
+          {/* Render the modals */}
+          {showPrivacyPolicyModal && (
+            <LegalModal
+              closeModal={closePrivacyPolicyModal}
+              title="Privacy Policy"
+              content={privacyPolicy}
+            />
+          )}
+          {showTermsModal && (
+            <LegalModal
+              closeModal={closeTermsModal}
+              title="Terms & Conditions"
+              content={termsOfService}
+            />
+          )}
         </div>
+
+        
+
+        
       </div>
       <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
 
@@ -237,13 +228,13 @@ const Footer = () => {
           </a>
         </div>
       </div>
-      <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-        © 2024{' '}
-        <a href="#" className="hover:underline">
-          HESTIA™
-        </a>
-        . All Rights Reserved.
-      </span>
+      <div className="mt-4 text-center text-gray-500 dark:text-gray-400">
+          © 2024{' '}
+          <a href="#" className="hover:underline text-red-500">
+            HESTIA™
+          </a>
+          . All Rights Reserved.
+        </div>
     </footer>
   );
 };

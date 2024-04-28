@@ -3,13 +3,20 @@ import { useState } from 'react';
 import { ChangeEvent } from 'react';
 import userSix from '../../images/user/user-06.png';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectCurrentToken, selectCurrentUsername, selectCurrentUser } from '../../ApiSlices/authSlice';
-import { useGetUserInfoQuery } from "../../ApiSlices/userApiSlice";
+import {  useDispatch, useSelector  } from 'react-redux';
+import {
+  selectCurrentToken,
+  selectCurrentUsername,
+  selectCurrentUser,
+} from '../../ApiSlices/authSlice';
+import {  useGetUserInfoQuery  } from '../../ApiSlices/userApiSlice';
+import UpdateProfileWithResume from './UpdateProfileWithResume';
 const ProfileCard = () => {
   const [user, setUser] = useState<any>(null);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  const [selectedCoverImage, setSelectedCoverImage] = useState<string | null>(null)
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedCoverImage, setSelectedCoverImage] = useState<string | null>(
+    null,
+  );
   //modifier le profile image
 
   const currentUser = useSelector(selectCurrentUser);
@@ -28,7 +35,7 @@ const ProfileCard = () => {
           {
             method: 'POST',
             body: data,
-          }
+          },
         );
         if (response.ok) {
           const result = await response.json();
@@ -54,8 +61,10 @@ const ProfileCard = () => {
       }
     }
   };
-  ///modifier coverture image   
-  const handlecoverImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
+  ///modifier coverture image
+  const handlecoverImageChange = async (
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
     const selectedFile = event.target.files?.[0];
 
     if (selectedFile) {
@@ -70,13 +79,16 @@ const ProfileCard = () => {
           {
             method: 'POST',
             body: data,
-          }
+          },
         );
         if (response.ok) {
           const result = await response.json();
           setSelectedCoverImage(result.secure_url);
-          // window.location.reload();
-          localStorage.setItem(`userImage_${currentUser.username}`, result.secure_url);
+          window.location.reload();
+          localStorage.setItem(
+            `userImage_${currentUser.username}`,
+            result.secure_url,
+          );
           await fetch('http://localhost:3001/user/upload-coverimage', {
             method: 'POST',
             headers: {
@@ -124,14 +136,19 @@ const ProfileCard = () => {
             />
           )}
 
-
           {/* Edit cover photo button */}
           <div className="absolute bottom-4 right-4 z-30 xsm:bottom-8 xsm:right-8">
             <label
               htmlFor="cover"
               className="flex cursor-pointer items-center justify-center gap-2 rounded bg-black py-1 px-2 text-sm font-medium text-white hover:bg-opacity-90 xsm:px-4"
             >
-              <input type="file" name="cover" id="cover" className="sr-only" onChange={handlecoverImageChange} />
+              <input
+                type="file"
+                name="cover"
+                id="cover"
+                className="sr-only"
+                onChange={handlecoverImageChange}
+              />
               <span>
                 <svg
                   className="fill-current"
@@ -159,9 +176,7 @@ const ProfileCard = () => {
               </span>
               <span>Edit</span>
             </label>
-
           </div>
-
         </div>
 
         <Link to={`/profile/update`} className="float-right  mr-2 mt-2 text-gray-500 hover:text-gray-700 cursor-pointer">
@@ -183,29 +198,33 @@ const ProfileCard = () => {
               </div>
             </div>
 
-            <div
-              className="shadow-md flex items-center group-hover:gap-2 bg-gradient-to-br from-red-200 to-red-300 p-3 rounded-full cursor-pointer duration-300"
-            >
+            <div className="shadow-md flex items-center group-hover:gap-2 bg-gradient-to-br from-red-200 to-red-300 p-3 rounded-full cursor-pointer duration-300">
               <i className="fas fa-edit fill-zinc-600"></i>
-              <span className="text-[0px] group-hover:text-sm duration-300"
-              >Update Profile</span
-              >
+              <span className="text-[0px] group-hover:text-sm duration-300">
+                Update Profile
+              </span>
             </div>
           </div>
-
         </Link>
 
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
           <div className="relative mx-auto z-30 ml-10 -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
             <div className="relative drop-shadow-2">
               {currentUser.image ? (
-                <img src={currentUser.image} alt="profile" className='w-50 h-40 sm:w-44 sm:h-44 rounded-full overflow-hidden object-cover' />
+                <img
+                  src={currentUser.image}
+                  alt="profile"
+                  className="w-50 h-40 sm:w-44 sm:h-44 rounded-full overflow-hidden object-cover"
+                />
               ) : selectedImage ? (
-                <img src={selectedImage} alt="profile" className='w-50 h-40 sm:w-44 sm:h-44 rounded-full overflow-hidden object-cover' />
+                <img
+                  src={selectedImage}
+                  alt="profile"
+                  className="w-50 h-40 sm:w-44 sm:h-44 rounded-full overflow-hidden object-cover"
+                />
               ) : (
                 <img src={userSix} alt="profile" />
-              )
-              }
+              )}
               <label
                 htmlFor="profile"
                 className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-black text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
@@ -239,18 +258,21 @@ const ProfileCard = () => {
                   onChange={handleImageChange}
                 />
               </label>
-
             </div>
-
-
           </div>
 
           <div className="mr-150 sm:mt-10 ">
             <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
               {/* Display user's full name */}
-              {currentUser && `${currentUser.firstName} ${currentUser.lastName}`}
+              {currentUser &&
+                `${currentUser.firstName} ${currentUser.lastName}`}
             </h3>
-            <p className="font-medium"> {currentUser && `${currentUser.title} `}</p>
+            <p className="font-medium">
+              {' '}
+              {currentUser && `${currentUser.title} `}
+            </p>
+            <UpdateProfileWithResume />
+
           </div>
         </div>
         <div className="flex mb-2 ml-[871px] mt-4">
@@ -351,10 +373,8 @@ const ProfileCard = () => {
         </div>
 
       </div>
-
-
     </>
   );
-}
+};
 
 export default ProfileCard;
