@@ -315,14 +315,19 @@ const handleUpdateStatus = async (userId: string, status: string,customDeactivat
       placeholder="Search users..."
       className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-red-800 focus:border-red-800 w-full"
     />
-     <button className="px-3 py-2 mx-1 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-greenadd focus:border-greenadd" onClick={startVoiceSearch}>
-  {/* icône de recherche vocale */}
+    <div className="group relative">
+  <button  onClick={startVoiceSearch}>
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
   <path d="M7 4a3 3 0 0 1 6 0v6a3 3 0 1 1-6 0V4Z" />
   <path d="M5.5 9.643a.75.75 0 0 0-1.5 0V10c0 3.06 2.29 5.585 5.25 5.954V17.5h-1.5a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5h-1.5v-1.546A6.001 6.001 0 0 0 16 10v-.357a.75.75 0 0 0-1.5 0V10a4.5 4.5 0 0 1-9 0v-.357Z" />
 </svg>
-
-</button>
+  </button>
+  <span className="absolute -top-14 left-[50%] -translate-x-[50%] 
+  z-20 origin-left scale-0 px-3 rounded-lg border 
+  border-gray-300 bg-white py-2 text-sm font-bold
+  shadow-md transition-all duration-300 ease-in-out 
+  group-hover:scale-100">Voice Search<span>
+</span></span></div>
      </div>
      {/* button ajout */}
      <div className="flex justify-between">

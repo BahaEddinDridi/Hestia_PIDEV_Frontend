@@ -15,7 +15,6 @@ import ChartSkills from '../components/ChartSkills';
 import ChartCompanies from '../components/ChartCompanies';
 import ChartLocations from '../components/ChartLocation';
 import ChartSeniorityLevel from '../components/ChartSeniority';
-import Googlemap from '../components/Googlemaps';
 
 
 const StatisticPage: React.FC = () => {
@@ -91,7 +90,7 @@ const StatisticPage: React.FC = () => {
        <ChartCompanies/>
        <ChartLocations/>
        <ChartSeniorityLevel/>
-       <Googlemap/>
+      
         {/* <ChartOne />
         <ChartTwo />
         <ChatCard /> */}

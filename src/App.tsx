@@ -65,6 +65,7 @@ import Detailsintership from './pages/Detailsintership';
 import ApplicationsList from './pages/Applications/ApplicationsList';
 import InternshipOfferView from './pages/Opportunity/InternshipOfferView';
 import Messenger from './pages/Messenger/messenger'
+import '../src/i18n.js'
 
 function App() {
   const navigate = useNavigate();

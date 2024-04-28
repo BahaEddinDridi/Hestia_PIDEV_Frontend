@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Hestia from '../../images/logo/hestia-logo.png';
 import LegalModal from './LegalModal';
 import { Link } from 'react-router-dom';
+import LanguageButton from '../Header/languagebutton';
+
+import {useTranslation} from 'react-i18next';
 
 const Footer = () => {
   const [showPrivacyPolicyModal, setShowPrivacyPolicyModal] = useState(false);
@@ -62,6 +65,8 @@ const Footer = () => {
     }
   };
 
+  const[t,i18n]=useTranslation();
+
   return (
     <footer className="bg-white dark:bg-black">
       <div className="mx-auto w-full max-w-screen-xl py-6 lg:py-8 h-auto ">
@@ -79,6 +84,10 @@ const Footer = () => {
               <div className="grid grid-cols-1 gap-8 sm:gap-4 sm:grid-cols-3">
                 <h4 className="mb-4 font-semibold text-esprit uppercase dark:text-white ">
                   {crmData.CompanyName}
+                  <div className='mt-5'>
+                  <LanguageButton/>
+                  </div>
+                  
                 </h4>
                 <ul className="text-gray-500 dark:text-gray-400 font-medium">
                   <li className="mb-4 mr-4">
@@ -91,14 +100,14 @@ const Footer = () => {
           </div>
           <div>
             <h4 className="mb-4 font-semibold text-esprit uppercase dark:text-white ">
-              GET IN TOUCH
+            {t('GET IN TOUCH')}
             </h4>
             <ul className="text-gray-500 dark:text-gray-400 font-medium">
               {crmData && (
                 <div>
                   <li className="mb-4">
                     <a className="text-espritLightRed dark:text-white">
-                      Location:
+                    {t('Location')}:
                     </a>
                     <a className="hover:underline" href={crmData.Location}>
                       {crmData.Location}
@@ -106,13 +115,13 @@ const Footer = () => {
                   </li>
                   <li className="mb-4">
                     <a className="text-espritLightRed dark:text-white">
-                      Phone Number:
+                    {t('Phone Number')}:
                     </a>
                     <a className="hover:underline">{crmData.PhoneNumber}</a>
                   </li>
                   <li className="mb-4">
                     <a className="text-espritLightRed dark:text-white">
-                      Email:
+                    {t('Email')}:
                     </a>
                     <a className="hover:underline">{crmData.Email}</a>
                   </li>
@@ -124,7 +133,7 @@ const Footer = () => {
           <div>
             <div>
               <h4 className="mb-4 font-semibold text-esprit uppercase dark:text-white">
-                LEGAL
+              {t('LEGAL')}
               </h4>
               <ul className="text-black dark:text-gray-400 font-medium">
                 <li className="mb-4">
@@ -133,7 +142,7 @@ const Footer = () => {
                     className="hover:underline text-espritLightRed"
                     onClick={openPrivacyPolicyModal}
                   >
-                    Privacy Policy
+                    {t('Privacy Policy')}
                   </a>
                 </li>
                 <li className="mb-4">
@@ -142,7 +151,7 @@ const Footer = () => {
                     className="hover:underline text-espritLightRed"
                     onClick={openTermsModal}
                   >
-                    Terms &amp; Conditions
+                    {t('Terms &amp; Conditions')}
                   </a>
                 </li>
               </ul>
