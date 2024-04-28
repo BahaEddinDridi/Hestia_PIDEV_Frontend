@@ -134,7 +134,7 @@ function App() {
           path="/calendar"
           element={
             <>
-              <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Calendar" />
               <Calendar />
             </>
           }
@@ -197,7 +197,7 @@ function App() {
           path="/Profilecompany"
           element={
             <>
-              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Profile" />
               <ProtectedRoute>
                 <ProfileCompany />
               </ProtectedRoute>
@@ -209,7 +209,7 @@ function App() {
           path="/company/:username"
           element={
             <>
-              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Profile" />
               <ProtectedRoute>
                 <ViewCompany />
               </ProtectedRoute>
@@ -220,7 +220,7 @@ function App() {
           path="/detailsoffer/:jobId"
           element={
             <>
-              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Profile" />
               <ProtectedRoute>
                 <Detailsjoboffer />
               </ProtectedRoute>
@@ -230,7 +230,7 @@ function App() {
           path="/detailsintership/:intershipid"
           element={
             <>
-              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Profile" />
               <ProtectedRoute>
                 <Detailsintership />
               </ProtectedRoute>
@@ -262,7 +262,7 @@ function App() {
           path="/desactiveAccount"
           element={
             <>
-              <PageTitle title="Update Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Update Profile" />
               <ProtectedRoute>
                 <DesactiveAccount />
               </ProtectedRoute>
@@ -273,7 +273,7 @@ function App() {
           path="/desactiveAccount"
           element={
             <>
-              <PageTitle title="Update Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Update Profile" />
               <DesactiveAccount />
             </>
           }
@@ -293,7 +293,7 @@ function App() {
           path="/forms/form-elements"
           element={
             <>
-              <PageTitle title="Form Elements | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Form Elements" />
               <FormElements />
             </>
           }
@@ -302,7 +302,7 @@ function App() {
           path="/forms/form-layout"
           element={
             <>
-              <PageTitle title="Form Layout | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Form Layout" />
               <FormLayout />
             </>
           }
@@ -451,7 +451,7 @@ function App() {
           path="/chart"
           element={
             <>
-              <PageTitle title="Basic Chart | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Basic Chart" />
               <Chart />
             </>
           }
@@ -460,7 +460,7 @@ function App() {
           path="/ui/alerts"
           element={
             <>
-              <PageTitle title="Alerts | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Alerts" />
               <Alerts />
             </>
           }
@@ -469,7 +469,7 @@ function App() {
           path="/ui/buttons"
           element={
             <>
-              <PageTitle title="Buttons | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Buttons" />
               <Buttons />
             </>
           }
