@@ -50,9 +50,9 @@ const DropdownNotificationAdmin = () => {
   // }, [notifications]);
 
   useEffect(() => {
-    const userId = '65e391bb8826b7b3a56df1d9';
+    // const userId = '65e391bb8826b7b3a56df1d9';
     const fetchNotificationsForUser = async () => {
-      const userNotifications = await fetchNotifications(userId);
+      const userNotifications = await fetchNotifications(currentUser._id);
       setNotifications(userNotifications);
     };
 
