@@ -32,89 +32,89 @@ const CalendarAdmin = () => {
 
  
   
-    // useEffect(() => {
-    //   const fetchNotificationsForUser = async () => {
-    //     const userNotifications = await fetchNotifications(currentUser._id);
-    //     setNotifications(userNotifications);
-    //   };
+    useEffect(() => {
+      const fetchNotificationsForUser = async () => {
+        const userNotifications = await fetchNotifications(currentUser._id);
+        setNotifications(userNotifications);
+      };
   
-    //   fetchNotificationsForUser();
-    // }, []);
+      fetchNotificationsForUser();
+    }, []);
   
 
 
-    // useEffect(() => {
-    //   const fetchEvents = async () => {
-    //     try {
-    //       const response = await fetch('http://localhost:3001/dashboard/api/holidaysAdmin');
-    //       if (!response.ok) {
-    //         throw new Error('Failed to fetch holidays');
-    //       }
-    //       const data = await response.json();
-    //       const fetchedEvents = data.response.holidays.map((holiday:any) => ({
-    //         title: holiday.name,
-    //         start: holiday.date.iso,
-    //       }));
+    useEffect(() => {
+      const fetchEvents = async () => {
+        try {
+          const response = await fetch('http://localhost:3001/dashboard/api/holidaysAdmin');
+          if (!response.ok) {
+            throw new Error('Failed to fetch holidays');
+          }
+          const data = await response.json();
+          const fetchedEvents = data.response.holidays.map((holiday:any) => ({
+            title: holiday.name,
+            start: holiday.date.iso,
+          }));
   
-    //       // // Ajoutez les notifications comme événements
-    //       // const notificationEvents = notifications.map((notification) => ({
-    //       //   title: notification.type,
-    //       //   start: notification.timestamp,
-    //       // }));
+          // Ajoutez les notifications comme événements
+          const notificationEvents = notifications.map((notification) => ({
+            title: notification.type,
+            start: notification.timestamp,
+          }));
   
-    //       // setEvents([...fetchedEvents, ...notificationEvents]);
-    //       setEvents([...fetchedEvents]);
-    //     } catch (error) {
-    //       console.error(error);
-    //     }
-    //   };
+          setEvents([...fetchedEvents, ...notificationEvents]);
+          setEvents([...fetchedEvents]);
+        } catch (error) {
+          console.error(error);
+        }
+      };
   
-    //   fetchEvents();
-    // }, [notifications]); // Utilisez notifications comme dépendance pour mettre à jour les événements lorsque les notifications changent
+      fetchEvents();
+    }, [notifications]); // Utilisez notifications comme dépendance pour mettre à jour les événements lorsque les notifications changent
   
     const handleDateClick = (arg :any) => {
       setSelectedDate(arg.date);
     };
   //////////////////////////////////////////
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch('http://localhost:3001/dashboard/api/holidaysAdmin');
-        if (!response.ok) {
-          throw new Error('Failed to fetch holidays');
-        }
-        const data = await response.json();
-        const fetchedEvents = data.response.holidays.map((holiday: any) => ({
-          title: holiday.name,
-          start: holiday.date.iso,
-          classNames: 'holiday',
-        }));
-        setEvents([...fetchedEvents]);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchEvents = async () => {
+  //     try {
+  //       const response = await fetch('http://localhost:3001/dashboard/api/holidaysAdmin');
+  //       if (!response.ok) {
+  //         throw new Error('Failed to fetch holidays');
+  //       }
+  //       const data = await response.json();
+  //       const fetchedEvents = data.response.holidays.map((holiday: any) => ({
+  //         title: holiday.name,
+  //         start: holiday.date.iso,
+  //         classNames: 'holiday',
+  //       }));
+  //       setEvents([...fetchedEvents]);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
 
-    fetchEvents();
-  }, []); // Utilisez une dépendance vide pour exécuter la requête une seule fois lors du montage
+  //   fetchEvents();
+  // }, []); // Utilisez une dépendance vide pour exécuter la requête une seule fois lors du montage
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const notificationsCount = await fetchNotificationsCountByUserIdByDate(currentUser.id);
-        const notificationEvents = Object.entries(notificationsCount).map(([date, count]) => ({
-          title: `Notifications: ${count}`,
-          start: new Date(date),
-          classNames: 'notification',
-        }));        
-        setEvents((prevEvents) => [...prevEvents, ...notificationEvents]);
-      } catch (error) {
-        console.error('Error fetching notifications count:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchNotifications = async () => {
+  //     try {
+  //       const notificationsCount = await fetchNotificationsCountByUserIdByDate(currentUser.id);
+  //       const notificationEvents = Object.entries(notificationsCount).map(([date, count]) => ({
+  //         title: `Notifications: ${count}`,
+  //         start: new Date(date),
+  //         classNames: 'notification',
+  //       }));        
+  //       setEvents((prevEvents) => [...prevEvents, ...notificationEvents]);
+  //     } catch (error) {
+  //       console.error('Error fetching notifications count:', error);
+  //     }
+  //   };
 
-    fetchNotifications();
-  }, []); // Utilisez l'ID de l'utilisateur comme dépendance pour mettre à jour les notifications lorsque l'utilisateur change
+  //   fetchNotifications();
+  // }, []); // Utilisez l'ID de l'utilisateur comme dépendance pour mettre à jour les notifications lorsque l'utilisateur change
 
    
     
