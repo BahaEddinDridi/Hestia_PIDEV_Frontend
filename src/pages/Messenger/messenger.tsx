@@ -36,7 +36,6 @@ export default function Messenger() {
     const currentUser = useSelector(selectCurrentUser);
 
 
-
     useEffect(() => {
         socket.current = io("ws://localhost:3001")
         socket.current.on("getMessage", data => {
@@ -135,22 +134,43 @@ export default function Messenger() {
         }
     }, [messages]);
 
+    const [username, setUsername] = useState('');
+    const [userImage, setUserImage] = useState('');
+    useEffect(() => {
+        const getUsernameForChat = async () => {
+            try {
+                if (currentChat) {
+                    const otherUserId = currentChat.members[1];
+                    const res = await axios.get("http://localhost:3001/user/getOneUserById/" + otherUserId);
 
-    const handleEmoji = (newMessage: any) => {
-        setNewMessage(newMessage)
-    }
+                    // Vérifier si la requête a réussi
+                    if (res.status === 200) {
+                        // Extraire le nom d'utilisateur de la réponse
+                        const username = res.data.username;
+                        const userImage = res.data.image;
+                        setUsername(username); // Mettre à jour l'état avec le nom d'utilisateur
+                        setUserImage(userImage);
+                    } else {
+                        console.error("La requête a échoué.");
+                    }
+                }
+            } catch (error) {
+                console.error("Erreur lors de la récupération du nom d'utilisateur :", error);
+            }
+        };
+
+        getUsernameForChat();
+    }, [currentChat]);
+
 
     return (
         <DefaultLayout>
-            <div className='messenger'>
+            <div className='messenger rounded-lg dark:bg-black'>
 
                 <div className="chatMenu">
                     <div className="chatMenuWrapper">
-                        <input
-                            placeholder='search for friends'
-                            className='chatMenuInput' />
-
                         {conversations.map((c) => (
+
                             // Correction : Ajout d'une clé 'key' pour chaque élément de la liste
                             <div key={c._id} onClick={() => setCurrentChat(c)}>
                                 <Conversation conversation={c} nowuser={currentUser} />
@@ -158,22 +178,34 @@ export default function Messenger() {
                         ))}
                     </div>
                 </div>
-
                 <div className="chatBox">
+
                     <div className="chatBoxWrapper">
-                        <nav>
-                            <img src='' className='' />
-                        </nav>
                         {currentChat ? (
                             <>
-                                <div className="chatBoxTop" ref={messagesContainerRef}>
-                                    {/* Affichez les messages ici */}
-                                    {messages.map((m) => (
-                                        <div className='mt-10' key={m._id}>
-                                            <TopMessage message={m} own={m.sender === currentUser._id} />
+                            <nav className='navbarChat'>
+                                        <div className='otheruser'>
+                                            {userImage && <img src={userImage} className="otherUserImage" />}
+                                            {username && <span className="otherUsername">{username}</span>}
                                         </div>
-                                    ))}
+                                    </nav>
+
+                                <div className="container">
+                                    
+                                    <div className="chatBoxTop" ref={messagesContainerRef}>
+                                        {/* Affichez les messages ici */}
+                                        {messages.map((m) => (
+                                            <div className='mt-10' key={m._id}>
+
+                                                <TopMessage message={m} own={m.sender === currentUser._id}
+                                                
+                                                />
+                                            </div>
+
+                                        ))}
+                                    </div>
                                 </div>
+
                                 <div className="chatBoxBottom">
                                     {/* <textarea
                                         className='chatMessageInput '
@@ -187,6 +219,8 @@ export default function Messenger() {
                                         }}
                                         value={newMessage}
                                     ></textarea> */}
+
+
                                     <div className='input-emoji'>
                                         <InputEmoji
                                             onChange={(newMessage) => setNewMessage(newMessage)}
@@ -201,13 +235,28 @@ export default function Messenger() {
                                             shouldConvertEmojiToImage={false}
 
                                         />
-                                    </div>
 
+                                    </div>
                                     <button
-                                        className='chatSubmitButton'
-                                        onClick={sendMessage}> {/* Utilisez la fonction sendMessage ici */}
+                                        className="flex items-center bg-esprit text-white gap-1 px-4 py-2 cursor-pointer text-gray-800 font-semibold tracking-widest rounded-xl hover:bg-esprit duration-300 hover:gap-2 hover:translate-x-2"
+                                        onClick={sendMessage}>
                                         Send
+                                        <svg
+                                            className="w-5 h-5"
+                                            stroke="currentColor"
+                                            stroke-width="1.5"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                                                stroke-linejoin="round"
+                                                stroke-linecap="round"
+                                            ></path>
+                                        </svg>
                                     </button>
+
 
                                 </div>
 

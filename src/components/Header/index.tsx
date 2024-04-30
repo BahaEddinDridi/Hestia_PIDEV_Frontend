@@ -82,6 +82,7 @@ const Header = (props: {
         <Link to="/">
           <img src={Logo_PIDEV} className='w-26 h-14' alt="Logo" />
         </Link>
+        <SearchBar />
         <ul className="flex items-center gap-3 2xsm:gap-4">
           <li className="relative">
             <Link to="/Feed">
@@ -178,8 +179,9 @@ const Header = (props: {
               </button>
             </Link>
           </li>
+          <li><DropdownNotification /></li>
         </ul>
-        <SearchBar />
+
 
         <div className="flex items-center gap-3 2xsm:gap-7">
 
@@ -190,12 +192,9 @@ const Header = (props: {
 
 
             {/* <!-- Notification Menu Area --> */}
-            <DropdownNotification />
+
             {/* <!-- Notification Menu Area --> */}
 
-            {/* <!-- Chat Notification Area --> */}
-            <DropdownMessage />
-            {/* <!-- Chat Notification Area --> */}
 
             <li>
               <button

@@ -23,6 +23,7 @@ const TopMessage: React.FC<TopMessageProps> = ({ message, own }) => {
   };
 
   return (
+    
     <div className={own ? "message own" : "message"}>
       
       <div className="messageTop">
