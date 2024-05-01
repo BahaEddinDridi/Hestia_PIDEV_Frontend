@@ -705,3 +705,18 @@ export const fetchNotifications = async (userId) => {
     return [];
   }
 };
+
+//affiche chaque jour le nombre de notif
+export const fetchNotificationsCountByUserIdByDate = async (userId) => {
+  try {
+    const response = await fetch(`http://localhost:3001/notifications/NotificationsByDate/${userId}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch notifications count');
+    }
+    const data = await response.json();
+    return data.notificationsCount;
+  } catch (error) {
+    console.error('Error fetching notifications count:', error);
+    return {};
+  }
+};

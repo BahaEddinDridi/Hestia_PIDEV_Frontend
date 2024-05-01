@@ -15,6 +15,7 @@ import ChartSkills from '../components/ChartSkills';
 import ChartCompanies from '../components/ChartCompanies';
 import ChartLocations from '../components/ChartLocation';
 import ChartSeniorityLevel from '../components/ChartSeniority';
+import ChartAvancee from '../components/chartavancee';
 
 
 const StatisticPage: React.FC = () => {
@@ -86,10 +87,12 @@ const StatisticPage: React.FC = () => {
       <ChartThree />
        <ChartGender/> 
        <ChartStatus/> 
+       <ChartAvancee/>
        <ChartSkills/>
        <ChartCompanies/>
        <ChartLocations/>
        <ChartSeniorityLevel/>
+       
       
         {/* <ChartOne />
         <ChartTwo />

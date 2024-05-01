@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../../ApiSlices/authSlice';
-import { io} from "socket.io-client";
 import {fetchNotifications} from '../../api'
 
 
@@ -49,25 +48,86 @@ const DropdownNotificationAdmin = () => {
   //   };
   // }, [notifications]);
 
+  // useEffect(() => {
+  //   const fetchNotificationsForUser = async () => {
+  //     const userNotifications = await fetchNotifications(currentUser._id);
+  //     setNotifications(userNotifications);
+  //   };
+
+  //   fetchNotificationsForUser();
+  // }, []);
+  ////////////////////////////////////////////////
   useEffect(() => {
-    const userId = '65e391bb8826b7b3a56df1d9';
-    const fetchNotificationsForUser = async () => {
-      const userNotifications = await fetchNotifications(userId);
-      setNotifications(userNotifications);
+    const fetchNotifications = async () => {
+      try {
+        const userId = currentUser._id
+        const response = await fetch(`http://localhost:3001/notifications/getNotificationsByUser/${userId}`);
+        const data = await response.json();
+        setNotifications(data.notifications);
+        const hasUnreadNotifications = data.notifications.some(notification => !notification.read);
+        setNotifying(hasUnreadNotifications);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
     };
 
-    fetchNotificationsForUser();
+    fetchNotifications();
   }, []);
+  useEffect(() => {
+    const fetchAndMarkNotificationsAsRead = async () => {
+      try {
+        const userId = currentUser._id;
+        const response = await fetch(`http://localhost:3001/notifications/getNotificationsByUser/${userId}`);
+        const data = await response.json();
+        setNotifications(data.notifications);
+        // Extract notification ids
+        const notificationIds = data.notifications.map(notification => notification._id);
+        // Call markNotificationsAsRead API
+        await fetch('http://localhost:3001/notifications/markNotificationsAsRead', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ notificationIds }),
+        });
+      } catch (error) {
+        console.error('Error fetching notifications or marking as read:', error);
+      }
+    };
 
+    if (dropdownOpen) {
+      fetchAndMarkNotificationsAsRead();
+    }
+  }, [dropdownOpen, currentUser._id]);
+  useEffect(() => {
+    const clickHandler = ({ target }: MouseEvent) => {
+      if (!dropdown.current) return;
+      if (!dropdownOpen ||
+        dropdown.current.contains(target) ||
+        trigger.current.contains(target)
+      ) return;
+      setDropdownOpen(false);
+    };
+    document.addEventListener('click', clickHandler);
+    return () => document.removeEventListener('click', clickHandler);
+  });
 
- 
+ // close if the esc key is pressed
+ useEffect(() => {
+  const keyHandler = ({ keyCode }) => {
+    if (!dropdownOpen || keyCode !== 27) return;
+    setDropdownOpen(false);
+  };
+  document.addEventListener('keydown', keyHandler);
+  return () => document.removeEventListener('keydown', keyHandler);
+});
 
 
   return (
     <li className="relative">
       <Link
         ref={trigger}
-        onClick={() => setDropdownOpen(!dropdownOpen)}
+        onClick={() =>{setNotifying(false) ; setDropdownOpen(!dropdownOpen)} }
         to="#"
         className="relative flex h-9 w-9 items-center justify-center text-white
         rounded-full border-[0.5px] border-stroke bg-red-600 hover:text-red-800
@@ -115,7 +175,17 @@ const DropdownNotificationAdmin = () => {
               <Link
                 className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3
                 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                to={``}
+                to={
+                  notification.type === 'job_application'
+                  ? `/Dashboard/tables-Of-Jobs/Applications`
+                  : notification.type === 'internship_application'
+                    ? `/tables-Of-Interships/Applications`
+                    : notification.type === 'New Compte'
+                    ? `/Dashboard/tables-Of-Users`
+                    : notification.type === 'Job Opportunities'
+                    ? `/Dashboard/tables-Of-Jobs/Opportunities`
+                    : '/Dashboard/tables-Of-Interships/Opportunities'
+                }
               >
                 <p className="text-sm">{notification.message}</p>
                 <p className="text-xs">{formatDate(notification.timestamp)}</p>
