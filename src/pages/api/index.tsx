@@ -411,6 +411,7 @@ export const updatestatuinter = async (applicationId:string,newStatus:any) =>{
     const response = await axios.put('http://localhost:3001/application/updatestatusinter', {
         applicationId: applicationId,
         newStatus: newStatus
+        
     });
     
     if (response.status === 200) {

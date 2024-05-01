@@ -1,12 +1,13 @@
 import DefaultLayout from "../../layout/DefaultLayout";
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../ApiSlices/authSlice';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState ,useEffect} from 'react';
 import CoverOne from '../../images/cover/cover-01.png';
 import userSix from '../../images/user/user-06.png';
 import { Link } from "react-router-dom";
 import { deleteJobByIdAndUsername } from "../../backoffice/api/index";
 import { deleteIntershipByIdAndUsername } from "../../backoffice/api/index";
+import company from '../../images/cards/cpn.jpg'
 
 const formatDate = (dateString: string) => {
   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -106,7 +107,7 @@ const ProfileCompany = () => {
   };
   ///////////////
   const [currentPage, setCurrentPage] = useState(1);
-  const cardsPerPage = 3;
+  const cardsPerPage = 4;
 
   const nextPage = () => {
     setCurrentPage(prevPage => prevPage + 1);
@@ -115,7 +116,11 @@ const ProfileCompany = () => {
   const prevPage = () => {
     setCurrentPage(prevPage => prevPage - 1);
   };
-
+  useEffect(() => {
+    if (currentPage < 1) {
+        setCurrentPage(1);
+    }
+}, [currentPage]);
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   //trie le tableau de intership 
@@ -356,83 +361,12 @@ const ProfileCompany = () => {
               </h3>
 
             </div>
-            <div className="flex  ml-[871px] mt-4">
-              <button
-
-                className="group ml-10 flex p-2 rounded-md drop-shadow-xl  from-gray-800  font-semibold hover:translate-y-3 hover:rounded-[50%] transition-all duration-500 hover:from-[#331029] hover:to-[#310413]"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1em"
-                  height="1.1em"
-                  viewBox="0 0 512 512"
-                  stroke-width="0"
-                  fill="currentColor"
-                  stroke="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path
-                    d="M444.17 32H70.28C49.85 32 32 46.7 32 66.89v374.72C32 461.91 49.85 480 70.28 480h373.78c20.54 0 35.94-18.21 35.94-38.39V66.89C480.12 46.7 464.6 32 444.17 32zm-273.3 373.43h-64.18V205.88h64.18zM141 175.54h-.46c-20.54 0-33.84-15.29-33.84-34.43 0-19.49 13.65-34.42 34.65-34.42s33.85 14.82 34.31 34.42c-.01 19.14-13.31 34.43-34.66 34.43zm264.43 229.89h-64.18V296.32c0-26.14-9.34-44-32.56-44-17.74 0-28.24 12-32.91 23.69-1.75 4.2-2.22 9.92-2.22 15.76v113.66h-64.18V205.88h64.18v27.77c9.34-13.3 23.93-32.44 57.88-32.44 42.13 0 74 27.77 74 87.64z"
-                  ></path>
-                </svg>
-                <span
-                  className="absolute text-black dark:text-white opacity-0 group-hover:opacity-100 group-hover:text-gray-700 group-hover:text-sm group-hover:-translate-y-10 duration-700"
-                >
-                  Linkedin
-                </span>
-              </button>
-              <button
-                className="group flex p-2 rounded-md drop-shadow-xl bg-gradient-to-r from-gray-800   font-semibold hover:translate-y-3 hover:rounded-[50%] transition-all duration-500 hover:from-[#331029] hover:to-[#310413]"
-
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 15 15"
-                  className="w-5"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    fill-rule="evenodd"
-                    fill="currentColor"
-                    d="M7.49933 0.25C3.49635 0.25 0.25 3.49593 0.25 7.50024C0.25 10.703 2.32715 13.4206 5.2081 14.3797C5.57084 14.446 5.70302 14.2222 5.70302 14.0299C5.70302 13.8576 5.69679 13.4019 5.69323 12.797C3.67661 13.235 3.25112 11.825 3.25112 11.825C2.92132 10.9874 2.44599 10.7644 2.44599 10.7644C1.78773 10.3149 2.49584 10.3238 2.49584 10.3238C3.22353 10.375 3.60629 11.0711 3.60629 11.0711C4.25298 12.1788 5.30335 11.8588 5.71638 11.6732C5.78225 11.205 5.96962 10.8854 6.17658 10.7043C4.56675 10.5209 2.87415 9.89918 2.87415 7.12104C2.87415 6.32925 3.15677 5.68257 3.62053 5.17563C3.54576 4.99226 3.29697 4.25521 3.69174 3.25691C3.69174 3.25691 4.30015 3.06196 5.68522 3.99973C6.26337 3.83906 6.8838 3.75895 7.50022 3.75583C8.1162 3.75895 8.73619 3.83906 9.31523 3.99973C10.6994 3.06196 11.3069 3.25691 11.3069 3.25691C11.7026 4.25521 11.4538 4.99226 11.3795 5.17563C11.8441 5.68257 12.1245 6.32925 12.1245 7.12104C12.1245 9.9063 10.4292 10.5192 8.81452 10.6985C9.07444 10.9224 9.30633 11.3648 9.30633 12.0413C9.30633 13.0102 9.29742 13.7922 9.29742 14.0299C9.29742 14.2239 9.42828 14.4496 9.79591 14.3788C12.6746 13.4179 14.75 10.7025 14.75 7.50024C14.75 3.49593 11.5036 0.25 7.49933 0.25Z"
-                  ></path>
-                </svg>
-                <span
-                  className=" text-black dark:text-white absolute opacity-0 group-hover:opacity-100 group-hover:text-gray-700 group-hover:text-sm group-hover:-translate-y-10 duration-700"
-                >
-                  GitHub
-                </span>
-              </button>
-              <div className="group relative mx-2">
-                <button>
-                  <svg
-                    stroke-linejoin="round"
-                    stroke-linecap="round"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    height="44"
-                    width="44"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-8 hover:scale-125 duration-200 hover:stroke-esprit"
-                    fill="none"
-                  >
-                    <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
-                    <path d="M8 9h8"></path>
-                    <path d="M8 13h6"></path>
-                    <path
-                      d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z"
-                    ></path>
-                  </svg>
-                </button>
-                <span
-                  className="absolute -top-14 left-[50%] -translate-x-[50%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100"
-                >Chat <span> </span
-                ></span>
-              </div>
+            <div className="flex  ml-[888px] mt-4">
+            
+           
+             
               <Link to={`/calendarcompany/${(currentUser.username)}`}>
-                <button className="flex justify-center items-center gap-2 px-3 h-10 w-48 rounded-full bg-gradient-to-br from-red-200 to-red-300  text-blackgray font-sans font-medium text-base shadow-md hover:bg-red-600 transition-colors">
+                <button className="flex justify-center items-center gap-2 px-3 h-10 w-48 rounded-full bg-gradient-to-r from-neutral-400 via-neutral-200 to-neutral-400  text-blackgray font-sans font-medium text-base shadow-md hover:bg-red-600 transition-colors">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -448,7 +382,7 @@ const ProfileCompany = () => {
                       <path d="m4 11h16"></path>
                     </g>
                   </svg>
-                  <span className="text-lg">see the calendar</span>
+                  <span className="text-lg text-black-2">see the calendar</span>
                 </button>
               </Link>
             </div>
@@ -525,20 +459,23 @@ const ProfileCompany = () => {
                   <h3 className="font-medium text-lg text-black uppercase">Company Details</h3>
                 </div>
                 {/* Insérer l'image de l'entreprise */}
-                <img src={currentUser.image} alt="profile" className='w-40 h-30 rounded-lg overflow-hidden object-cover' />
+                <img src={currentUser.image} alt="profile" className='w-40 h-30 rounded-full  overflow-hidden object-cover' />
                 {/* Nom de l'entreprise */}
                 <h2 className="text-xl font-semibold text-black">{currentUser && currentUser.username}</h2>
               </div>
 
-              <div className="bg-white border mt-2 border-stroke shadow-md dark:border-strokedark dark:bg-boxdark p-6 rounded-lg">
-                <div className="flex items-center justify-between mb-4">
-                  <p className="w-32">View a collection of active or past {currentUser && currentUser.username} Engineering Services advertisements.</p>
+              <div className=" border mt-2 border-stroke shadow-md dark:border-strokedark dark:bg-boxdark p-6 rounded-lg" style={{ backgroundImage: "url('src/images/cards/cpn.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                <div className="flex items-center justify-between mb-4 " >
+                 
+                  <p className="w-32 text-black " >
+                    
+                    View a collection of active or past {currentUser && currentUser.username} Engineering Services advertisements.</p>
                 </div>
               </div>
             </div>
 
             {/* Card pour ajouter une offre et afficher les offres */}
-            <div className="flex-1">
+            <div className="flex-1 ">
               <div className="bg-white border border-stroke shadow-md dark:border-strokedark dark:bg-boxdark p-6 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-medium text-lg text-black uppercase">Job Offers</h3>
@@ -562,30 +499,32 @@ const ProfileCompany = () => {
 
                   {currentCards.map((job) => (
 
-                    <div className="w-66 h-66 mr-4 bg-red-800 rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
+                    <div className="w-100 h-55 mr-4  mt-16 rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-neutral-500 transition-shadow"  style={{ backgroundImage: "url('src/images/cards/cardsoffersjob.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
 
-                      <div className="w-52 h-30 bg-white text-black text-center rounded-2xl"><b>{job.jobTitle}</b></div>
+                      <div className=" flex items-center   w-50 h-30 bg-gradient-to-r from-neutral-400 via-neutral-200 to-neutral-400 bg-white text-black text-center rounded-full ">
+                       
+                        <img src={currentUser.image} alt="profile" className='w-9.5 h-9.5 rounded-full  overflow-hidden object-cover' />
+                        <b className="ml-2">{job.jobTitle}</b>
+                      </div>
 
                       <div className="">
                         <div className="  felex items-center">
-                          <h2 className="font-bold text-white text-base mr-1">Post:</h2>
-                          <p className="text-sm  text-neutral-400">{job.jobPost}</p>
+                          <h2 className="font-bold text-black text-base mr-1">Post:</h2>
+                          <p className="text-sm  text-white">{job.jobPost}</p>
                         </div>
                         <div className=" felex items-center">
-                          <h2 className="font-bold  text-white text-base mr-1">Field:</h2>
-                          <p className="text-sm text-neutral-400">{job.jobfield}</p></div>
+                          <h2 className="font-bold  text-black text-base mr-1">Field:</h2>
+                          <p className="text-sm text-white w-5">{job.jobfield}</p></div>
                         <div className=" text-black felex items-center">
-                          <h2 className="font-bold  text-white text-base mr-1">Application Deadline:</h2>
-                          <p className="text-sm text-neutral-400 ">{formatDate(job.jobApplicationDeadline)}</p></div>
+                          <h2 className="font-bold  text-black  text-base mr-1">Application Deadline:</h2>
+                          <p className="text-sm text-white ">{formatDate(job.jobApplicationDeadline)}</p></div>
                       </div>
-                      <div className="flex justify-between items-center">
+                      <div className="flex justify-between  ml-44">
 
-                        <Link to={`/detailsoffer/${job._id}`}>
-                          <button className="bg-gray text-black font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
-                        </Link>
+                       
 
-                        <section className="relative flex justify-center items-center ml-15">
-                          <div className="group flex justify-center transition-all rounded-full bg-gray-200 p-1">
+                        <section className="relative flex justify-center items-center pr-2 ">
+                          <div className="group flex justify-center transition-all rounded-full bg-black p-1">
                             <Link to={`/Profilecompany/Opportunity/EditJob/${job._id}`}>
                               <svg viewBox="0 0 24 24" className="w-4 h-4">
                                 <path
@@ -595,14 +534,14 @@ const ProfileCompany = () => {
                               </svg>
                             </Link>
                             <span
-                              className="absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm"
+                              className="absolute opacity-0 text-black group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm"
                             >Update</span>
 
                           </div>
                         </section>
 
-                        <section className="relative flex justify-center items-center ">
-                          <div className="group flex justify-center transition-all rounded-full bg-gray-200 p-1">
+                        <section className="relative flex justify-center items-center  pr-2">
+                          <div className="group flex justify-center transition-all rounded-full bg-black p-1">
                             <button onClick={() => handleDeleteJob(job._id, currentUser.username)} className="focus:outline-none">
                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4">
                                 <path fill="currentColor" d="M20.625 4.975h-3.438v-1.9a1.275 1.275 0 0 0-1.275-1.275h-4.975a1.275 1.275 0 0 0-1.275 1.275v1.9H3.375a.843.843 0 0 0-.843.843a.844.844 0 0 0 .843.843h.3l.839 13.775a2.7 2.7 0 0 0 2.7 2.477h9.15a2.7 2.7 0 0 0 2.7-2.7L20.325 6.66h.3a.844.844 0 0 0 .843-.843a.843.843 0 0 0-.843-.843zm-11.067-.874h3.112v1.101H9.558V4.101zm4.112 0v1.101h-2.22V4.101h2.22zM5.08 6.545h13.905L17.61 18.774H6.375l-1.295-12.229zM5.756 21.975a1.006 1.006 0 0 1-1.006-1.006c0-.555.45-1.006 1.006-1.006h12.488a1.006 1.006 0 0 1 1.006 1.006c0 .555-.45 1.006-1.006 1.006h-1.686a.844.844 0 0 1-.843-.843a.843.843 0 0 1 .843-.843h1.686c.093 0 .169.076.169.169c0 .093-.076.169-.169.169h-12.488a.169.169 0 0 0-.169.169c0 .093.076.169.169.169h.843a.844.844 0 0 1 .843.843a.844.844 0 0 1-.843.843H5.756z" />
@@ -610,11 +549,13 @@ const ProfileCompany = () => {
                             </button>
                             <span
                               onClick={() => handleDeleteJob(job._id, currentUser.username)}
-                              className="absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm"
+                              className="absolute text-black opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm"
                             >Delete</span>
                           </div>
                         </section>
-
+                        <Link to={`/detailsoffer/${job._id}`}>
+                          <button className="bg-black text-neutral-200  font-extrabold  p-2 px-6  rounded-xl hover:bg-neutral-400  hover:text-black transition-colors">See more</button>
+                        </Link>
                       </div>
 
 
@@ -641,9 +582,9 @@ const ProfileCompany = () => {
                 <h2 className="text-xl font-semibold text-black">{currentUser && currentUser.username}</h2>
               </div>
 
-              <div className="bg-white border mt-2 border-stroke shadow-md dark:border-strokedark dark:bg-boxdark p-6 rounded-lg">
+              <div className="bg-white border mt-2 border-stroke shadow-md dark:border-strokedark dark:bg-boxdark p-6 rounded-lg" style={{ backgroundImage: "url('src/images/cards/cpn.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
                 <div className="flex items-center justify-between mb-4">
-                  <p className="w-32">View a collection of active or past {currentUser && currentUser.username} Engineering Services advertisements.</p>
+                  <p className="w-32 text-black">View a collection of active or past {currentUser && currentUser.username} Engineering Services advertisements.</p>
                 </div>
               </div>
             </div>
@@ -672,30 +613,31 @@ const ProfileCompany = () => {
                 <div className="flex flex-wrap justify-center ">
 
                   {currentCardstwo.map((internship) => (
-                    <div className="w-66 h-66 mr-4  bg-companybgfarah rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow">
-                      <div className="w-52 h-30   bg-red-800 text-white text-center rounded-2xl"><b>{internship.interTitle}</b></div>
+                    <div className="w-100 h-55 mr-4 mt-16  bg-companybgfarah rounded-3xl text-neutral-300 p-4 flex flex-col items-start justify-center gap-3 hover:bg-gray-900 hover:shadow-lg hover:shadow-farahbutton transition-shadow" style={{ backgroundImage: "url('src/images/cards/cardsoffersjob.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                      <div className=" flex items-center w-52 h-30    bg-gradient-to-r from-neutral-400 via-neutral-200 to-neutral-400 bg-white text-black text-center rounded-2xl">
+                      <img src={currentUser.image} alt="profile" className='w-9.5 h-9.5 rounded-full  overflow-hidden object-cover' />
+                        <b className="ml-2">{internship.interTitle}</b>
+                        </div>
                       <div className="">
                         <div className="  felex items-center">
                           <h2 className="font-bold text-black text-base mr-1">Post:</h2>
-                          <p className="text-sm text-neutral-500">{internship.interPost}</p>
+                          <p className="text-sm text-white">{internship.interPost}</p>
                         </div>
                         <div className="  felex items-center">
                           <h2 className="font-bold text-base text-black  mr-1">Field:</h2>
-                          <p className="text-sm text-neutral-500">{internship.interfield}</p></div>
+                          <p className="text-sm text-white w-5">{internship.interfield}</p></div>
                         <div className="  felex items-center">
                           <h2 className="font-bold text-black  text-base mr-1">Application Deadline:</h2>
-                          <p className="text-sm text-neutral-500">{formatDate(internship.interApplicationDeadline)}</p></div>
+                          <p className="text-sm text-white">{formatDate(internship.interApplicationDeadline)}</p></div>
 
                       </div>
-                      <div className="flex justify-between items-center">
-                        <Link to={`/detailsintership/${internship._id}`} >
-                          <button className="bg-red-800  text-white font-extrabold p-2 px-6 rounded-xl hover:bg-farahbutton transition-colors">See more</button>
-                        </Link>
+                      <div className="flex justify-between  ml-44">
+                       
 
-                        <section className="relative flex justify-center items-center ml-15">
-                          <div className="group flex justify-center transition-all rounded-full bg-gray-200 p-1">
+                        <section className="relative flex justify-center items-center  pr-2">
+                          <div className="group flex justify-center transition-all rounded-full bg-black p-1">
                             <Link to={`/Profilecompany/Opportunity/EditInternship/${internship._id}`}>
-                              <svg viewBox="0 0 24 24" className="w-4 h-4 text-red-800">
+                              <svg viewBox="0 0 24 24" className="w-4 h-4 ">
                                 <path
                                   fill="currentColor"
                                   d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
@@ -703,23 +645,26 @@ const ProfileCompany = () => {
                               </svg>
                             </Link>
                             <span
-                              className="text-red-800 absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm"
+                              className="text-black absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm"
                             >Update</span>
                           </div>
                         </section>
-                        <section className="relative flex justify-center items-center ">
-                          <div className="group flex justify-center transition-all rounded-full bg-gray-200 p-1">
+                        <section className="relative flex justify-center items-center pr-2 ">
+                          <div className="group flex justify-center transition-all rounded-full bg-black  p-1">
                             <button onClick={() => handleDeleteinter(internship._id, currentUser.username)} className="focus:outline-none">
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4 text-red-800">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4 ">
                                 <path fill="currentColor" d="M20.625 4.975h-3.438v-1.9a1.275 1.275 0 0 0-1.275-1.275h-4.975a1.275 1.275 0 0 0-1.275 1.275v1.9H3.375a.843.843 0 0 0-.843.843a.844.844 0 0 0 .843.843h.3l.839 13.775a2.7 2.7 0 0 0 2.7 2.477h9.15a2.7 2.7 0 0 0 2.7-2.7L20.325 6.66h.3a.844.844 0 0 0 .843-.843a.843.843 0 0 0-.843-.843zm-11.067-.874h3.112v1.101H9.558V4.101zm4.112 0v1.101h-2.22V4.101h2.22zM5.08 6.545h13.905L17.61 18.774H6.375l-1.295-12.229zM5.756 21.975a1.006 1.006 0 0 1-1.006-1.006c0-.555.45-1.006 1.006-1.006h12.488a1.006 1.006 0 0 1 1.006 1.006c0 .555-.45 1.006-1.006 1.006h-1.686a.844.844 0 0 1-.843-.843a.843.843 0 0 1 .843-.843h1.686c.093 0 .169.076.169.169c0 .093-.076.169-.169.169h-12.488a.169.169 0 0 0-.169.169c0 .093.076.169.169.169h.843a.844.844 0 0 1 .843.843a.844.844 0 0 1-.843.843H5.756z" />
                               </svg>
                             </button>
                             <span
                               onClick={() => handleDeleteinter(internship._id, currentUser.username)}
-                              className="text-red-800 absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm"
+                              className="text-black absolute opacity-0 group-hover:opacity-100 group-hover:-translate-y-7 duration-700 text-sm"
                             >Delete</span>
                           </div>
                         </section>
+                        <Link to={`/detailsintership/${internship._id}`} >
+                          <button className="bg-black  text-neutral-200  font-extrabold p-2 px-6 rounded-xl hover:bg-neutral-400 hover:text-black transition-colors">See more</button>
+                        </Link>
                       </div>
                     </div>
                   ))}
