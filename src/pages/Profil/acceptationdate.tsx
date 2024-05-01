@@ -10,6 +10,8 @@ const Acceptationdate = () => {
     const [message, setMessage] = useState('');
     const [showAnimation, setShowAnimation] = useState(false);
     const [acceptationClicked, setAcceptationClicked] = useState(false);
+    const [acceptedApplications, setAcceptedApplications] = useState([]);
+    
     useEffect(() => {
         const script = document.createElement('script');
         script.src = 'https://cdn.lordicon.com/lordicon.js';
@@ -53,13 +55,18 @@ const Acceptationdate = () => {
         }
     };
 
-
+    useEffect(() => {
+        // Filtrer les applications acceptées
+        const filteredApplications = currentUser.applications.filter(application => application.status === 'Accepted');
+        setAcceptedApplications(filteredApplications);
+    }, [currentUser.applications]);
     return (
 
         <>
             <DefaultLayout>
                 <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark p-4">
-                    {currentUser && currentUser.applications.map((application, index) => (
+                    {acceptedApplications.map((application, index) => (
+                      
                         <div key={index} className="mb-6">
                             <h2 className="text-red-800 text-center font-bold mb-4 mt-6 ">Congratulations, {application.fullName}!</h2>
                             <p className="text-center text-black w-115  mt-9 sm:ml-[400px] lg:ml-[400px] h-30 sm:mt-4 lg:mt-6">The company, <span className="font-bold">{application.companyName}</span>, has reviewed your application for the position of <span className="font-bold">{application.jobTitle}</span> and believes you are an excellent fit. However, before proceeding, we kindly request your availability for an interview.</p>
@@ -75,7 +82,7 @@ const Acceptationdate = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {application.interviewDates && application.interviewDates.map((date, index) => (
+                                        {application.interviewDates && application.interviewDates.map((date, index)  => (
                                             <tr key={index}>
                                                 <td className="px-6 py-4 whitespace-nowrap">{new Date(date).toLocaleDateString()}</td>
                                                 <td>{new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
