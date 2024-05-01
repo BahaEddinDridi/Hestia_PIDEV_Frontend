@@ -60,7 +60,7 @@ import LandingPage from './pages/Landing Page/LandingPage';
 import Messenger from './pages/Messenger/messenger'
 import '../src/i18n.js'
 import { io } from "socket.io-client";
-import Acceptationdate from './pages/Profil/acceptationdate';
+
 
 
 const socket = io("http://localhost:3001");
@@ -130,14 +130,6 @@ function App() {
           element={
             <>
               <Unauthorized />
-            </>
-          }
-        />
-         <Route
-          path="/AcceptedDate"
-          element={
-            <>
-             <Acceptationdate/>
             </>
           }
         />
