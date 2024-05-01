@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { io, Socket } from "socket.io-client";
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../ApiSlices/authSlice';
-import { initializeSocket } from '../../SocketService';
-import { useSocket } from '../../SocketContext';
 
 const ENDPOINT = 'http://localhost:3001';
 

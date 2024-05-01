@@ -112,7 +112,6 @@ function App() {
     <Loader />
   ) : (
     <>
-<NotificationComponent/>
       <Routes>
         <Route
           index
