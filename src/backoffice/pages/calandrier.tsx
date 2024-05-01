@@ -74,15 +74,15 @@ const CalendarAdmin = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const holidaysResponse = await fetch('http://localhost:3001/dashboard/api/holidaysAdmin');
-        // if (!holidaysResponse.ok) {
-        //   throw new Error('Failed to fetch holidays');
-        // }
-        // const holidaysData = await holidaysResponse.json();
-        // const holidays = holidaysData.response.holidays.map((holiday: any) => ({
-        //   title: holiday.name,
-        //   start: holiday.date.iso,
-        // }));
+        const holidaysResponse = await fetch('http://localhost:3001/dashboard/api/holidaysAdmin');
+        if (!holidaysResponse.ok) {
+          throw new Error('Failed to fetch holidays');
+        }
+        const holidaysData = await holidaysResponse.json();
+        const holidays = holidaysData.response.holidays.map((holiday: any) => ({
+          title: holiday.name,
+          start: holiday.date.iso,
+        }));
   
         const notificationsCount = await fetchNotificationsCountByUserIdByDate(currentUser._id);
         const notificationEvents = Object.entries(notificationsCount).map(([date, count]) => {
@@ -94,8 +94,8 @@ const CalendarAdmin = () => {
           };
         });
   
-        // setEvents([...holidays, ...notificationEvents]);
-        setEvents([ ...notificationEvents]);
+        setEvents([...holidays, ...notificationEvents]);
+        // setEvents([ ...notificationEvents]);
       } catch (error) {
         console.error('Error fetching events:', error);
       }
