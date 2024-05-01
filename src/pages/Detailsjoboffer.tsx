@@ -8,6 +8,8 @@ import { useParams } from "react-router";
 import { getUserImage } from "./api";
 import { updateApplicationStatus } from "./api";
 import { Link } from "react-router-dom";
+import jobinfo from '../images/cards/jobinfo.jpg'
+import jobinfo2 from '../images/cards/jobinfo2.jpg'
 
 const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -130,6 +132,9 @@ const Detailsjoboffer = () => {
     const [newStatus, setNewStatus] = useState('');
     const [successMessage, setSuccessMessage] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const [showText, setShowText] = useState(null);
+    const [showText2, setShowText2] = useState(null);
+    const [showText3, setShowText3] = useState(null);
     const openModal = (id, status) => {
         setApplicationId(id);
         setNewStatus(status);
@@ -143,9 +148,25 @@ const Detailsjoboffer = () => {
 
     };
     console.log(newStatus);
-    const [DateInterview, setDateInterview] = useState('');
+    const [DateInterview, setDateInterview] = useState(['', '', '']);
+    const [error, setError] = useState('');
+    const handleDateChange = (index, value) => {
+        const selectedDate = new Date(value);
+        const currentDate = new Date();
+        if (selectedDate <= currentDate) {
+
+            setError(`The date must be in the future for the proposition ${index + 1}`);
+        } else {
+
+            const updatedDates = [...DateInterview];
+            updatedDates[index] = value;
+            setDateInterview(updatedDates);
+
+            setError('');
+        }
+    };
     const handleConfirm = () => {
-        updateApplicationStatus(applicationId, newStatus,DateInterview);
+        updateApplicationStatus(applicationId, newStatus, DateInterview);
         setModalOpen(false);
         if (newStatus === 'Accepted') {
             setSuccessMessage('application accepted');
@@ -160,7 +181,7 @@ const Detailsjoboffer = () => {
         }
     };
     const handleConfirmreject = () => {
-        updateApplicationStatus(applicationId, newStatus,DateInterview);
+        updateApplicationStatus(applicationId, newStatus, DateInterview);
         setmodalopenReject(false);
         if (newStatus === 'Accepted') {
             setSuccessMessage('application accepted');
@@ -177,77 +198,84 @@ const Detailsjoboffer = () => {
     return (
         <>
             <DefaultLayout>
-                <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                <div className="rounded-sm border border-stroke  shadow-default dark:border-strokedark dark:bg-boxdark" >
 
 
 
 
                     {offer && (
-                        <div key={offer._id} className="p-6 bg-white shadow-md rounded-lg mb-4">
-                            <div className="flex items-center mb-4">
-                                <img src={currentUser.image} className="w-20 h-20 rounded-full overflow-hidden object-cover" />
-                                <h2 className="text-xl font-semibold ml-4">{offer.jobTitle}</h2>
-                            </div>
-                            <div className="flex items-center mb-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-6 h-6 text-red-800 mr-2">
-                                    <path d="M21 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 0 1 18 0z"></path>
-                                    <circle cx="12" cy="10" r="3"></circle>
-                                </svg>
-                                <span className="text-gray-600">{offer.jobLocation}</span>
-                            </div>
-                            <div className="flex items-center mb-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-6 h-6 text-red-800 mr-2">
-                                    <path d="M21 6h-4V4a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v2H3a1 1 0 0 0-1 1v13a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a1 1 0 0 0-1-1zm-9-2h2v2h-2V4zM5 8h14M3 12h18M6 16h12"></path>
-                                </svg>
-                                <div className="text-sm text-gray-600">{offer.jobPost}</div>
-                            </div>
-                            <div className="flex items-center mb-2">
-                                <svg className="w-6 h-6 text-red-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M7 2a2 2 0 0 0-2 2v1a1 1 0 0 0 0 2v1a1 1 0 0 0 0 2v1a1 1 0 1 0 0 2v1a1 1 0 1 0 0 2v1a1 1 0 1 0 0 2v1a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H7Zm3 8a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm-1 7a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3 1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1Z" clip-rule="evenodd" />
-                                </svg>
+                        <div key={offer._id} className="p-6 shadow-md   rounded-lg mb-4 bg-white " >
+                            <div className="flex items-center mb-10">
+                                <div className="p-6 shadow-xl  rounded-lg mb-1   " style={{ backgroundImage: `url(${jobinfo})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                                    <div className="flex items-center mb-4"  >
+                                        <img src={currentUser.image} className="w-20 h-20 rounded-full overflow-hidden object-cover" />
+                                        <h2 className="text-xl font-semibold ml-4">{offer.jobTitle}</h2>
+                                    </div>
+                                    <div className="flex items-center mb-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-6 h-6 text-red-800 mr-2">
+                                            <path d="M21 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 0 1 18 0z"></path>
+                                            <circle cx="12" cy="10" r="3"></circle>
+                                        </svg>
+                                        <span className="text-gray-600">{offer.jobLocation}</span>
+                                    </div>
+                                    <div className="flex items-center mb-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-6 h-6 text-red-800 mr-2">
+                                            <path d="M21 6h-4V4a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v2H3a1 1 0 0 0-1 1v13a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a1 1 0 0 0-1-1zm-9-2h2v2h-2V4zM5 8h14M3 12h18M6 16h12"></path>
+                                        </svg>
+                                        <div className="text-sm text-gray-600">{offer.jobPost}</div>
+                                    </div>
+                                    <div className="flex items-center mb-2">
+                                        <svg className="w-6 h-6 text-red-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                            <path fill-rule="evenodd" d="M7 2a2 2 0 0 0-2 2v1a1 1 0 0 0 0 2v1a1 1 0 0 0 0 2v1a1 1 0 1 0 0 2v1a1 1 0 1 0 0 2v1a1 1 0 1 0 0 2v1a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H7Zm3 8a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm-1 7a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3 1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1Z" clip-rule="evenodd" />
+                                        </svg>
 
-                                <div className="text-sm text-gray-600 mb-2">{offer.jobfield}</div>
-                            </div>
-                            <div className="flex items-center text-sm text-gray-600 mb-2">
-                                <svg className="w-6 h-6 text-red-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24  ">
-                                    <path fill-rule="evenodd" d="M6 5V4a1 1 0 1 1 2 0v1h3V4a1 1 0 1 1 2 0v1h3V4a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v2H3V7a2 2 0 0 1 2-2h1ZM3 19v-8h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Zm5-6a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" clip-rule="evenodd" />
-                                </svg>
-
-
-                                <b className="text-black">Job Start Date:</b> <span className="mr-4">{formatDate(offer.jobStartDate)}</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-6 h-6 text-red-800 mr-2">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                                    <line x1="12" y1="16" x2="12" y2="16"></line>
-                                </svg>
-                                <b className="text-black">Job Application Deadline:</b> <span>{formatDate(offer.jobApplicationDeadline)}</span>
-                            </div>
-                            <div className="border-t border-gray-200 pt-4">
-                                <h3 className="text- text-black font-semibold mb-2">About the Job Offer</h3>
-                                <p className="text-gray-800">{offer.jobDescription}</p>
-                            </div>
+                                        <div className="text-sm text-gray-600 mb-2">{offer.jobfield}</div>
+                                    </div>
+                                    <div className="flex items-center text-sm text-gray-600 mb-2">
+                                        <svg className="w-6 h-6 text-red-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24  ">
+                                            <path fill-rule="evenodd" d="M6 5V4a1 1 0 1 1 2 0v1h3V4a1 1 0 1 1 2 0v1h3V4a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v2H3V7a2 2 0 0 1 2-2h1ZM3 19v-8h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Zm5-6a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" clip-rule="evenodd" />
+                                        </svg>
 
 
-                            <div className="border-t border-gray-200 pt-4">
+                                        <b className="text-black">Job Start Date:</b> <span className="mr-4">{formatDate(offer.jobStartDate)}</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-6 h-6 text-red-800 mr-2">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                                            <line x1="12" y1="16" x2="12" y2="16"></line>
+                                        </svg>
+                                        <b className="text-black">Job Application Deadline:</b> <span>{formatDate(offer.jobApplicationDeadline)}</span>
+                                    </div>
+                                </div>
+                                <div className="md:col-span-2 p-2 ml-50 w-[500px] h-[274px]  shadow-md  rounded-lg " style={{ backgroundImage: `url(${jobinfo2})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                                    <h3 className="text- text-black font-semibold mb-2">About the Job Offer</h3>
+                                    <p className="text-gray-800">{offer.jobDescription}</p>
+                                </div>
+                            </div>
+
+                            <div className="md:col-span-2 px-9 py-9 ml-100 w-[500px] shadow-md bg-gradient-to-r from-neutral-300 via-neutral-400 to-neutral-300 rounded-lg">
                                 <h3 className="text-lg font-semibold mb-2 text-black">Qualifications</h3>
                                 <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                                     <div className="mb-4">
                                         <h4 className="text-red-800 font-semibold mb-1">Required Skills</h4>
-                                        <p className="text-gray-800">{offer.jobRequiredSkills}</p>
+                                        <ul className="list-disc ml-6">
+                                            {offer.jobRequiredSkills.map((skill, index) => (
+                                                <li key={index}>{skill}</li>
+                                            ))}
+                                        </ul>
                                     </div>
-                                    <div className="mb-4">
+                                    <div className="mb-4 pl-9 ">
                                         <h4 className="text-red-800 font-semibold mb-1">Required Education</h4>
                                         <p className="text-gray-800">{offer.jobRequiredEducation}</p>
                                     </div>
-                                    <div className="mb-4">
-                                        <h4 className="text-red-800 font-semibold mb-1">Required Experience</h4>
+                                    <div className="mb-4 ">
+                                        <h4 className="text-red-800  font-semibold mb-1">Required Experience</h4>
                                         <p className="text-gray-800">{offer.jobRequiredExperience}</p>
                                     </div>
                                 </div>
                             </div>
 
 
-                            <div className="border-t border-gray-200 pt-4"></div>
+
 
 
 
@@ -335,20 +363,34 @@ const Detailsjoboffer = () => {
                                                     {application.phoneNumber}
                                                 </a></td>
                                                 <td className="px-6 flex items-center py-4 whitespace-nowrap">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModal(application._id, 'Accepted')} className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                    </svg>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModalReject(application._id, 'Rejected')} className="w-6 h-6 mr-2 cursor-pointer text-red-500 dark:text-red-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                     <div className=" relative  "> 
+                                                        <svg xmlns="http://www.w3.org/2000/svg" onMouseEnter={() => setShowText(index)} onMouseLeave={() => setShowText(null)} onClick={() => openModal(application._id, 'Accepted')} className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                        </svg>
+                                                         {showText === index && (
+                                                            <span className="absolute top-0 left-full mt-1 ml-2 bg-green-400 text-white px-2 py-1 rounded-sm">Accept</span>
+                                                        )} 
+                                                    </div> 
+                                                    <div className=" relative  "> 
+                                                    <svg xmlns="http://www.w3.org/2000/svg" onMouseEnter={() => setShowText2(index)} onMouseLeave={() => setShowText2(null)}  onClick={() => openModalReject(application._id, 'Rejected')} className="w-6 h-6 mr-2 cursor-pointer text-red-500 dark:text-red-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                         <circle cx="12" cy="12" r="10"></circle>
                                                         <line x1="15" y1="9" x2="9" y2="15"></line>
                                                         <line x1="9" y1="9" x2="15" y2="15"></line>
                                                     </svg>
-                                                    <svg onClick={() => handleOpenModal(index)} className="w-6 h-6 text-blue-500 cursor-pointer dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                    {showText2 === index && (
+                                                            <span className="absolute top-0 left-full mt-1 ml-2 bg-red-400 text-white px-2 py-1 rounded-sm">Reject</span>
+                                                        )} 
+                                                    </div>
+                                                    <div className=" relative  "> 
+                                                    <svg onMouseEnter={() => setShowText3(index)} onMouseLeave={() => setShowText3(null)} onClick={() => handleOpenModal(index)} className="w-6 h-6 text-blue-500 cursor-pointer dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
                                                         <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                                     </svg>
-
+                                                    {showText3 === index && (
+                                                            <span className="absolute top-0 left-full mt-1 ml-2 bg-blue-400 text-white px-2 py-1 rounded-sm">View</span>
+                                                        )} 
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))
@@ -380,19 +422,34 @@ const Detailsjoboffer = () => {
                                                     </a>
                                                 </td>
                                                 <td className="px-6 flex items-center py-4 whitespace-nowrap">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModal(application._id, 'Accepted')} className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                    </svg>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModalReject(application._id, 'Rejected')} className="w-6 h-6 mr-2 cursor-pointer text-red-500 dark:text-red-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <div className=" relative  "> 
+                                                        <svg xmlns="http://www.w3.org/2000/svg" onMouseEnter={() => setShowText(index)} onMouseLeave={() => setShowText(null)}  onClick={() => openModal(application._id, 'Accepted')} className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                        </svg>
+                                                         {showText === index && (
+                                                            <span className="absolute top-0 left-full mt-1 ml-2 bg-green-400 text-white px-2 py-1 rounded-sm">Accept</span>
+                                                        )} 
+                                                    </div> 
+                                                    <div className=" relative  "> 
+                                                    <svg xmlns="http://www.w3.org/2000/svg" onMouseEnter={() => setShowText2(index)} onMouseLeave={() => setShowText2(null)}  onClick={() => openModalReject(application._id, 'Rejected')} className="w-6 h-6 mr-2 cursor-pointer text-red-500 dark:text-red-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                         <circle cx="12" cy="12" r="10"></circle>
                                                         <line x1="15" y1="9" x2="9" y2="15"></line>
                                                         <line x1="9" y1="9" x2="15" y2="15"></line>
                                                     </svg>
-                                                    <svg onClick={() => handleOpenModal(index)} className="w-6 h-6 text-blue-500 cursor-pointer dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                    {showText2 === index && (
+                                                            <span className="absolute top-0 left-full mt-1 ml-2 bg-red-400 text-white px-2 py-1 rounded-sm">Reject</span>
+                                                        )} 
+                                                    </div>
+                                                    <div className=" relative  "> 
+                                                    <svg onMouseEnter={() => setShowText3(index)} onMouseLeave={() => setShowText3(null)} onClick={() => handleOpenModal(index)} className="w-6 h-6 text-blue-500 cursor-pointer dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
                                                         <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                                     </svg>
+                                                    {showText3 === index && (
+                                                            <span className="absolute top-0 left-full mt-1 ml-2 bg-blue-400 text-white px-2 py-1 rounded-sm">View</span>
+                                                        )} 
+                                                    </div>
 
                                                 </td>
                                             </tr>
@@ -423,19 +480,34 @@ const Detailsjoboffer = () => {
                                                 </a>
                                                 </td>
                                                 <td className="px-6 flex items-center py-4 whitespace-nowrap">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModal(application._id, 'Accepted')} className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                                    </svg>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" onClick={() => openModalReject(application._id, 'Rejected')} className="w-6 h-6 mr-2 cursor-pointer text-red-500 dark:text-red-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <div className=" relative  "> 
+                                                        <svg xmlns="http://www.w3.org/2000/svg" onMouseEnter={() => setShowText(index)} onMouseLeave={() => setShowText(null)} onClick={() => openModal(application._id, 'Accepted')} className="w-6 h-6 mr-2 cursor-pointer text-green-500 dark:text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                        </svg>
+                                                         {showText === index  &&(
+                                                            <span className="absolute top-0 left-full mt-1 ml-2 bg-green-400 text-white px-2 py-1 rounded-sm">Accepté</span>
+                                                        )} 
+                                                    </div> 
+                                                    <div className=" relative  "> 
+                                                    <svg xmlns="http://www.w3.org/2000/svg" onMouseEnter={() => setShowText2(index)} onMouseLeave={() => setShowText2(null)}  onClick={() => openModalReject(application._id, 'Rejected')} className="w-6 h-6 mr-2 cursor-pointer text-red-500 dark:text-red-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                         <circle cx="12" cy="12" r="10"></circle>
                                                         <line x1="15" y1="9" x2="9" y2="15"></line>
                                                         <line x1="9" y1="9" x2="15" y2="15"></line>
                                                     </svg>
-                                                    <svg onClick={() => handleOpenModal(index)} className="w-6 h-6 text-blue-500 cursor-pointer dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                    {showText2 === index && (
+                                                            <span className="absolute top-0 left-full mt-1 ml-2 bg-red-400 text-white px-2 py-1 rounded-sm">Reject</span>
+                                                        )} 
+                                                    </div>
+                                                    <div className=" relative  "> 
+                                                    <svg onMouseEnter={() => setShowText3(index)} onMouseLeave={() => setShowText3(null)} onClick={() => handleOpenModal(index)} className="w-6 h-6 text-blue-500 cursor-pointer dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
                                                         <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                                     </svg>
+                                                    {showText3 === index && (
+                                                            <span className="absolute top-0 left-full mt-1 ml-2 bg-blue-400 text-white px-2 py-1 rounded-sm">View</span>
+                                                        )} 
+                                                    </div>
 
                                                 </td>
                                             </tr>
@@ -610,17 +682,43 @@ const Detailsjoboffer = () => {
                                             <div className="modal">
                                                 <div className="modal-content">
                                                     <p className='text-black ml-2'>Do you confirm your action?</p>
-                                                    <label for="meeting-time" className="text-black ml-2 mt-2">Choose a time for your appointment:</label>
+                                                    <label for="meeting-time" className="text-black ml-2 mt-2">Choose a time and date for your appointment:</label>
+                                                    <div>
+                                                        <label className="ml-2 text-black">1.Proposition 1:</label>
+                                                        <input
+                                                            type="datetime-local"
+                                                            id="meeting-time"
+                                                            name="meeting-time"
+                                                            value={DateInterview[0]}
+                                                            onChange={(e) => handleDateChange(0, e.target.value)}
+                                                            className="border-black mt-6 ml-6"
+                                                        />
 
-                                                    <input
-                                                        type="datetime-local"
-                                                        id="meeting-time"
-                                                        name="meeting-time"
-                                                        value={DateInterview}
-                                                        onChange={(e) => setDateInterview(e.target.value)}
-                                                        className="border-black mt-6 ml-6"
-                                                    />
-                                                  
+                                                    </div>
+                                                    <div>
+                                                        <label className="ml-2 text-black">2.Proposition 2:</label>
+                                                        <input
+                                                            type="datetime-local"
+                                                            id="meeting-time"
+                                                            name="meeting-time"
+                                                            value={DateInterview[1]}
+                                                            onChange={(e) => handleDateChange(1, e.target.value)}
+                                                            className="border-black mt-6 ml-6"
+                                                        />
+
+                                                    </div>
+                                                    <div>
+                                                        <label className="ml-2 text-black">3.Proposition 3:</label>
+                                                        <input
+                                                            type="datetime-local"
+                                                            id="meeting-time"
+                                                            name="meeting-time"
+                                                            value={DateInterview[2]}
+                                                            onChange={(e) => handleDateChange(2, e.target.value)}
+                                                            className="border-black mt-6 ml-6"
+                                                        />
+                                                        {error && <p className="text-red-500">{error}</p>}
+                                                    </div>
                                                     <div className="center">
                                                         <button className="ml-2 mt-5 mb-5 px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700" onClick={handleConfirm}>Confirm</button>
                                                         <button className="px-4 ml-2  py-2 text-sm font-medium text-red-600 border border-red-600 rounded-md hover:bg-red-50" onClick={() => setModalOpen(false)}>Cancel</button>

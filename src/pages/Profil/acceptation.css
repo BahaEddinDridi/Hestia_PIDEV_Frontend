@@ -1,0 +1,40 @@
+.animation-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+.emoji {
+    font-size: 10rem;
+    animation: bounce 0.5s ease infinite alternate;
+}
+
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-20px);
+    }
+}
+.star {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #ffd700; /* Couleur de l'étoile */
+    border-radius: 50%;
+    animation: twinkle 1s linear infinite alternate; /* Animation de scintillement */
+}
+
+@keyframes twinkle {
+    0% {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: rotate(360deg) scale(0);
+    }
+}

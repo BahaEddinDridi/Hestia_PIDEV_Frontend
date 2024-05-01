@@ -29,16 +29,7 @@ const formatDate = (dateString: string) => {
 }
 const Detailsintership = () => {
    
-    const acceptApplication = (candidateId) => {
-        // Implémentez ici la logique pour accepter la candidature avec l'ID du candidat
-        console.log(`Candidature acceptée pour le candidat avec l'ID ${candidateId}`);
-    }
-
-    // Fonction pour rejeter une candidature
-    const rejectApplication = (candidateId) => {
-        // Implémentez ici la logique pour rejeter la candidature avec l'ID du candidat
-        console.log(`Candidature rejetée pour le candidat avec l'ID ${candidateId}`);
-    }
+ 
     const currentUser = useSelector(selectCurrentUser);
     const { intershipid } = useParams();
     console.log(intershipid);
@@ -126,7 +117,11 @@ const Detailsintership = () => {
     setModalOpen(true);
    
 };
+
 console.log(newStatus);
+
+const [error, setError]=useState('');
+
 const handleConfirm = () => {
     updatestatuinter(applicationId, newStatus);
     setModalOpen(false);
@@ -142,6 +137,7 @@ const handleConfirm = () => {
         }, 3000);
     }
 };
+
     return (
         <>
             <DefaultLayout>
@@ -550,6 +546,7 @@ const handleConfirm = () => {
                                          <div className="modal">
                                              <div className="modal-content">
                                                  <p className='text-black ml-2'>Do you confirm your action?</p>
+                                                
                                                  <button className="ml-2 mt-5 mb-5 px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700" onClick={handleConfirm}>Confirm</button>
                                                  <button className="px-4 ml-2  py-2 text-sm font-medium text-red-600 border border-red-600 rounded-md hover:bg-red-50" onClick={() => setModalOpen(false)}>Cancel</button>
                                              </div>
@@ -561,6 +558,7 @@ const handleConfirm = () => {
                      </div>
               
             )}
+             
                 </div >
             </DefaultLayout>
         </>);
