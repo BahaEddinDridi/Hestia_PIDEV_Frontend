@@ -262,7 +262,7 @@ export default function Messenger() {
                     </div>
                 </div>
 
-                <div className="chatBox">
+                <div className="chatBox shadow-lg shadow-black rounded-md">
                     <div className="chatBoxWrapper">
                         {currentChat ? (
                             <>
@@ -362,14 +362,14 @@ export default function Messenger() {
                     </div>
                 </div>
 
-                <div className="chatOnline">
-                    <div className=''><nav className='navbarConversation my-3'>
-                        <div className='flex items-center justify-center'>
-                            <h1 className="text-black font-bold text-2xl">Esprit Career Users</h1>
-                        </div>
-                    </nav>
-                        <hr className='text-black-2'></hr>
-                    </div>
+                <div className="chatOnline ml-5">
+                   
+                        <nav className='navbarConversation my-3'>
+                            <div className='flex items-center justify-center'>
+                                <h1 className="text-black font-bold text-2xl">Esprit Career Users</h1>
+                            </div>
+                        </nav>
+                        <hr className='text-black-2 '></hr>
                     <div className="chatOnlineWrapper">
                         <ChatOnline
                             onLineUsers={onLineUsers}
