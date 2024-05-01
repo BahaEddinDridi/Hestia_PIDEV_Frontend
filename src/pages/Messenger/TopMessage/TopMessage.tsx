@@ -31,7 +31,7 @@ const TopMessage: React.FC<TopMessageProps> = ({ message, own }) => {
           {insertLineBreaks(message.text)}
         </p>
       </div>
-      <div className="messageButtom">
+      <div className="messageButtom dark:text-graydouble">
         {format(createdAtString)} {/* Utiliser la chaîne de caractères dans timeago.js */}
       </div>
     </div>

@@ -260,7 +260,7 @@ export default function Messenger() {
                         ))}
                     </div>
                 </div>
-                
+
                 <div className="chatBox">
                     <div className="chatBoxWrapper">
                         {currentChat ? (
@@ -331,7 +331,7 @@ export default function Messenger() {
 
                                     </div>
                                     <button
-                                        className="flex items-center bg-esprit text-white gap-1 px-4 py-2 cursor-pointer text-gray-800 font-semibold tracking-widest rounded-xl hover:bg-esprit duration-300 "
+                                        className=" shadow-xl shadow-black-2 flex items-center bg-esprit text-white gap-1 px-4 py-2 cursor-pointer text-gray-800 font-semibold tracking-widest rounded-xl hover:bg-esprit duration-300 "
                                         onClick={sendMessage}>
                                         Send
                                         <svg
