@@ -66,7 +66,7 @@ const FiltersSidebar: React.FC<{ onFilterChange: (filters: Filters) => void; isJ
   return (
     <div className="bg-gradient-to-r from-red-400 via-red-600 to-red-800 p-4 rounded-lg shadow-md"
          style={{
-           background: "url('src/images/cards/filterBar.png')",
+           background: isJobs? "url('src/images/cards/filterBar.png')" : "url('src/images/cards/filterBar1.png')",
            backgroundSize: 'cover',
          }}>
       <h2 className="text-lg font-semibold text-white text-start ml-2 mb-4">Filters</h2>
