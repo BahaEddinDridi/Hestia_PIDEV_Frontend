@@ -140,7 +140,7 @@ const DropdownNotification = () => {
                     ? `/detailsoffer/${notification.jobId}`
                     : notification.type === 'internship_application'
                       ? `/detailsinternship/${notification.jobId}`
-                      : '/Applications'
+                      : '/AcceptedDate'
                 }
               >
                 <p className="text-sm">{notification.message}</p>
