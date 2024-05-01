@@ -10,7 +10,7 @@ import axios from 'axios';
 import { button } from '@material-tailwind/react';
 import { io, Socket } from "socket.io-client";
 import { getUsers } from '../api';
-
+import { useSocket } from '../../SocketContext';
 
 
 interface Message {
@@ -42,9 +42,9 @@ export default function Messenger() {
     const [arrivalMessage, setArrivalMessage] = useState(null);
     const scrollRef = useRef<HTMLDivElement>(null); // Assurez-vous que le type est correct
     const [currentChat, setCurrentChat] = useState(null);
-    const socket = useRef<Socket<DefaultEventsMap, DefaultEventsMap> | undefined>(undefined);
     const currentUser = useSelector(selectCurrentUser);
     const userId = currentUser ? currentUser._id : null;
+    const socket = useSocket(); // Use useSocket hook to get the socket instance
 
     /////recherche
     const [searchTerm, setSearchTerm] = useState("");
@@ -72,50 +72,28 @@ export default function Messenger() {
 
 
     useEffect(() => {
-        console.log("Initializing socket connection...");
-        socket.current = io("ws://localhost:3001")
-
-        socket.current.on('connect', () => {
-            console.log("Socket connected successfully!");
-        });
-        socket.current.on('disconnect', () => {
-            console.log("Socket disconnected.");
-        });
-        socket.current.on('error', (error) => {
-            console.error("Socket error:", error);
-        });
-
-        socket.current.on("getMessage", data => {
-            console.log("New notification received:", data);
-            setArrivalMessage({
-                sender: data.senderId,
-                text: data.text,
-                createdAt: Date.now
-            })
-        })
-        if (socket.current && userId) {
+        if (socket && userId) {
             console.log("Emitting addUser event...");
-            socket.current.emit("addUser", userId, (response) => {
+            socket.emit("addUser", userId, (response) => {
                 console.log("addUser event emitted. Server response:", response);
             });
         }
+    }, [socket, userId]);
 
-        return () => {
-            if (socket.current) {
-                console.log("Cleaning up socket connection...");
+    useEffect(() => {
+        console.log("Socket:", socket);
 
-            }
-        };
-    }, [userId]);
+        socket.on('getMessage', data => {
+            console.log("New message received:", data);
+            // Update messages state with the new message
+            setMessages(prev => [...prev, data]);
+        });
+    }, [socket]);
+
 
     useEffect(() => {
         arrivalMessage && currentChat && currentChat.members && arrivalMessage.sender && currentChat.members.includes(arrivalMessage.sender) && setMessages(prev => [...prev, arrivalMessage]);
     }, [arrivalMessage, currentChat]);
-
-
-
-    console.log(socket)
-
 
     useEffect(() => {
         // Correction : Ajout d'une clé 'key' pour chaque élément de la liste
@@ -159,9 +137,9 @@ export default function Messenger() {
             (member: any) => member !== userId
         );
 
-        if (socket.current) {
+        if (socket) {
             // Accédez à socket.current en toute sécurité ici
-            socket.current.emit("sendMessage", {
+            socket.emit("sendMessage", {
                 senderId: userId,
                 receiverId,
                 text: newMessage
@@ -206,17 +184,18 @@ export default function Messenger() {
                             <>
                                 <div className="chatBoxTop">
                                     {messages.map((m) => (
-                                        // Correction : Ajout d'une clé 'key' pour chaque élément de la liste
-                                        <div >
-                                            {/* ref={scrollRef} */}
-                                            <TopMessage key={m._id} message={m} own={m.sender === currentUser._id} />
-                                        </div>
+                                      <div className="" key={m._id}>
+
+                                          <TopMessage message={m} own={m.sender === userId}
+
+                                          />
+                                      </div>
                                     ))}
                                 </div>
                                 <div className="chatBoxBottom">
                                     <textarea
-                                        className='chatMessageInput'
-                                        placeholder='write something...'
+                                      className="chatMessageInput"
+                                      placeholder='write something...'
                                         onChange={(e) => setNewMessage(e.target.value)}
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter' && !e.shiftKey) {

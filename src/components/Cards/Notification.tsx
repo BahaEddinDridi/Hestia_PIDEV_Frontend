@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { io, Socket } from "socket.io-client";
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../ApiSlices/authSlice';
+import { initializeSocket } from '../../SocketService';
+import { useSocket } from '../../SocketContext';
 
 const ENDPOINT = 'http://localhost:3001';
 
@@ -11,52 +13,29 @@ type DefaultEventsMap = {
 function NotificationComponent() {
   const [notification, setNotification] = useState([]);
   const [popoverOpen, setPopoverOpen] = useState(false); // State to track popover open/close
-  const socket = useRef<Socket<DefaultEventsMap, DefaultEventsMap> | undefined>(undefined);
   const currentUser = useSelector(selectCurrentUser);
   const [onLineUsers, setOnLineUsers] = useState([]);
   const userId = currentUser ? currentUser._id : null;
+  const socket = useSocket(); // Use useSocket hook to get the socket instance
 
   useEffect(() => {
-    console.log("Initializing socket connection...");
-    socket.current = io(ENDPOINT);
-    console.log("Socket connection initialized.");
+    if (socket && userId) {
+      socket.on('newNotification', (data) => {
+        console.log("New notification received:", data);
+        setNotification(data.notification);
+        setPopoverOpen(true);
+        setTimeout(() => {
+          setPopoverOpen(false);
+        }, 5000);
+      });
 
-    socket.current.on('connect', () => {
-      console.log("Socket connected successfully!");
-    });
-
-    socket.current.on('disconnect', () => {
-      console.log("Socket disconnected.");
-    });
-
-    socket.current.on('error', (error) => {
-      console.error("Socket error:", error);
-    });
-
-    socket.current.on('newNotification', (notification) => {
-      console.log("New notification received:", notification);
-      setNotification(notification.notification);
-      setPopoverOpen(true);
-      setTimeout(() => {
-        setPopoverOpen(false);
-      }, 5000);
-    });
-
-    if (socket.current && userId) {
       console.log("Emitting addUser event...");
-      socket.current.emit("addUser", userId, (response) => {
+      socket.emit("addUser", userId, (response) => {
         console.log("addUser event emitted. Server response:", response);
       });
+
     }
-
-    return () => {
-      if (socket.current) {
-        console.log("Cleaning up socket connection...");
-
-      }
-    };
-  }, [userId]);
-
+  }, [socket, userId]);
 
   const handleClosePopover = () => {
     setPopoverOpen(false); // Close the popover

@@ -124,7 +124,8 @@ const InternshipOfferView = () => {
     <DefaultLayout>
       {internship && (
         <div
-          className="p-6 mx-26 bg-gray border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+          className="p-6 mx-26 bg-gray border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 p-10 mr-5">
             <div className="order-2 md:order-1 flex items-end justify-start md:justify-end">
               <div
@@ -158,14 +159,13 @@ const InternshipOfferView = () => {
                       id="avatar"
                       viewBox="0 0 100 100"
                       xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <image
-                        className="size-36 z-40"
-                        width="100%"
-                        height="100%"
-                        preserveAspectRatio="xMidYMid slice"
-                        xlinkHref={internship.interImage}
-                      />
+                      style={{
+                        backgroundImage: `url(${internship.interImage})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        justifyContent: 'center'
+                      }}>
+
                     </svg>
 
                     <div
