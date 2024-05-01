@@ -2,13 +2,13 @@
     height: calc(100vh - 70px);
     display : flex;
     background-color: white;
+    border-radius: 5px;
 }
 
 .chatMenu{
     flex: 4;
     max-height: auto; /* Hauteur maximale de 80% de la hauteur de la fenêtre */
     overflow-y: auto; /* Activation du défilement vertical si nécessaire */
-    
 }
 .chatMenuInput{
     width: 90%;
@@ -116,7 +116,7 @@
     border-radius: 10px;
     box-shadow: 0 2px 10px black;
     align-items: center;
-    
+    margin-bottom: 5px;
 }
 .moreInfo{
     cursor: pointer;
