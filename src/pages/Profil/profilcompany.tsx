@@ -732,7 +732,8 @@ const ProfileCompany = () => {
 
       </DefaultLayout>
 
-    </>);
+    </>
+    );
 }
 
 export default ProfileCompany;

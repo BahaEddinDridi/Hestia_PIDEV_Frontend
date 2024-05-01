@@ -38,21 +38,25 @@ export default function ChatOnline({ onLineUsers, currentId, setCurrentChat }) {
     };
   }, []);
 
-  const handleClick = async (user: any) => {
-    try {
-      const res = await axios.get(`http://localhost:3001/conversation/find/${currentId}/${user._id}`);
+const handleClick = async (user: any) => {
+  try {
+    const res = await axios.get(`http://localhost:3001/conversation/find/${currentId}/${user._id}`);
 
-      if (res.data) {
-        setCurrentChat(res.data);
-      } else {
-        console.log('New conversation created');
-        // Affichez un message indiquant que la nouvelle conversation a été créée
-        // ou effectuez toute autre action appropriée
-      }
-    } catch (err) {
-      console.error('Error fetching conversation:', err);
+    if (res.data) {
+      setCurrentChat(res.data);
+    } else {
+      // Si aucune conversation n'existe, créez une nouvelle conversation
+      const newConversationRes = await axios.post(`http://localhost:3001/conversation`, {
+        members: [currentId, user._id]
+      });
+
+      setCurrentChat(newConversationRes.data);
     }
-  };
+  } catch (err) {
+    console.error('Error fetching conversation:', err);
+  }
+};
+
 
 
   return (
