@@ -183,22 +183,30 @@ export default function Messenger() {
                     <div className="chatBoxWrapper">
                         {currentChat ? (
                             <>
-                            <nav className='navbarChat'>
-                                        <div className='otheruser'>
-                                            {userImage && <img src={userImage} className="otherUserImage" />}
-                                            {username && <span className="otherUsername">{username}</span>}
+                                <nav className='navbarChat'>
+                                    <div className='otheruser'>
+
+                                        {userImage && <img src={userImage} className="otherUserImage" />}
+                                        {username && <span className="otherUsername">{username}</span>}
+
+                                        <div className='moreInfo ml-100'>
+                                            <svg className="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                            </svg>
                                         </div>
-                                    </nav>
+
+                                    </div>
+                                </nav>
 
                                 <div className="container">
-                                    
+
                                     <div className="chatBoxTop" ref={messagesContainerRef}>
                                         {/* Affichez les messages ici */}
                                         {messages.map((m) => (
-                                            <div className='mt-10' key={m._id}>
+                                            <div className='' key={m._id}>
 
                                                 <TopMessage message={m} own={m.sender === currentUser._id}
-                                                
+
                                                 />
                                             </div>
 
@@ -238,7 +246,7 @@ export default function Messenger() {
 
                                     </div>
                                     <button
-                                        className="flex items-center bg-esprit text-white gap-1 px-4 py-2 cursor-pointer text-gray-800 font-semibold tracking-widest rounded-xl hover:bg-esprit duration-300 hover:gap-2 hover:translate-x-2"
+                                        className="flex items-center bg-esprit text-white gap-1 px-4 py-2 cursor-pointer text-gray-800 font-semibold tracking-widest rounded-xl hover:bg-esprit duration-300 "
                                         onClick={sendMessage}>
                                         Send
                                         <svg
