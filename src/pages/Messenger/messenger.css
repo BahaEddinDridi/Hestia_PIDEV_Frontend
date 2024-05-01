@@ -4,7 +4,6 @@
     background-color: white;
     border-color: #000;
     border-width: 1px;
-    
 }
 
 .chatMenu{
@@ -24,7 +23,6 @@
     flex: 5.5;
     border-color: #000;
     border-width: 1px;
-    border-radius: 10px;
 }
 .chatBoxWrapper{
     display: flex;
@@ -46,6 +44,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    
 }
 .chatMessageInput{
     width: 80%;
@@ -67,18 +66,21 @@
 }
 
 .chatMenuWrapper, .chatBoxWrapper, .chatOnlineWrapper{
-    padding: 20px;
-    /* background-color: #C62828; */
+    padding: 10px;
 }
 
-.noConversationText{
-   position: absolute;
-   top: 10%;
-   font-size: 50px;
-   color: gray;
-   cursor: default;
-   line-height: 1.5;
-}
+.noConversationText {
+    position: absolute;
+    top: 50%; /* Positionnez-le au milieu de l'écran */
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centrez-le horizontalement et verticalement */
+    font-size: 3vw; /* Taille de police relative à la largeur de la fenêtre */
+    color: gray;
+    cursor: default;
+    line-height: 1.5;
+    text-align: center; /* Centrer le texte */
+  }
+
 .input-emoji {
     width: 500px;
     margin-bottom: auto;
@@ -124,3 +126,66 @@
 .moreInfo{
     cursor: pointer;
 }
+
+.modalUserImg{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border-color: #000;
+    border-width: 2px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+.modalInfo{
+    border-width: 2px;
+    border-color: #000;
+}
+
+/* Ajoutez les classes de taille d'écran Tailwind CSS pour rendre le composant réactif */
+@media (max-width: 768px) {
+    .messenger {
+      flex-direction: column; /* Affichage en colonne sur les petits écrans */
+      height: auto; /* Hauteur automatique */
+    }
+    .chatMenu,
+    .chatBox,
+    .chatOnline {
+      flex: 1; /* Répartir l'espace de manière égale sur les petits écrans */
+    }
+    .noConversationText {
+        font-size: 4vw; /* Taille de police relative à la largeur de la fenêtre */
+      }
+  }
+  
+  /* Ajustez les styles en fonction des changements de taille d'écran */
+  @media (max-width: 640px) {
+    .input-emoji {
+      width: 100%; /* Ajustez la largeur de l'entrée emoji sur les petits écrans */
+    }
+    
+    .noConversationText {
+        font-size: 2vw; /* Taille de police relative à la largeur de la fenêtre */
+      }
+  }
+  @media (min-width: 640px) and (max-width: 768px) {
+    /* Ajoutez vos styles ici pour les écrans ayant une largeur entre 640px et 768px */
+    .noConversationText {
+      font-size: 2vw; /* Taille de police relative à la largeur de la fenêtre */
+    }
+  }
+
+    /* Ajustez les styles en fonction des changements de taille d'écran */
+    @media (max-width: 640px) {
+        .input-emoji {
+          width: 100%; /* Ajustez la largeur de l'entrée emoji sur les petits écrans */
+        }
+        .noConversationText {
+            font-size: 2vw; /* Taille de police relative à la largeur de la fenêtre */
+          }
+      }
+      @media (max-width: 480px) {
+        /* Ajoutez vos styles ici pour les écrans ayant une largeur maximale de 480px */
+        .noConversationText {
+          font-size: 1.5vw; /* Taille de police relative à la largeur de la fenêtre */
+        }
+      }

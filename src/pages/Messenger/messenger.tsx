@@ -10,6 +10,7 @@ import axios from 'axios';
 import { button, navbar } from '@material-tailwind/react';
 import { io, Socket } from "socket.io-client";
 import InputEmoji from "react-input-emoji";
+import Unknown from '../../images/user/Unknown.png';
 
 
 
@@ -136,6 +137,11 @@ export default function Messenger() {
 
     const [username, setUsername] = useState('');
     const [userImage, setUserImage] = useState('');
+    const [userEmail, setUserEmail] = useState('');
+    const [userRole, setUserRole] = useState('');
+    const [userPhoneNumber, setUserPhoneNumber] = useState('');
+    const [userAccountVisibility, setUserAccountVisibility] = useState('');
+    const [userLocatin, setUserLocation] = useState('');
     useEffect(() => {
         const getUsernameForChat = async () => {
             try {
@@ -148,8 +154,19 @@ export default function Messenger() {
                         // Extraire le nom d'utilisateur de la réponse
                         const username = res.data.username;
                         const userImage = res.data.image;
-                        setUsername(username); // Mettre à jour l'état avec le nom d'utilisateur
+                        const userEmail = res.data.email;
+                        const userRole = res.data.role;
+                        const userPhoneNumber = res.data.phoneNumber;
+                        const userAccountVisibility = res.data.accountVisibility;
+                        const userLocation = res.data.location;
+                        // Mettre à jour l'état avec le nom d'utilisateur
+                        setUsername(username);
                         setUserImage(userImage);
+                        setUserEmail(userEmail);
+                        setUserRole(userRole);
+                        setUserPhoneNumber(userPhoneNumber);
+                        setUserAccountVisibility(userAccountVisibility);
+                        setUserLocation(userLocation);
                     } else {
                         console.error("La requête a échoué.");
                     }
@@ -163,11 +180,76 @@ export default function Messenger() {
     }, [currentChat]);
 
 
+    /////////////////////// Modal info ///////////////////////////
+    const [showFriendInfo, setShowFriendInfo] = useState(false);
+    const modalRef = useRef<HTMLDivElement>(null);
+
+    const toggleModal = () => {
+        setShowFriendInfo(!showFriendInfo);
+    };
+
+    const closeModalOutsideClick = (e: MouseEvent) => {
+        if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+            setShowFriendInfo(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", closeModalOutsideClick);
+
+        return () => {
+            document.removeEventListener("mousedown", closeModalOutsideClick);
+        };
+    }, []);
+
     return (
         <DefaultLayout>
+            {showFriendInfo && (
+                <div className={`fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-opacity-50 backdrop-filter backdrop-blur-sm ${showFriendInfo ? 'bg-gray-300' : ''}`}>
+                    <div ref={modalRef} className=" modalInfo bg-white border-black p-6 rounded-lg">
+                        <div className='ml-70'>
+                            <span className='text-black-2 cursor-pointer' onClick={toggleModal}>X</span>
+                        </div>
+                        <div className="flex items-center mb-8">
+                            {userImage ? (
+                                <img src={userImage} className="modalUserImg" alt="User" />
+                            ) : (
+                                <img src={Unknown} className="modalUserImg" alt="Unknown User" />
+                            )}
+                            {username && <span className="text-2xl ml-3 font-bold text-black-2">{username}</span>}
+                        </div>
+                        <div className="flex items-center">
+                            <p className="mr-2 m-3 font-semibold text-blackgray">Role :</p>
+                            {userRole && <span className="">{userRole}</span>}
+                        </div>
+                        <div className="flex items-center">
+                            <p className="mr-2 m-3 font-semibold text-blackgray">Location :</p>
+                            {userLocatin && <span className="">{userLocatin}</span>}
+                        </div>
+                        <div className="flex items-center">
+                            <p className="mr-2 m-3 font-semibold text-blackgray">Email :</p>
+                            {userEmail && <span className="">{userEmail}</span>}
+                        </div>
+                        <div className="flex items-center">
+                            <p className="mr-2 m-3 font-semibold text-blackgray">Phone Number :</p>
+                            {userPhoneNumber && <span className="">+ {userPhoneNumber}</span>}
+                        </div>
+                        <div className="flex items-center">
+                            <p className="mr-2 m-3 font-semibold text-blackgray">Account Visibility :</p>
+                            {userAccountVisibility && <span className="">{userAccountVisibility}</span>}
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className='messenger rounded-lg dark:bg-black'>
 
                 <div className="chatMenu">
+                    <nav className='navbarConversation my-3'>
+                        <div className='flex items-center justify-center'>
+                            <h1 className="text-black font-bold text-2xl">Conversations</h1>
+                        </div>
+                    </nav>
+                    <hr className='text-black-2'></hr>
                     <div className="chatMenuWrapper">
                         {conversations.map((c) => (
 
@@ -178,23 +260,26 @@ export default function Messenger() {
                         ))}
                     </div>
                 </div>
+                
                 <div className="chatBox">
-
                     <div className="chatBoxWrapper">
                         {currentChat ? (
                             <>
                                 <nav className='navbarChat'>
-                                    <div className='otheruser'>
-
-                                        {userImage && <img src={userImage} className="otherUserImage" />}
-                                        {username && <span className="otherUsername">{username}</span>}
-
-                                        <div className='moreInfo ml-100'>
-                                            <svg className="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    <div className='flex items-center justify-between m-2'>
+                                        <div className='flex items-center'>
+                                            {userImage ? (
+                                                <img src={userImage} className="otherUserImage" alt="User" />
+                                            ) : (
+                                                <img src={Unknown} className="otherUserImage" alt="Unknown User" />
+                                            )}
+                                            {username && <span className="otherUsername">{username}</span>}
+                                        </div>
+                                        <div className="moreInfo ml-4">
+                                            <svg className="w-6 h-6 text-white dark:text-white" onClick={toggleModal} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                             </svg>
                                         </div>
-
                                     </div>
                                 </nav>
 
@@ -277,6 +362,13 @@ export default function Messenger() {
                 </div>
 
                 <div className="chatOnline">
+                    <div className=''><nav className='navbarConversation my-3'>
+                        <div className='flex items-center justify-center'>
+                            <h1 className="text-black font-bold text-2xl">Esprit Career Users</h1>
+                        </div>
+                    </nav>
+                        <hr className='text-black-2'></hr>
+                    </div>
                     <div className="chatOnlineWrapper">
                         <ChatOnline
                             onLineUsers={onLineUsers}
