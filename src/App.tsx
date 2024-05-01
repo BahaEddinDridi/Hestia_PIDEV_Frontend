@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate, BrowserRouter } from 'react-router-dom';
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
@@ -59,29 +59,28 @@ import InternshipOfferView from './pages/Opportunity/InternshipOfferView';
 import LandingPage from './pages/Landing Page/LandingPage';
 import Messenger from './pages/Messenger/messenger'
 import '../src/i18n.js'
-import { io } from "socket.io-client";
-
-
-
-const socket = io("http://localhost:3001");
-socket.on("connect", () => {
-  console.log("Connected to socket.io server");
-});
-
-socket.on("disconnect", () => {
-  console.log("Disconnected from socket.io server");
-});
-
-socket.on("hello", (arg) => {
-  console.log(arg); // world
-});
-//import ChatCard from './components/Chat/ChatCard';
 import Calendrie from './components/Cards/calendrie';
+import NotificationComponent from './components/Cards/Notification';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from './ApiSlices/authSlice';
+import { io, Socket } from 'socket.io-client';
+
+
 function App() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
+  const currentUser = useSelector(selectCurrentUser);
   const { pathname } = useLocation();
   const [refresh, { isLoading }] = useRefreshMutation();
+  const [onLineUsers, setOnLineUsers] = useState([]);
+
+  const socket = useRef(null);
+
+
+  // Empty dependency array indicates this effect runs only once
+
+// Move this useEffect outside the above one
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -113,7 +112,7 @@ function App() {
     <Loader />
   ) : (
     <>
-
+<NotificationComponent/>
       <Routes>
         <Route
           index

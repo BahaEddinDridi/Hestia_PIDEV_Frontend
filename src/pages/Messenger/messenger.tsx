@@ -9,7 +9,8 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { button } from '@material-tailwind/react';
 import { io, Socket } from "socket.io-client";
-import { getUsers } from "../api";
+import { getUsers } from '../api';
+
 
 
 interface Message {
@@ -43,8 +44,7 @@ export default function Messenger() {
     const [currentChat, setCurrentChat] = useState(null);
     const socket = useRef<Socket<DefaultEventsMap, DefaultEventsMap> | undefined>(undefined);
     const currentUser = useSelector(selectCurrentUser);
-    console.log("currentUser", currentUser);
-
+    const userId = currentUser ? currentUser._id : null;
 
     /////recherche
     const [searchTerm, setSearchTerm] = useState("");
@@ -72,29 +72,46 @@ export default function Messenger() {
 
 
     useEffect(() => {
+        console.log("Initializing socket connection...");
         socket.current = io("ws://localhost:3001")
+
+        socket.current.on('connect', () => {
+            console.log("Socket connected successfully!");
+        });
+        socket.current.on('disconnect', () => {
+            console.log("Socket disconnected.");
+        });
+        socket.current.on('error', (error) => {
+            console.error("Socket error:", error);
+        });
+
         socket.current.on("getMessage", data => {
+            console.log("New notification received:", data);
             setArrivalMessage({
                 sender: data.senderId,
                 text: data.text,
                 createdAt: Date.now
             })
         })
-    }, []);
+        if (socket.current && userId) {
+            console.log("Emitting addUser event...");
+            socket.current.emit("addUser", userId, (response) => {
+                console.log("addUser event emitted. Server response:", response);
+            });
+        }
+
+        return () => {
+            if (socket.current) {
+                console.log("Cleaning up socket connection...");
+
+            }
+        };
+    }, [userId]);
 
     useEffect(() => {
         arrivalMessage && currentChat && currentChat.members && arrivalMessage.sender && currentChat.members.includes(arrivalMessage.sender) && setMessages(prev => [...prev, arrivalMessage]);
     }, [arrivalMessage, currentChat]);
 
-
-    useEffect(() => {
-        if (socket.current) {
-            socket.current.emit("addUser", currentUser._id);
-            socket.current.on("getUsers", users => {
-                setOnLineUsers(users);
-            });
-        }
-    }, [currentUser]);
 
 
     console.log(socket)
@@ -134,22 +151,24 @@ export default function Messenger() {
         if (newMessage.trim() === "") return; // Vérifiez que le message n'est pas vide
 
         const message = {
-            sender: currentUser._id,
+            sender: userId,
             text: newMessage,
             ConversationId: currentChat._id
         };
         const receiverId = currentChat?.members.find(
-            (member: any) => member !== currentUser._id
+            (member: any) => member !== userId
         );
 
         if (socket.current) {
             // Accédez à socket.current en toute sécurité ici
             socket.current.emit("sendMessage", {
-                senderId: currentUser._id,
+                senderId: userId,
                 receiverId,
                 text: newMessage
             });
+            console.log()
         }
+
         try {
             const res = await axios.post("http://localhost:3001/message", message);
             setMessages([...messages, res.data])

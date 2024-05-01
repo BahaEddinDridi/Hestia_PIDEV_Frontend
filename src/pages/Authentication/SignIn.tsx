@@ -146,8 +146,8 @@ const SignIn: React.FC = () => {
       setSuccessMessage(successMessageText);
       setTimeout(() => {
         setSuccessMessage('');
-        navigate(currentUser.role === 'admin' ? `/Dashboard` : '/Profile');
-      }, 3000);
+        navigate(currentUser.role === 'admin' ? `/Dashboard` : '/Feed');
+      }, 500);
     } catch (err) {
       if (!err.status) {
         setErrorMessage('No Server Response');

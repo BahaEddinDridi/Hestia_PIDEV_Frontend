@@ -27,7 +27,10 @@ const NewsCard: React.FC = () => {
 
     fetchNewsData();
   }, []);
-console.log((newsData))
+  const handleNewsClick = (index) => {
+    console.log('handleNewsClick', index);
+    setCurrentIndex(index);
+  }
   // Function to increment the current index to cycle through news
   const nextNews = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % newsData.length);
@@ -46,7 +49,6 @@ console.log((newsData))
 
     return () => clearInterval(intervalId);
   }, [currentIndex, newsData]);
-
   return (
     <div>
       <div className="relative overflow-hidden h-96 rounded-lg shadow-lg bg-white "
@@ -58,27 +60,40 @@ console.log((newsData))
              alignItems: 'center'
            }}>
         {newsData.map((article: any, index: number) => (
-          <div
-            key={index}
-            className="items-center justify-center absolute top-0 left-0 w-full h-full  transition-opacity ease-in-out"
-            style={{ opacity: currentIndex === index ? 1 : 0 }}
-          >
-            <div className="absolute inset-0 backdrop-blur-[2px]  p-6"
-            style={{
-              backgroundImage: `url(${article.urlToImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              justifyContent: 'center',
-            }}>
-              <div className="absolute inset-0 bg-gray-800 bg-white bg-opacity-10 backdrop-blur-[1px]  p-6">
-                <h3 className="text-xl font-bold text-white bg-white bg-opacity-20"
+            <div
+              key={index}
+              className="items-center justify-center absolute top-0 left-0 w-full h-full  transition-opacity ease-in-out"
+              style={{ opacity: currentIndex === index ? 1 : 0 }}
+            >
+              <a
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute inset-0 backdrop-blur-[2px]  p-6"
+                style={{
+                  backgroundImage: `url(${article.urlToImage})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <div className="absolute inset-0 backdrop-blur-[2px]  p-6"
+                     style={{
+                       backgroundImage: `url(${article.urlToImage})`,
+                       backgroundSize: 'cover',
+                       backgroundPosition: 'center',
+                       justifyContent: 'center'
+                     }}>
+                  <div className="absolute inset-0 bg-gray-800 bg-white bg-opacity-10 backdrop-blur-[1px]  p-6">
+                    <h3 className="text-xl font-bold text-white bg-white bg-opacity-20"
                     >{article.title}</h3>
-                <p className="text-lg font-bold text-black bg-white bg-opacity-20"
-                   >{article.description}</p>
-              </div>
+                    <p className="text-lg overflow-hidden h-48 font-bold text-black bg-white bg-opacity-20"
+                    >{article.description}</p>
+                  </div>
+                </div>
+              </a>
             </div>
-          </div>
-        ))}
+          ))}
 
         <div className="absolute bottom-0 justify-center space-x-4 w-full flex p-4">
           <button
