@@ -16,13 +16,14 @@ COPY . .
 RUN npm run build
 
 # Second stage: production stage
-FROM nginx:alpine
+FROM nginx:latest as prod
 
 # Copy built artifacts from the build stage to Nginx web server directory
 COPY --from=build /app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Expose port 80 (default for nginx)
-EXPOSE 80
+EXPOSE 80/tcp
 
 # Command to run Nginx (no need to start npm here, as Nginx will serve static files)
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
