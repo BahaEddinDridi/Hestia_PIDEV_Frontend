@@ -1,29 +1,9 @@
 version: '3.8'
-
 services:
-  db:
-    image: mongo:4.2
-    container_name: db
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./data/dump:/dump
-
   app:
     build: .
-    image: front
+    image: frontend
     restart: always
     container_name: front
     ports:
-      - "5173:5173"  # Port changed to avoid conflict
-    depends_on:
-      - db
-    volumes:
-      - mongo-data:/path/to/mongo/data
-
-volumes:
-  mongo-data:
+      - "5173:5173"  
