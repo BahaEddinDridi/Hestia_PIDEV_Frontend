@@ -16,13 +16,19 @@ COPY . .
 RUN npm run build
 
 # Second stage: production stage
-FROM nginx:alpine
+FROM nginx:1.19-alpine
 
-# Copy built artifacts from the build stage to Nginx web server directory
-COPY --from=build /app/build .
+# Copy the build output to replace the default nginx contents
+COPY --from=build /app/build /usr/share/nginx/html
 
-# Expose port 80 (default for nginx)
+# Remove default nginx index page
+RUN rm /usr/share/nginx/html/index.html
+
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Expose port 80
 EXPOSE 80
 
-# Command to run Nginx
+# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
