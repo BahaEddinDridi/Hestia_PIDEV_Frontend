@@ -714,6 +714,7 @@ export const fetchNotificationsCountByUserIdByDate = async (userId) => {
       throw new Error('Failed to fetch notifications count');
     }
     const data = await response.json();
+    
     return data.notificationsCount;
   } catch (error) {
     console.error('Error fetching notifications count:', error);

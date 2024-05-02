@@ -74,35 +74,57 @@ const CalendarAdmin = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch holidays data
         const holidaysResponse = await fetch('http://localhost:3001/dashboard/api/holidaysAdmin');
         if (!holidaysResponse.ok) {
           throw new Error('Failed to fetch holidays');
         }
         const holidaysData = await holidaysResponse.json();
-        const holidays = holidaysData.response.holidays.map((holiday: any) => ({
-          title: holiday.name,
-          start: holiday.date.iso,
-        }));
-  
+
+        // Fetch notifications count by user ID
         const notificationsCount = await fetchNotificationsCountByUserIdByDate(currentUser._id);
-        const notificationEvents = Object.entries(notificationsCount).map(([date, count]) => {
-          const parsedDate = parse(date, 'dd/MM/yyyy', new Date());
-          return {
-            title: `${count} Notifications`,
-            start: format(parsedDate, 'yyyy-MM-dd'),
-            allDay: true,
-          };
+        
+        // Process holidays and notifications count to create events array
+        const events = [];
+
+        // Process holidays
+        holidaysData.response.holidays.forEach((holiday) => {
+          const holidayDate = new Date(holiday.date.iso);
+          if (!isNaN(holidayDate.getTime())) {
+            events.push({
+              title: holiday.name,
+              start: holidayDate,
+              allDay: true,
+            });
+          }
         });
-  
-        setEvents([...holidays, ...notificationEvents]);
-        // setEvents([ ...notificationEvents]);
+
+        // Process notifications count
+        Object.entries(notificationsCount).forEach(([dateString, count]) => {
+          // Determine the date format dynamically based on the length of the dateString
+          const dateFormat = dateString.includes('/')
+            ? 'M/d/yyyy' // Use this format if the date string contains slashes (e.g., '5/2/2024')
+            : 'MM-dd-yyyy'; // Otherwise, use this format (e.g., '05-02-2024')
+
+          const parsedDate = parse(dateString, dateFormat, new Date());
+          if (!isNaN(parsedDate.getTime())) {
+            events.push({
+              title: `${count} Notifications`,
+              start: parsedDate,
+              allDay: true,
+            });
+          }
+        });
+
+        // Set the events state with the combined events array
+        setEvents(events);
       } catch (error) {
         console.error('Error fetching events:', error);
       }
     };
-  
+
     fetchData();
-  }, []);
+  }, [currentUser._id])
   return (
          <DefaultLayoutAdmin>
       <Breadcrumb pageName="Calendar" />
@@ -131,7 +153,7 @@ const CalendarAdmin = () => {
         <a href="#" className="text-sm text-esprit hover:text-black font-semibold"
         onClick={() => setShowModal(false)}
         >
-          Concel
+          Cancel
           
         </a>
       </div>
