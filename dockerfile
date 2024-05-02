@@ -4,7 +4,7 @@ WORKDIR /app
 # Copy package.json and package-lock.json separately and install dependencies
 COPY package.json package-lock.json ./
 RUN npm install --save --legacy-peer-deps
-
+RUN npm i i18next
 # Copy the rest of the application code
 COPY . .
 
