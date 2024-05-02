@@ -19,10 +19,10 @@ export default function Conversation({ conversation, nowuser }: ConversationProp
         // Récupérer l'ID de l'ami dans la conversation
         const friendId = conversation.members.find((m: any) => m !== nowuser._id);
         // Récupérer les données de l'utilisateur avec qui l'utilisateur parle
-        const userRes = await axios.get(`http://localhost:3001/user/getUserById?userId=${friendId}`);
+        const userRes = await axios.get(`http://192.168.33.10:3001/user/getUserById?userId=${friendId}`);
         setUserData(userRes.data);
         // Récupérer le dernier message de la conversation
-        const messageRes = await axios.get(`http://localhost:3001/message/lastMessage/${conversation._id}`);
+        const messageRes = await axios.get(`http://192.168.33.10:3001/message/lastMessage/${conversation._id}`);
         if (messageRes.data) {
           setLastMessage(messageRes.data);
         }

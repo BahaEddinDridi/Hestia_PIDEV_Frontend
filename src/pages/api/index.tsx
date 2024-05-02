@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:3001'; 
+const BASE_URL = 'http://192.168.33.10:3001'; 
 import axios from 'axios';
 
 export const getUserProfile = async (username: string) => {
@@ -19,7 +19,7 @@ export const getUserProfile = async (username: string) => {
   };
 export const getUsers =async()=>{
     try{
-        const response =await fetch('http://localhost:3001/dashboard/users',{
+        const response =await fetch('http://192.168.33.10:3001/dashboard/users',{
             method:'GET',
 
         });
@@ -192,7 +192,7 @@ export const resetPassword = async (_id: string, password: string) => {
 
   export const registerUser = async (userData: any) => {
   try {
-    const response = await fetch('http://localhost:3001/user/register', {
+    const response = await fetch('http://192.168.33.10:3001/user/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -377,7 +377,7 @@ export const deleteproject = async (username:any, projectId:any) => {
 export const updateproject = async (username:string , projectId:string, updatedProject:any) => {
   try {
     const response = await axios.put(
-      `http://localhost:3001/user/updateproject/${username}/${projectId}`,
+      `http://192.168.33.10:3001/user/updateproject/${username}/${projectId}`,
       updatedProject
     );
     return response.data;
@@ -388,7 +388,7 @@ export const updateproject = async (username:string , projectId:string, updatedP
 };
 export const updateApplicationStatus = async (applicationId:string,newStatus:any,DateInterview:any) =>{
   try {
-    const response = await axios.put('http://localhost:3001/application/updatestatus', {
+    const response = await axios.put('http://192.168.33.10:3001/application/updatestatus', {
         applicationId: applicationId,
         newStatus: newStatus,
         DateInterview: DateInterview
@@ -408,7 +408,7 @@ export const updateApplicationStatus = async (applicationId:string,newStatus:any
 }
 export const updatestatuinter = async (applicationId:string,newStatus:any) =>{
   try {
-    const response = await axios.put('http://localhost:3001/application/updatestatusinter', {
+    const response = await axios.put('http://192.168.33.10:3001/application/updatestatusinter', {
         applicationId: applicationId,
         newStatus: newStatus
         
@@ -430,7 +430,7 @@ export const updatestatuinter = async (applicationId:string,newStatus:any) =>{
 /////updateCRM
 export const updateCRM = async (updatedCRMData :any) => {
   try {
-    const response = await fetch(`http://localhost:3001/CRM/updateCRM`, {
+    const response = await fetch(`http://192.168.33.10:3001/CRM/updateCRM`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -448,7 +448,7 @@ export const updateCRM = async (updatedCRMData :any) => {
 export const getCRM = async () => {
   try {
     
-    const response = await fetch(`http://localhost:3001/CRM/getCRM`, {
+    const response = await fetch(`http://192.168.33.10:3001/CRM/getCRM`, {
       method: 'GET'
     });
     return await response.json();

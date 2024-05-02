@@ -35,7 +35,7 @@ const Detailsjoboffer = () => {
 
         const fetchJobApplications = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/job/getapp/${jobId}`, {
+                const response = await fetch(`http://192.168.33.10:3001/job/getapp/${jobId}`, {
                     method: 'GET',
 
                 });

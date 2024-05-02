@@ -4,7 +4,7 @@ import axios from 'axios';
 // affichage users
 export const getUsers =async()=>{
     try{
-      const response =await fetch('http://localhost:3001/dashboard/users',{
+      const response =await fetch('http://192.168.33.10:3001/dashboard/users',{
         method:'GET',
        
       });
@@ -22,7 +22,7 @@ export const getUsers =async()=>{
 //affichage user details par rapport son id 
 export const getUserById=async(userId:string)=>{
   try {
-    const response=await fetch(`http://localhost:3001/dashboard/user/${userId}`,{
+    const response=await fetch(`http://192.168.33.10:3001/dashboard/user/${userId}`,{
       method:'GET',
     });
     if (!response.ok){
@@ -42,7 +42,7 @@ export const deleteUsersById= async(userId:string)=>{
     if(!confirmed){
       return;
     }
-    const response =await fetch(`http://localhost:3001/dashboard/users/${userId}`,{
+    const response =await fetch(`http://192.168.33.10:3001/dashboard/users/${userId}`,{
       method:'DELETE',
     });
     if(!response.ok){
@@ -58,7 +58,7 @@ export const deleteUsersById= async(userId:string)=>{
 // update user role 
 export const updateUsersRoleById = async (userId: string, role: string) => {
   try {
-    const response = await fetch(`http://localhost:3001/dashboard/users/${userId}`, {
+    const response = await fetch(`http://192.168.33.10:3001/dashboard/users/${userId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ export const updateUsersRoleById = async (userId: string, role: string) => {
 //add user 
 export const ajoutUser =async(userData:any)=>{
     try{
-      const response = await fetch(`http://localhost:3001/dashboard/adduser`,{
+      const response = await fetch(`http://192.168.33.10:3001/dashboard/adduser`,{
         method:'POST',
         headers:{
           'content-Type':'application/json',
@@ -98,7 +98,7 @@ export const ajoutUser =async(userData:any)=>{
 //exportation data 
 //excel
 export const exportExcel = () => {
-  axios.get('http://localhost:3001/dashboard/export-excel', { responseType: 'blob' })
+  axios.get('http://192.168.33.10:3001/dashboard/export-excel', { responseType: 'blob' })
       .then(response => {
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement('a');
@@ -113,7 +113,7 @@ export const exportExcel = () => {
 };
 //pdf
 export const exportPDF = () => {
-  axios.get('http://localhost:3001/dashboard/export-pdf', { responseType: 'blob' })
+  axios.get('http://192.168.33.10:3001/dashboard/export-pdf', { responseType: 'blob' })
       .then(response => {
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement('a');
@@ -130,7 +130,7 @@ export const exportPDF = () => {
 //desactiver le compte 
 export const deactivateAccount = async (userId: string, newStatus: string) => {
   try {
-    const response = await axios.put(`http://localhost:3001/dashboard/users/${userId}/change-status`, { newStatus });
+    const response = await axios.put(`http://192.168.33.10:3001/dashboard/users/${userId}/change-status`, { newStatus });
     console.log(response.data); // Afficher la réponse de l'API backend
   } catch (error) {
     console.error('Erreur lors de la désactivation du compte :', error);
@@ -140,7 +140,7 @@ export const deactivateAccount = async (userId: string, newStatus: string) => {
 //desactivation le compte automatiquement
 // export const desactiveProfilByIdAuto = async (userId: string, newStatus: string, customDeactivation: any) => {
 //   try {
-//     const response = await axios.put(`http://localhost:3001/dashboard/${userId}/deactivate`, { newStatus, customDeactivation });
+//     const response = await axios.put(`http://192.168.33.10:3001/dashboard/${userId}/deactivate`, { newStatus, customDeactivation });
 //     console.log(response.data); // Afficher la réponse de l'API backend
 //   } catch (error) {
 //     console.error('Erreur lors de la désactivation du profil :', error);
@@ -150,7 +150,7 @@ export const deactivateAccount = async (userId: string, newStatus: string) => {
 
 export const desactiveProfilByIdAuto = async (userId:string, newStatus:string, customDeactivation:any) => {
   try {
-      const response = await fetch(`http://localhost:3001/dashboard/${userId}/deactivate`, {
+      const response = await fetch(`http://192.168.33.10:3001/dashboard/${userId}/deactivate`, {
           method: 'PUT',
           headers: {
               'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ export const desactiveProfilByIdAuto = async (userId:string, newStatus:string, c
 //get profilAdmin 
 export const fetchAdminByUsername = async (username: string) => {
   try {
-    const response = await fetch(`http://localhost:3001/dashboard/ProfilAdmin/${username}`, {
+    const response = await fetch(`http://192.168.33.10:3001/dashboard/ProfilAdmin/${username}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -191,7 +191,7 @@ export const fetchAdminByUsername = async (username: string) => {
 //update profil Admin 
 export const updateByUsernameAdmin = async (username, updatedAdminData) => {
   try {
-    const response = await fetch(`http://localhost:3001/dashboard/ProfilAdmin/${username}/update`, {
+    const response = await fetch(`http://192.168.33.10:3001/dashboard/ProfilAdmin/${username}/update`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -208,7 +208,7 @@ export const updateByUsernameAdmin = async (username, updatedAdminData) => {
 //get all opportunities Job Disponible
 export const fetchJobsByRoleAndFutureDeadline = async () => {
   try {
-    const response = await fetch(`http://localhost:3001/job/getAllJobsOpportFutureDeadline`, {
+    const response = await fetch(`http://192.168.33.10:3001/job/getAllJobsOpportFutureDeadline`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -227,7 +227,7 @@ export const fetchJobsByRoleAndFutureDeadline = async () => {
 //get all opportunities Job Not Disponible
 export const fetchJobsByRoleAndDeadline = async () => {
   try {
-    const response = await fetch(`http://localhost:3001/job/getAllJobsOpportDeadlinefinalized`, {
+    const response = await fetch(`http://192.168.33.10:3001/job/getAllJobsOpportDeadlinefinalized`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -246,7 +246,7 @@ export const fetchJobsByRoleAndDeadline = async () => {
 //delete Job opportunities 
 export const deleteJobByIdAndUsername = async (id:string, username:string) => {
   try {
-      const response = await axios.delete(`http://localhost:3001/job/deleteJob/${username}/${id}`);
+      const response = await axios.delete(`http://192.168.33.10:3001/job/deleteJob/${username}/${id}`);
 
       return response.data;
   } catch (error) {
@@ -258,7 +258,7 @@ export const deleteJobByIdAndUsername = async (id:string, username:string) => {
 //get all opportunities Interships Disponible
 export const fetchIntershipsByRoleAndFutureDeadline = async () => {
   try {
-    const response = await fetch(`http://localhost:3001/intership/getAllFuturIntershipsOpport`, {
+    const response = await fetch(`http://192.168.33.10:3001/intership/getAllFuturIntershipsOpport`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -278,7 +278,7 @@ export const fetchIntershipsByRoleAndFutureDeadline = async () => {
 //get all opportunities Interships Not Disponible
 export const fetchIntershipsByRoleAndDeadline = async () => {
   try {
-    const response = await fetch(`http://localhost:3001/intership/getAllIntershipsOpportDeadlinefinalized`, {
+    const response = await fetch(`http://192.168.33.10:3001/intership/getAllIntershipsOpportDeadlinefinalized`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -297,7 +297,7 @@ export const fetchIntershipsByRoleAndDeadline = async () => {
 //delete interships opportunities 
 export const deleteIntershipByIdAndUsername = async (id:string, username:string) => {
   try {
-      const response = await axios.delete(`http://localhost:3001/intership/deleteIntership/${username}/${id}`);
+      const response = await axios.delete(`http://192.168.33.10:3001/intership/deleteIntership/${username}/${id}`);
 
       return response.data;
   } catch (error) {
@@ -308,7 +308,7 @@ export const deleteIntershipByIdAndUsername = async (id:string, username:string)
 //get all Applications Jobs Disponible
 export const fetchApplicationsJobAvailable = async () => {
   try {
-    const response = await fetch(`http://localhost:3001/application/getJobApplicationAvailable`, {
+    const response = await fetch(`http://192.168.33.10:3001/application/getJobApplicationAvailable`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -327,7 +327,7 @@ export const fetchApplicationsJobAvailable = async () => {
 //get all Applications Jobs Disponible
 export const fetchApplicationsJobNotAvailable = async () => {
   try {
-    const response = await fetch(`http://localhost:3001/application/getJobApplicationNotAvailable`, {
+    const response = await fetch(`http://192.168.33.10:3001/application/getJobApplicationNotAvailable`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -347,7 +347,7 @@ export const fetchApplicationsJobNotAvailable = async () => {
 // get all Applications Interships Disponible 
 export const fetchApplicationsIntershipAvailable = async () => {
   try {
-    const response = await fetch(`http://localhost:3001/application/getIntershipsApplicationAvailable`, {
+    const response = await fetch(`http://192.168.33.10:3001/application/getIntershipsApplicationAvailable`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -367,7 +367,7 @@ export const fetchApplicationsIntershipAvailable = async () => {
 //get all Applications Interships Not Disponible
 export const fetchApplicationsIntershipNotAvailable = async () => {
   try {
-    const response = await fetch(`http://localhost:3001/application/getIntershipsApplicationNotAvailable`, {
+    const response = await fetch(`http://192.168.33.10:3001/application/getIntershipsApplicationNotAvailable`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -390,7 +390,7 @@ export const fetchApplicationsIntershipNotAvailable = async () => {
 //ajout experience 
 export const addUserExperienceAdmin = async (username:String, experienceData:any) => {
   try {
-    const response = await fetch(`http://localhost:3001/user/newexperience/${username}`, {
+    const response = await fetch(`http://192.168.33.10:3001/user/newexperience/${username}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -414,7 +414,7 @@ export const addUserExperienceAdmin = async (username:String, experienceData:any
 //delete education
 export const deleteEducation = async (username, educationId) => {
   try {
-      const response = await axios.delete(`http://localhost:3001/user/deleteEducation/${username}/${educationId}`);
+      const response = await axios.delete(`http://192.168.33.10:3001/user/deleteEducation/${username}/${educationId}`);
       return response.data;
   } catch (error) {
       console.error('Error:', error.message);
@@ -425,7 +425,7 @@ export const deleteEducation = async (username, educationId) => {
 //update education 
 export const updateEducation = async (username: string, educationId: string, newData: any) => {
   try {
-    const response = await axios.put(`http://localhost:3001/user/updateEducation/${username}/${educationId}`, newData);
+    const response = await axios.put(`http://192.168.33.10:3001/user/updateEducation/${username}/${educationId}`, newData);
     return response.data;
   } catch (error) {
     console.error('Failed to update education. Server responded with:', error.response.data);
@@ -435,7 +435,7 @@ export const updateEducation = async (username: string, educationId: string, new
 //delete Experience 
 export const deleteExperience = async (username, experienceId) => {
   try {
-    const response = await axios.delete(`http://localhost:3001/user/deleteExperiences/${username}/${experienceId}`);
+    const response = await axios.delete(`http://192.168.33.10:3001/user/deleteExperiences/${username}/${experienceId}`);
     console.log('Experience deleted successfully:', response.data);
   } catch (error) {
     console.error('Error deleting experience:', error.message);
@@ -446,7 +446,7 @@ export const deleteExperience = async (username, experienceId) => {
 export const updateExperience = async (username:string , experienceId:string, updatedExperience:any) => {
   try {
     const response = await axios.put(
-      `http://localhost:3001/user/updateExperiences/${username}/${experienceId}`,
+      `http://192.168.33.10:3001/user/updateExperiences/${username}/${experienceId}`,
       updatedExperience
     );
     return response.data;
@@ -464,7 +464,7 @@ export const updateExperience = async (username:string , experienceId:string, up
 //total_users
 export const fetchUserData = async () => {
   try {
-    const response = await fetch('http://localhost:3001/stats/count', {
+    const response = await fetch('http://192.168.33.10:3001/stats/count', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -483,7 +483,7 @@ export const fetchUserData = async () => {
 //total_users by role
 export const fetchUserRoleStats = async () => {
   try {
-    const response = await fetch('http://localhost:3001/stats/user-role', {
+    const response = await fetch('http://192.168.33.10:3001/stats/user-role', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -502,7 +502,7 @@ export const fetchUserRoleStats = async () => {
 //total uers par ages 
 export const fetchUserAgeGroupStats = async () => {
   try {
-    const response = await axios.get('http://localhost:3001/stats/user-age-group');
+    const response = await axios.get('http://192.168.33.10:3001/stats/user-age-group');
     const stats = response.data;
     console.log('User age group statistics:', stats);
     return stats;
@@ -514,7 +514,7 @@ export const fetchUserAgeGroupStats = async () => {
 //total users par gender 
 export const fetchUserGenderStats = async () => {
   try {
-    const response = await fetch('http://localhost:3001/stats/user-gender', {
+    const response = await fetch('http://192.168.33.10:3001/stats/user-gender', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -537,7 +537,7 @@ export const fetchUserGenderStats = async () => {
 //get all uers by status
 export const getUserStatusStats = async () => {
   try {
-    const response = await fetch('http://localhost:3001/stats/user-status', {
+    const response = await fetch('http://192.168.33.10:3001/stats/user-status', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -561,7 +561,7 @@ export const getUserStatusStats = async () => {
 
 export const LinkeDinScraper = async (job:string,location:string) => {
   try {
-    const response = await fetch(`http://localhost:3001/Scraping/scraper/${location}/${job}`, {
+    const response = await fetch(`http://192.168.33.10:3001/Scraping/scraper/${location}/${job}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -569,7 +569,7 @@ export const LinkeDinScraper = async (job:string,location:string) => {
       timeout: 120000 // 2 minutes
     });
     await delay(5000);
-    const response1=await fetch(`http://localhost:3001/Scraping/scraper/skills`, {
+    const response1=await fetch(`http://192.168.33.10:3001/Scraping/scraper/skills`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -577,7 +577,7 @@ export const LinkeDinScraper = async (job:string,location:string) => {
       timeout: 240000 // 4 minutes
     });
     await delay(5000);
-    const response2 = await fetch(`http://localhost:3001/Scraping/scraper/topSkills`, {
+    const response2 = await fetch(`http://192.168.33.10:3001/Scraping/scraper/topSkills`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -601,7 +601,7 @@ function delay(ms: number) {
 }
 export const TopCompanies = async () => {
   try {
-    const response = await fetch('http://localhost:3001/Scraping/scraper/topCompanies', {
+    const response = await fetch('http://192.168.33.10:3001/Scraping/scraper/topCompanies', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -622,7 +622,7 @@ export const TopCompanies = async () => {
 }
 export const topLocations = async () => {
   try {
-    const response = await fetch('http://localhost:3001/Scraping/scraper/topLocations', {
+    const response = await fetch('http://192.168.33.10:3001/Scraping/scraper/topLocations', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -643,7 +643,7 @@ export const topLocations = async () => {
 }
 export const TopSeniorityLevel = async () => {
   try {
-    const response = await fetch('http://localhost:3001/Scraping/scraper/topSeniorityLevel', {
+    const response = await fetch('http://192.168.33.10:3001/Scraping/scraper/topSeniorityLevel', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -663,7 +663,7 @@ export const TopSeniorityLevel = async () => {
   }
 }
 export const exportPDFJob=()=>{
-  axios.get('http://localhost:3001/Scraping/scraper/exportPDF',{responseType:'blob'})
+  axios.get('http://192.168.33.10:3001/Scraping/scraper/exportPDF',{responseType:'blob'})
   .then(response=>{
     const url=window.URL.createObjectURL(new Blob([response.data]));
     const link=document.createElement('a');
@@ -677,7 +677,7 @@ export const exportPDFJob=()=>{
   });
 }
 export const exportExcelJob=()=>{
-  axios.get('http://localhost:3001/Scraping/scraper/exportExcel',{responseType:'blob'})
+  axios.get('http://192.168.33.10:3001/Scraping/scraper/exportExcel',{responseType:'blob'})
   .then(response=>{
     const url=window.URL.createObjectURL(new Blob([response.data]));
     const link=document.createElement('a');
@@ -694,7 +694,7 @@ export const exportExcelJob=()=>{
 /////////////////////////////API
 export const fetchNotifications = async (userId) => {
   try {
-    const response = await fetch(`http://localhost:3001/notifications/getNotificationsByUser/${userId}`);
+    const response = await fetch(`http://192.168.33.10:3001/notifications/getNotificationsByUser/${userId}`);
     if (!response.ok) {
       throw new Error('Failed to fetch notifications');
     }
@@ -709,7 +709,7 @@ export const fetchNotifications = async (userId) => {
 //affiche chaque jour le nombre de notif
 export const fetchNotificationsCountByUserIdByDate = async (userId) => {
   try {
-    const response = await fetch(`http://localhost:3001/notifications/NotificationsByDate/${userId}`);
+    const response = await fetch(`http://192.168.33.10:3001/notifications/NotificationsByDate/${userId}`);
     if (!response.ok) {
       throw new Error('Failed to fetch notifications count');
     }

@@ -27,7 +27,7 @@ const ChatbotComponent = () => {
 
     try {
       // Make API call to send user input and receive AI response
-      const response = await fetch(`http://localhost:3001/gptchatbot/AddGptchatbot/${storedUser._id}`, {
+      const response = await fetch(`http://192.168.33.10:3001/gptchatbot/AddGptchatbot/${storedUser._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

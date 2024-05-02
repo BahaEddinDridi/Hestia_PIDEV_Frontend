@@ -58,7 +58,7 @@ const SignUpTeacher: React.FC = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const BASE_URL = 'http://localhost:3001';
+    const BASE_URL = 'http://192.168.33.10:3001';
 
 
     ///////////////////////////////////// phonenumber ////////////////////////////////////////////////////////////
@@ -218,7 +218,7 @@ const SignUpTeacher: React.FC = () => {
 
   const fetchCRMData = async () => {
     try {
-      const response = await fetch('http://localhost:3001/CRM/getCRM');
+      const response = await fetch('http://192.168.33.10:3001/CRM/getCRM');
       if (response.ok) {
         const data = await response.json();
         // Assuming data is an array and contains only one CRM object

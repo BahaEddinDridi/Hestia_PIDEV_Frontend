@@ -36,7 +36,7 @@ export interface Internship {
   interOtherInformation?: string;
 }
 
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = 'http://192.168.33.10:3001';
 
 const jobService = {
   getAllJobs: async (location?: string, jobExperience?: string, jobField?: string): Promise<Job[]> => {

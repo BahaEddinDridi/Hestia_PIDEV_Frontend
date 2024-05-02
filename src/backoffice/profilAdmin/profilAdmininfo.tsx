@@ -157,7 +157,7 @@ const handleEditEducationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 useEffect(() => {
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/user/educations/${currentUsername}`);
+      const response = await axios.get(`http://192.168.33.10:3001/user/educations/${currentUsername}`);
       setEducationList(response.data.data);
     } catch (error) {
       console.error('Error fetching educations:', error.message);

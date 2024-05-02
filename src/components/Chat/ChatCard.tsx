@@ -8,7 +8,7 @@ const ChatCard = () => {
   const sendMessage = async () => {
     try {
       // Envoi de la requête au backend pour envoyer le message
-      const response = await axios.post('http://localhost:3001/messagerie/api/messages', {
+      const response = await axios.post('http://192.168.33.10:3001/messagerie/api/messages', {
         channelName: channelName,
         message: message
       });

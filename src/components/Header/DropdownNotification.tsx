@@ -16,7 +16,7 @@ const DropdownNotification = () => {
     const fetchNotifications = async () => {
       try {
         const userId = currentUser._id
-        const response = await fetch(`http://localhost:3001/notifications/getNotificationsByUser/${userId}`);
+        const response = await fetch(`http://192.168.33.10:3001/notifications/getNotificationsByUser/${userId}`);
         const data = await response.json();
         setNotifications(data.notifications);
         const hasUnreadNotifications = data.notifications.some(notification => !notification.read);
@@ -33,13 +33,13 @@ const DropdownNotification = () => {
     const fetchAndMarkNotificationsAsRead = async () => {
       try {
         const userId = currentUser._id;
-        const response = await fetch(`http://localhost:3001/notifications/getNotificationsByUser/${userId}`);
+        const response = await fetch(`http://192.168.33.10:3001/notifications/getNotificationsByUser/${userId}`);
         const data = await response.json();
         setNotifications(data.notifications);
         // Extract notification ids
         const notificationIds = data.notifications.map(notification => notification._id);
         // Call markNotificationsAsRead API
-        await fetch('http://localhost:3001/notifications/markNotificationsAsRead', {
+        await fetch('http://192.168.33.10:3001/notifications/markNotificationsAsRead', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

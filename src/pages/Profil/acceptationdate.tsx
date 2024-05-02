@@ -37,7 +37,7 @@ const Acceptationdate = () => {
             const date = new Date(selectedDate);
             console.log("Applicant username:", applicantUsername);
             console.log("Selected date:", date.toISOString());
-            const response = await axios.put('http://localhost:3001/application/selecteddate', {
+            const response = await axios.put('http://192.168.33.10:3001/application/selecteddate', {
                 applicantUsername,
                 selectedDate: date.toISOString()
             });

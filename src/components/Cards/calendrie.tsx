@@ -17,10 +17,10 @@ const Calendrie =  ({ type }) =>{
 
         if (type === 'candidate') {
           // Si le type est candidat, récupérez les événements pour le username
-          apiUrl = `http://localhost:3001/application/calendrie/event?username=${username}`;
+          apiUrl = `http://192.168.33.10:3001/application/calendrie/event?username=${username}`;
         } else if (type === 'company') {
           // Si le type est entreprise, récupérez les événements pour le companyName
-          apiUrl = `http://localhost:3001/application/calendrie/event?companyName=${companyName}`;
+          apiUrl = `http://192.168.33.10:3001/application/calendrie/event?companyName=${companyName}`;
         }
         const response = await axios.get(apiUrl);
   

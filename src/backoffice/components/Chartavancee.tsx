@@ -23,7 +23,7 @@ const currentUser = useSelector(selectCurrentUser);
 useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/notifications/getNotificationsCountStat/${currentUser._id}`);
+        const response = await axios.get(`http://192.168.33.10:3001/notifications/getNotificationsCountStat/${currentUser._id}`);
         const notificationsCount = response.data.notificationsCount;
         const dates = Object.keys(notificationsCount);
         const series = Object.values(notificationsCount).map((countObj) => Object.values(countObj));

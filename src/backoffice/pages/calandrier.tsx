@@ -58,7 +58,7 @@ const CalendarAdmin = () => {
     const handleDateClick = async (arg: any) => {
       try {
         const formattedDate = format(arg.date, 'dd-MM-yyyy');
-        const response = await axios.get(`http://localhost:3001/notifications/NotificationsByDateAndRecepientId/${formattedDate}/${currentUser._id}`);
+        const response = await axios.get(`http://192.168.33.10:3001/notifications/NotificationsByDateAndRecepientId/${formattedDate}/${currentUser._id}`);
         const notifications = response.data.notifications;
     
         // Mettre à jour l'état des notifications sélectionnées
@@ -74,7 +74,7 @@ const CalendarAdmin = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const holidaysResponse = await fetch('http://localhost:3001/dashboard/api/holidaysAdmin');
+        const holidaysResponse = await fetch('http://192.168.33.10:3001/dashboard/api/holidaysAdmin');
         if (!holidaysResponse.ok) {
           throw new Error('Failed to fetch holidays');
         }

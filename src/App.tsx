@@ -63,7 +63,7 @@ import { io } from "socket.io-client";
 
 
 
-const socket = io("http://localhost:3001");
+const socket = io("http://192.168.33.10:3001");
 socket.on("connect", () => {
   console.log("Connected to socket.io server");
 });

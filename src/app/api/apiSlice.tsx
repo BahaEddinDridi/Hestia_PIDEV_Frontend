@@ -3,7 +3,7 @@ import {setCredentials} from "../../ApiSlices/authSlice";
 
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:3001',
+  baseUrl: 'http://192.168.33.10:3001',
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token

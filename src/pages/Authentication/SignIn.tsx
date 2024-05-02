@@ -178,7 +178,7 @@ const SignIn: React.FC = () => {
 
     try {
       console.log('Initiating LinkedIn login...');
-      window.location.href = `https://www.linkedin.com/oauth/v2/authorization?client_id=773qhnfkn4hbwy&redirect_uri=http://localhost:3001/auth/linkedin/callback&response_type=code&scope=r_liteprofile%20r_emailaddress`;
+      window.location.href = `https://www.linkedin.com/oauth/v2/authorization?client_id=773qhnfkn4hbwy&redirect_uri=http://192.168.33.10:3001/auth/linkedin/callback&response_type=code&scope=r_liteprofile%20r_emailaddress`;
     } catch (error) {
       console.error('LinkedIn login initiation failed', error);
       setErrorMessage('Failed to initiate LinkedIn login');

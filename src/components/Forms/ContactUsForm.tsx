@@ -21,7 +21,7 @@ const ContactUsForm = () => {
        event.preventDefault();
 
     try {
-        const response = await fetch('http://localhost:3001/auth/receiveMail', {
+        const response = await fetch('http://192.168.33.10:3001/auth/receiveMail', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { selectCurrentUser } from '../../ApiSlices/authSlice';
 import { Link } from 'react-router-dom';
 
-const API_URL = 'http://localhost:3001/recommendation/recommendUser/';
+const API_URL = 'http://192.168.33.10:3001/recommendation/recommendUser/';
 const ITEMS_PER_PAGE = 3; // Number of job offers per page
 
 const Feed: React.FC = () => {

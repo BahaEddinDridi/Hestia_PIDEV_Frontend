@@ -35,7 +35,7 @@ const ExperienceCard = () => {
   useEffect(() => {
     const fetchExperiences = async () => {
         try {
-            const response = await axios.get(`http://localhost:3001/user/Experiences/${currentUser.username}`);
+            const response = await axios.get(`http://192.168.33.10:3001/user/Experiences/${currentUser.username}`);
             console.log(response);
             setExperiences(response.data.data);
         } catch (error) {

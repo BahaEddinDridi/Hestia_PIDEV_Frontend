@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../ApiSlices/authSlice';
 
-const ENDPOINT = 'http://localhost:3001';
+const ENDPOINT = 'http://192.168.33.10:3001';
 
 type DefaultEventsMap = {
   [key: string]: (...args: any[]) => void;

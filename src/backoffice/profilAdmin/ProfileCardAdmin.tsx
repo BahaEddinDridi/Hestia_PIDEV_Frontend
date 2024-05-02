@@ -57,7 +57,7 @@ const ProfileCardAdmin =() => {
             setSelectedImage(result.secure_url);
             window.location.reload();
             localStorage.setItem(`userImage_${currentUser.username}`, result.secure_url);
-            await fetch('http://localhost:3001/user/upload-image', {
+            await fetch('http://192.168.33.10:3001/user/upload-image', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ const ProfileCardAdmin =() => {
             setSelectedCoverImage(result.secure_url);
             window.location.reload();
             localStorage.setItem(`userImage_${currentUser.username}`, result.secure_url);
-            await fetch('http://localhost:3001/user/upload-coverimage', {
+            await fetch('http://192.168.33.10:3001/user/upload-coverimage', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

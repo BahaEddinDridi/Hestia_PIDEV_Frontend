@@ -39,7 +39,7 @@ const ExperienceCardAdmin = ({ index }: { index: number }) => {
     useEffect(() => {
         const fetchExperiences = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/user/Experiences/${currentUsername}`);
+                const response = await axios.get(`http://192.168.33.10:3001/user/Experiences/${currentUsername}`);
                 setExperiences(response.data.data);
             } catch (error) {
                 console.error('Error fetching experiences:', error.message);

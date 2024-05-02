@@ -9,7 +9,7 @@ export default function ChatOnline({ onLineUsers, currentId, setCurrentChat }) {
   useEffect(() => {
     const getFriends = async () => {
       try {
-        const res = await axios.get(`http://localhost:3001/user/getUsersByUserId/${currentId}`);
+        const res = await axios.get(`http://192.168.33.10:3001/user/getUsersByUserId/${currentId}`);
         setFriends(res.data);
       } catch (error) {
         console.error('Error fetching friends:', error);
@@ -40,13 +40,13 @@ export default function ChatOnline({ onLineUsers, currentId, setCurrentChat }) {
 
 const handleClick = async (user: any) => {
   try {
-    const res = await axios.get(`http://localhost:3001/conversation/find/${currentId}/${user._id}`);
+    const res = await axios.get(`http://192.168.33.10:3001/conversation/find/${currentId}/${user._id}`);
 
     if (res.data) {
       setCurrentChat(res.data);
     } else {
       // Si aucune conversation n'existe, créez une nouvelle conversation
-      const newConversationRes = await axios.post(`http://localhost:3001/conversation`, {
+      const newConversationRes = await axios.post(`http://192.168.33.10:3001/conversation`, {
         members: [currentId, user._id]
       });
 

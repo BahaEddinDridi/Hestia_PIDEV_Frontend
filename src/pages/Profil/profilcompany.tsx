@@ -40,7 +40,7 @@ const ProfileCompany = () => {
           const result = await response.json();
           setSelectedCoverImage(result.secure_url);
           localStorage.setItem(`userImage_${currentUser.username}`, result.secure_url);
-          await fetch('http://localhost:3001/user/upload-coverimage', {
+          await fetch('http://192.168.33.10:3001/user/upload-coverimage', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ const ProfileCompany = () => {
           const result = await response.json();
           setSelectedImage(result.secure_url);
           localStorage.setItem(`userImage_${currentUser.username}`, result.secure_url);
-          await fetch('http://localhost:3001/user/upload-image', {
+          await fetch('http://192.168.33.10:3001/user/upload-image', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

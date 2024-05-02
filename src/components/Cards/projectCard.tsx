@@ -70,7 +70,7 @@ const ProjectCard = () => {
   useEffect(() => {
     const fetchproject = async () => {
         try {
-            const response = await axios.get(`http://localhost:3001/user/projects/${currentUser.username}`);
+            const response = await axios.get(`http://192.168.33.10:3001/user/projects/${currentUser.username}`);
             setprojects(response.data.data);
         } catch (error) {
             console.error('Error fetching experiences:', error.message);

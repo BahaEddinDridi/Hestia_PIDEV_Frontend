@@ -39,7 +39,7 @@ export default function Messenger() {
 
 
     useEffect(() => {
-        socket.current = io("ws://localhost:3001")
+        socket.current = io("ws://192.168.33.10:3001")
         socket.current.on("getMessage", data => {
             setArrivalMessage({
                 sender: data.senderId,
@@ -71,7 +71,7 @@ export default function Messenger() {
         // Correction : Ajout d'une clé 'key' pour chaque élément de la liste
         const getConversation = async () => {
             try {
-                const res = await axios.get("http://localhost:3001/conversation/" + currentUser._id);
+                const res = await axios.get("http://192.168.33.10:3001/conversation/" + currentUser._id);
                 setConversations(res.data);
             } catch (err) {
                 console.log(err);
@@ -85,7 +85,7 @@ export default function Messenger() {
         const getMessages = async () => {
             try {
                 if (currentChat) {
-                    const res = await axios.get("http://localhost:3001/message/" + currentChat._id);
+                    const res = await axios.get("http://192.168.33.10:3001/message/" + currentChat._id);
                     setMessages(res.data);
                 }
             } catch (err) {
@@ -118,7 +118,7 @@ export default function Messenger() {
             });
         }
         try {
-            const res = await axios.post("http://localhost:3001/message", message);
+            const res = await axios.post("http://192.168.33.10:3001/message", message);
             setMessages([...messages, res.data])
             setNewMessage("")
         } catch (err) {
@@ -148,7 +148,7 @@ export default function Messenger() {
             try {
                 if (currentChat) {
                     const otherUserId = currentChat.members[1];
-                    const res = await axios.get("http://localhost:3001/user/getOneUserById/" + otherUserId);
+                    const res = await axios.get("http://192.168.33.10:3001/user/getOneUserById/" + otherUserId);
 
                     // Vérifier si la requête a réussi
                     if (res.status === 200) {

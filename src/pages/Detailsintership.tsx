@@ -44,7 +44,7 @@ const Detailsintership = () => {
 
         const fetchintershipApplications = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/intership/getapp/${intershipid}`, {
+                const response = await fetch(`http://192.168.33.10:3001/intership/getapp/${intershipid}`, {
                     method: 'GET',
 
                 });

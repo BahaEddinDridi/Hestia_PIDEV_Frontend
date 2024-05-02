@@ -67,7 +67,7 @@ const userDetails:React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/dashboard/user/${id}`);
+        const response = await axios.get(`http://192.168.33.10:3001/dashboard/user/${id}`);
         setUser(response.data);
         setLoading(false);
       } catch (error) {

@@ -50,7 +50,7 @@ function UpdateProfileWithResume() {
                         `userImage_${currentUser.username}`,
                         result.secure_url,
                     );
-                    await fetch(`http://localhost:3001/ProfileUpdater/CompareUserCv/${userId}`, {
+                    await fetch(`http://192.168.33.10:3001/ProfileUpdater/CompareUserCv/${userId}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
