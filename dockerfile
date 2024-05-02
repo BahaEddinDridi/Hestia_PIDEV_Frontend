@@ -19,7 +19,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy built artifacts from the build stage to Nginx web server directory
-COPY --from=build /usr/local/app/dist/summer-workshop-angular /usr/share/nginx/html
+COPY --from=build /app/build /usr/share/nginx/html
 
 # Expose port 80 (default for nginx)
 EXPOSE 80
