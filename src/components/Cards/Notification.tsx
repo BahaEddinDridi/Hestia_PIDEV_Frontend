@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../ApiSlices/authSlice';
+import { SocketContext } from '../../SocketContext';
 
 const ENDPOINT = 'http://localhost:3001';
 
@@ -13,10 +14,10 @@ function NotificationComponent() {
   const currentUser = useSelector(selectCurrentUser);
   const [onLineUsers, setOnLineUsers] = useState([]);
   const userId = currentUser ? currentUser._id : null;
-  const socket = useSocket(); // Use useSocket hook to get the socket instance
+  const socket = useContext(SocketContext); // Use useSocket hook to get the socket instance
 
   useEffect(() => {
-    if (socket && userId) {
+
       socket.on('newNotification', (data) => {
         console.log("New notification received:", data);
         setNotification(data.notification);
@@ -25,15 +26,13 @@ function NotificationComponent() {
           setPopoverOpen(false);
         }, 5000);
       });
+  }, []);
 
-      console.log("Emitting addUser event...");
-      socket.emit("addUser", userId, (response) => {
-        console.log("addUser event emitted. Server response:", response);
-      });
-
+  useEffect(() => {
+    if (socket) {
+      socket.emit("addUser", userId);
     }
-  }, [socket, userId]);
-
+  }, [currentUser]);
   const handleClosePopover = () => {
     setPopoverOpen(false); // Close the popover
   };

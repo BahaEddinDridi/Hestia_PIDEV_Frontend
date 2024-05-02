@@ -479,8 +479,8 @@ console.log(jobApplications)
                       />
                       <label
                         htmlFor="fullName"
-                        className={`absolute left-0 top-1 cursor-text peer-focus:text-xs transition-all ${
-                          inputState.fullName ? '-top-4 text-blue-700' : 'peer-focus:-top-4 peer-focus:text-blue-700'
+                        className={`absolute left-0 top-1 cursor-text transition-all ${
+                          inputState.fullName ? '-top-4 opacity-0 text-blue-700' : 'peer-focus:text-xs peer-focus:-top-4 peer-focus:text-blue-700'
                         }`}
                       >
                         Full Name
@@ -502,7 +502,7 @@ console.log(jobApplications)
                       <label
                         htmlFor="email"
                         className={`absolute left-0 top-1 cursor-text peer-focus:text-xs transition-all ${
-                          inputState.email ? '-top-4 text-blue-700' : 'peer-focus:-top-4 peer-focus:text-blue-700'
+                          inputState.email ? '-top-4 opacity-0 text-blue-700' : 'peer-focus:-top-4 peer-focus:text-blue-700'
                         }`}
                       >Email</label
                       >
@@ -522,7 +522,7 @@ console.log(jobApplications)
                     <label
                       htmlFor="phoneNumber"
                       className={`absolute left-0 top-1 cursor-text peer-focus:text-xs transition-all ${
-                        inputState.phoneNumber ? '-top-4 text-blue-700' : 'peer-focus:-top-4 peer-focus:text-blue-700'
+                        inputState.phoneNumber ? '-top-4 opacity-0 text-blue-700' : 'peer-focus:-top-4 peer-focus:text-blue-700'
                       }`}
                     >
                       Phone Number

@@ -75,8 +75,10 @@ socket.on("disconnect", () => {
 socket.on("hello", (arg) => {
   console.log(arg); // world
 });
+
 //import ChatCard from './components/Chat/ChatCard';
 import Calendrie from './components/Cards/calendrie';
+import NotificationComponent from './components/Cards/Notification';
 function App() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
@@ -113,7 +115,7 @@ function App() {
     <Loader />
   ) : (
     <>
-
+<NotificationComponent/>
       <Routes>
         <Route
           index

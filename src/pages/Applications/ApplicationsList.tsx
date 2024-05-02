@@ -6,6 +6,9 @@ import PhoneNumber from '../Authentication/SignUpFiles/PhoneNumber';
 import ApplicationService from './API/Services';
 import Pagination from '../../backoffice/pagination/pagination';
 import AppPagination from './AppPagination';
+import tableBg from '../../images/cards/tableBg.png';
+import tableHeader from '../../images/cards/tableHeader.jpg';
+
 
 const ApplicationsList = () => {
   const currentUser = useSelector(selectCurrentUser);
@@ -167,22 +170,32 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
     <DefaultLayout>
 
       <div className="mx-20 border border-gray-200
-      rounded-lg overflow-hidden shadow-lg hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 font-mono">
-        <div className="overflow-x-auto">
-          <table className="min-w-full border-collapse">
+      rounded-lg overflow-hidden shadow-lg hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 font-mono"
+          >
+        <div className="overflow-x-auto "
+        >
+          <table className="min-w-full border-collapse"
+          >
             <thead>
-            <tr className="text-md font-semibold tracking-wide text-left text-white bg-red-700 uppercase">
-              <th className="px-6 py-3">Company</th>
+            <tr className="text-md font-semibold tracking-wide text-center text-white bg-red-700 uppercase"
+                style={{
+                  background: `url(${tableHeader})`,
+                  backgroundSize: 'cover',
+                }}      >
+              <th className="px-6 py-3 text-start">Company</th>
               <th className="px-6 py-3">Job offer</th>
               <th className="px-6 py-3">Application Date</th>
               <th className="px-6 py-3">Status</th>
-              <th className="px-6 py-3">Actions</th>
+              <th className="px-6 py-3 text-start">Actions</th>
             </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200 ">
+            <tbody className="bg-gray divide-y divide-gray-200 "
+                   >
             {currentApplications.map(application => (
               <tr key={application._id}>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap"
+
+                >
                   <div className="flex items-center">
                     <div className="flex-shrink-0 w-10 h-10">
                       <img className="w-10 h-10 rounded-full" src={application.companyLogo} alt="" />
@@ -192,10 +205,10 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">{application.jobTitle}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{formatDate(application.submitDate)}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{application.status}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap text-center">{application.jobTitle}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-center">{formatDate(application.submitDate)}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-center">{application.status}</td>
+                <td className="px-6 py-4 whitespace-nowrap ">
                   <div className="flex space-x-4">
                     <div onClick={() => openModal(application)} className="cursor-pointer relative  transition-all ease-in duration-75 group-hover:bg-opacity-0
                     rounded-lg group  from-blue-500 to-green-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white
@@ -250,7 +263,11 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
           </table>
 
         </div>
-        <div className="flex justify-center bg-red-800">
+        <div className="flex justify-center bg-red-800"
+             style={{
+               background: `url(${tableHeader})`,
+               backgroundSize: 'cover',
+             }}       >
           <AppPagination
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
@@ -262,12 +279,17 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
         <div className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-50">
           <div className="group flex flex-col justify-start items-start gap-2 w-230 h-125 duration-500 relative
           rounded-lg p-4 bg-white hover:-translate-y-2 hover:shadow-xl shadow-red-400
-          ">
+          "
+               style={{
+                 background: `url(${tableBg})`,
+                 backgroundSize: '100% 100%',
+                 backgroundPosition: 'center',
+               }} >
             {!isEditMode ? (
               <>
-                <h2 className="text-xl font-semibold mb-4">Application Details</h2>
+                <h2 className="text-xl font-semibold text-red-900 mb-4">Application Details</h2>
                 <div className="grid grid-cols-2 gap-5">
-                  <div className="rounded-lg shadow-lg shadow-red-400 px-6 py-3 flex flex-col">
+                  <div className="rounded-lg shadow-lg bg-white px-6 py-3 flex flex-col">
                     <div className="mb-1">
                       <label className="block text-sm font-bold text-gray-700">Company Name</label>
                       <p>{selectedApplication.companyName}</p>
@@ -315,16 +337,19 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
                     </div>
                     <div className="mb-1">
                       <label className="block text-sm font-bold text-gray-700">Status</label>
-                      <p>{selectedApplication.status}</p>
+                      <p
+                        className={selectedApplication.status === 'Rejected' ? 'text-red-600' : selectedApplication.status === 'Accepted' ? 'text-green-600' : ''}>
+                        {selectedApplication.status}
+                      </p>
                     </div>
                   </div>
                   {/* Right side */}
 
                   <div
-                    className="mb-4 w-100 h-80 rounded-lg shadow-lg shadow-red-400 px-6 py-3 flex flex-col  overflow-auto"
+                    className="mb-4 w-100 h-80 rounded-lg shadow-lg bg-white px-6 py-3 flex flex-col  overflow-auto"
                     style={{ paddingRight: '10px' }}>
                     <div className="mb-1 flex-grow" style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
-                      <label className="block text-sm font-medium text-black">Motivation Letter</label>
+                      <label className="block text-sm font-bold text-gray-700">Motivation Letter</label>
                       <p className="whitespace-pre-line">{selectedApplication.motivationLetter}</p>
                     </div>
                   </div>
@@ -333,13 +358,8 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
                 </div>
                 <div
                   className="mt-4 flex justify-center items-center absolute duration-700 shadow-md
-                  group-hover:-translate-y-4 group-hover:-translate-x-4 -bottom-10 -right-10 w-60 h-30 rounded-lg bg-red-600">
-                  <button
-                    className="bg-white h-10 hover:bg-red-400 text-red-800 px-4 py-2 rounded-lg mr-2"
-                    onClick={toggleEditMode}
-                  >
-                    Update
-                  </button>
+                  group-hover:-translate-y-4 group-hover:-translate-x-4
+                  -bottom-10 -right-10 w-40 h-20 rounded-lg bg-red-700">
                   <button
                     className=" h-10 hover:bg-gray-400 text-white px-4 py-2 rounded-lg "
                     onClick={closeModal}

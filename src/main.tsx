@@ -9,6 +9,7 @@ import App from './App';
 import { store } from './app/store'
 import {Provider, useSelector} from 'react-redux'
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { socket, SocketContext } from './SocketContext';
 
 
 
@@ -18,11 +19,13 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId="522705329788-vg8pg8hd2cmbsobpr2daungv7sli0qbm.apps.googleusercontent.com">
     <Provider store={store}>
+      <SocketContext.Provider value={socket}>
       <BrowserRouter>
           <Routes>
               <Route path="/*" element={<App/>}/>
           </Routes>
       </BrowserRouter>
+      </SocketContext.Provider>
     </Provider>
     </GoogleOAuthProvider>
   </React.StrictMode>,

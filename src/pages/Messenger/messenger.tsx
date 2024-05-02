@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import "./messenger.css";
 import DefaultLayout from "../../layout/DefaultLayout";
 import Conversation from './Conversation/Conversation';
@@ -12,6 +12,7 @@ import { io, Socket } from "socket.io-client";
 import InputEmoji from "react-input-emoji";
 import Unknown from '../../images/user/Unknown.png';
 import { color } from 'framer-motion';
+import { SocketContext } from '../../SocketContext';
 
 
 
@@ -34,13 +35,13 @@ export default function Messenger() {
     const [arrivalMessage, setArrivalMessage] = useState(null);
     const scrollRef = useRef<HTMLDivElement>(null); // Assurez-vous que le type est correct
     const [currentChat, setCurrentChat] = useState(null);
-    const socket = useRef<Socket<DefaultEventsMap, DefaultEventsMap> | undefined>(undefined);
     const currentUser = useSelector(selectCurrentUser);
+    const socket = useContext(SocketContext); // Use useSocket hook to get the socket instance
+    const userId = currentUser ? currentUser._id : null;
 
 
     useEffect(() => {
-        socket.current = io("ws://localhost:3001")
-        socket.current.on("getMessage", data => {
+        socket.on("getMessage", data => {
             setArrivalMessage({
                 sender: data.senderId,
                 text: data.text,
@@ -54,14 +55,7 @@ export default function Messenger() {
     }, [arrivalMessage, currentChat]);
 
 
-    useEffect(() => {
-        if (socket.current) {
-            socket.current.emit("addUser", currentUser._id);
-            socket.current.on("getUsers", users => {
-                setOnLineUsers(users);
-            });
-        }
-    }, [currentUser]);
+
 
 
     console.log(socket)
@@ -101,18 +95,18 @@ export default function Messenger() {
         if (newMessage.trim() === "") return; // Vérifiez que le message n'est pas vide
 
         const message = {
-            sender: currentUser._id,
+            sender: userId,
             text: newMessage,
             ConversationId: currentChat._id
         };
         const receiverId = currentChat?.members.find(
-            (member: any) => member !== currentUser._id
+            (member: any) => member !== userId
         );
 
-        if (socket.current) {
+        if (socket) {
             // Accédez à socket.current en toute sécurité ici
-            socket.current.emit("sendMessage", {
-                senderId: currentUser._id,
+            socket.emit("sendMessage", {
+                senderId: userId,
                 receiverId,
                 text: newMessage
             });
