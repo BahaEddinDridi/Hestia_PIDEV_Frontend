@@ -59,22 +59,8 @@ import InternshipOfferView from './pages/Opportunity/InternshipOfferView';
 import LandingPage from './pages/Landing Page/LandingPage';
 import Messenger from './pages/Messenger/messenger'
 import '../src/i18n.js'
-import { io } from "socket.io-client";
 
 
-
-const socket = io("http://localhost:3001");
-socket.on("connect", () => {
-  console.log("Connected to socket.io server");
-});
-
-socket.on("disconnect", () => {
-  console.log("Disconnected from socket.io server");
-});
-
-socket.on("hello", (arg) => {
-  console.log(arg); // world
-});
 
 //import ChatCard from './components/Chat/ChatCard';
 import Calendrie from './components/Cards/calendrie';
