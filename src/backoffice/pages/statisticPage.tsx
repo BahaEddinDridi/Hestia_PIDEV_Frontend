@@ -15,7 +15,7 @@ import ChartSkills from '../components/ChartSkills';
 import ChartCompanies from '../components/ChartCompanies';
 import ChartLocations from '../components/ChartLocation';
 import ChartSeniorityLevel from '../components/ChartSeniority';
-import ChartAvancee from '../components/chartavancee';
+import ChartAvancee from '../components/Chartavancee';
 
 
 const StatisticPage: React.FC = () => {
