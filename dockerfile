@@ -16,19 +16,19 @@ COPY . .
 RUN npm run build
 
 # Second stage: production stage
-FROM nginx:1.19-alpine
+FROM node:20-alpine
 
-# Copy the build output to replace the default nginx contents
-COPY --from=build /app/build /usr/share/nginx/html
+# Set working directory
+WORKDIR /app
 
-# Remove default nginx index page
-RUN rm /usr/share/nginx/html/index.html
+# Copy the build output from the previous stage
+COPY --from=build /app/build /app/build
 
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
+# Install http-server globally
+RUN npm install -g http-server
 
 # Expose port 80
 EXPOSE 80
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Command to serve the static files using http-server
+CMD ["http-server", "-p", "80", "./build"]
