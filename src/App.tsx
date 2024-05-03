@@ -37,7 +37,7 @@ import SignUpTeacher from './pages/Authentication/SignUpTeacher';
 import Profiletest from './pages/Profil/profil';
 import SecurityQuestions from './pages/Authentication/Reset_Password/SecurityQuestions/SecurityQuestions';
 import SignUpStudent from './pages/Authentication/SignUpStudent';
-import Offers from './Offers/Offers';
+
 import JobOpp from '../src/pages/Opportunity/AddOpp/JobOpp'
 import IntershipOpp from '../src/pages/Opportunity/AddOpp/IntershipOpp'
 import EditJob from '../src/pages/Opportunity/UpdateOpp/jobUpdate'
@@ -675,17 +675,7 @@ function App() {
             </>
           }
         />
-        <Route
-          path='Profile/offer'
-          element={
-            <>
-              <PageTitle title="Offers" />
-              <ProtectedRoute>
-                <Offers />
-              </ProtectedRoute>
-            </>
-          }
-        />
+        
 
         <Route
           path='AboutUs'
