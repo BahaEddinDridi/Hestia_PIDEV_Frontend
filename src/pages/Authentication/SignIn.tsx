@@ -257,7 +257,7 @@ const SignIn: React.FC = () => {
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
                     <span className="absolute right-4 top-4 " onClick={() => setShowPassword(!showPassword)}
-                          style={{ cursor: 'pointer' }}>
+                      style={{ cursor: 'pointer' }}>
                       <svg
                         className="fill-current"
                         width="22"
@@ -325,18 +325,21 @@ const SignIn: React.FC = () => {
                     className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50"
                     onClick={initiateGitHubLogin}
                   >
-      <span>
-        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 72 72" width="20">
-          <g fill="none" fillRule="evenodd">
-            <path
-              d="M8,72 L64,72 C68.418278,72 72,68.418278 72,64 L72,8 C72,3.581722 68.418278,0 64,0 L8,0 C3.581722,0 0,3.581722 0,8 L0,64 C0,68.418278 3.581722,72 8,72 Z"
-              fill="#24292e" />
-            <path
-              d="M62,62 L51.315625,62 L51.315625,43.8021149 C51.315625,38.8127542 49.4197917,36.0245323 45.4707031,36.0245323 C41.1746094,36.0245323 38.9300781,38.9261103 38.9300781,43.8021149 L38.9300781,62 L28.6333333,62 L28.6333333,27.3333333 L38.9300781,27.3333333 L38.9300781,32.0029283 C38.9300781,32.0029283 42.0260417,26.2742151 49.3825521,26.2742151 C56.7356771,26.2742151 62,30.7644705 62,40.051212 L62,62 Z M16.349349,22.7940133 C12.8420573,22.7940133 10,19.9296567 10,16.3970067 C10,12.8643566 12.8420573,10 16.349349,10 C19.8566406,10 22.6970052,12.8643566 22.6970052,16.3970067 C22.6970052,19.9296567 19.8566406,22.7940133 16.349349,22.7940133 Z M11.0325521,62 L21.769401,62 L21.769401,27.3333333 L11.0325521,27.3333333 L11.0325521,62 Z"
-              fill="#FFFFFF" />
-          </g>
-        </svg>
-      </span>
+                    <span>
+                      <svg
+                        class="w-5"
+                        viewBox="0 0 15 15"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7.49933 0.25C3.49635 0.25 0.25 3.49593 0.25 7.50024C0.25 10.703 2.32715 13.4206 5.2081 14.3797C5.57084 14.446 5.70302 14.2222 5.70302 14.0299C5.70302 13.8576 5.69679 13.4019 5.69323 12.797C3.67661 13.235 3.25112 11.825 3.25112 11.825C2.92132 10.9874 2.44599 10.7644 2.44599 10.7644C1.78773 10.3149 2.49584 10.3238 2.49584 10.3238C3.22353 10.375 3.60629 11.0711 3.60629 11.0711C4.25298 12.1788 5.30335 11.8588 5.71638 11.6732C5.78225 11.205 5.96962 10.8854 6.17658 10.7043C4.56675 10.5209 2.87415 9.89918 2.87415 7.12104C2.87415 6.32925 3.15677 5.68257 3.62053 5.17563C3.54576 4.99226 3.29697 4.25521 3.69174 3.25691C3.69174 3.25691 4.30015 3.06196 5.68522 3.99973C6.26337 3.83906 6.8838 3.75895 7.50022 3.75583C8.1162 3.75895 8.73619 3.83906 9.31523 3.99973C10.6994 3.06196 11.3069 3.25691 11.3069 3.25691C11.7026 4.25521 11.4538 4.99226 11.3795 5.17563C11.8441 5.68257 12.1245 6.32925 12.1245 7.12104C12.1245 9.9063 10.4292 10.5192 8.81452 10.6985C9.07444 10.9224 9.30633 11.3648 9.30633 12.0413C9.30633 13.0102 9.29742 13.7922 9.29742 14.0299C9.29742 14.2239 9.42828 14.4496 9.79591 14.3788C12.6746 13.4179 14.75 10.7025 14.75 7.50024C14.75 3.49593 11.5036 0.25 7.49933 0.25Z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </span>
                     Sign in with GitHub
                   </button>
 
@@ -362,7 +365,7 @@ const SignIn: React.FC = () => {
       {showMessage && !successMessage && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
           <div className="bg-green-200 border border-green-500 text-green-700 px-6 py-4 rounded-lg relative z-50"
-               role="alert">
+            role="alert">
             <strong className="font-bold">You are already signed in.</strong>
             <span className="block sm:inline">{showMessageText}</span>
           </div>
@@ -371,9 +374,9 @@ const SignIn: React.FC = () => {
 
       {successMessage && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
-             onClick={() => setSuccessMessage('')}>
+          onClick={() => setSuccessMessage('')}>
           <div className="bg-green-200 border border-green-500 text-green-700 px-6 py-4 rounded-lg relative z-50"
-               role="alert">
+            role="alert">
             <strong className="font-bold">Success!</strong>
             <span className="block sm:inline">{successMessage}</span>
           </div>
@@ -382,7 +385,7 @@ const SignIn: React.FC = () => {
       {showLoginLimitMessage && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
           <div className="bg-red-200 border border-red-500 text-red-700 px-6 py-4 rounded-lg relative z-50"
-               role="alert">
+            role="alert">
             <strong className="font-bold">Error!</strong>
             <span
               className="block sm:inline"> Too many login attempts. Please try again after {countdown} seconds.</span>
@@ -391,9 +394,9 @@ const SignIn: React.FC = () => {
       )}
       {errorMessage !== '' && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
-             onClick={() => setErrorMessage('')}>
+          onClick={() => setErrorMessage('')}>
           <div className="bg-red-200 border border-red-500 text-red-700 px-6 py-4 rounded-lg relative z-50"
-               role="alert">
+            role="alert">
             <strong className="font-bold">Error!</strong>
             <span className="block sm:inline" dangerouslySetInnerHTML={handleErrorMessage(errorMessage)}></span>
           </div>
