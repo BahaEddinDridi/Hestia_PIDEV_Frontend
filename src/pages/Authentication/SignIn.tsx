@@ -327,7 +327,7 @@ const SignIn: React.FC = () => {
                   >
                     <span>
                       <svg
-                        class="w-5"
+                        className="w-5"
                         viewBox="0 0 15 15"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"

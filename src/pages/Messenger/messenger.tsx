@@ -141,7 +141,7 @@ export default function Messenger() {
         const getUsernameForChat = async () => {
             try {
                 if (currentChat) {
-                    const otherUserId = currentChat.members[1];
+                    const otherUserId = currentChat.members.find(memberID  => memberID !== currentUser._id);
                     const res = await axios.get("http://localhost:3001/user/getOneUserById/" + otherUserId);
 
                     // Vérifier si la requête a réussi
