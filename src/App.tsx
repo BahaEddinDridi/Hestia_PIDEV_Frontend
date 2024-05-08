@@ -65,6 +65,7 @@ import '../src/i18n.js'
 //import ChatCard from './components/Chat/ChatCard';
 import Calendrie from './components/Cards/calendrie';
 import NotificationComponent from './components/Cards/Notification';
+import Acceptationdate from './pages/Profil/acceptationdate';
 function App() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
@@ -350,7 +351,14 @@ function App() {
             </>
           }
         />
-       
+       <Route
+          path="/AcceptedDate"
+          element={
+            <>
+             <Acceptationdate/>
+            </>
+          }
+        />
         <Route
           path="/Dashboard/tables-Of-Interships/Opportunities"
           element={

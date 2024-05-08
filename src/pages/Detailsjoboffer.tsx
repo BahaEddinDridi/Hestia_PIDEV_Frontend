@@ -10,11 +10,24 @@ import { updateApplicationStatus } from "./api";
 import { Link } from "react-router-dom";
 import jobinfo from '../images/cards/jobinfo.jpg'
 import jobinfo2 from '../images/cards/jobinfo2.jpg'
+import { format,parse } from 'date-fns';
+const formatDate = (dateString: string, locale: 'en-US' | 'fr-FR' = 'en-US') => {
+    const dateFormat = dateString.includes('/')
+        ? 'M/d/yyyy' // Use this format if the date string contains slashes (e.g., '5/2/2024')
+        : 'MM-dd-yyyy'; // Otherwise, use this format (e.g., '05-02-2024')
 
-const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return new Date(dateString).toLocaleDateString('fr-FR', options);
-}
+    const parsedDate = parse(dateString, dateFormat, new Date());
+
+    // Configure date formatting options based on locale
+    const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'long', // Full month name (e.g., "January", "February")
+        day: 'numeric',
+    };
+
+    return parsedDate.toLocaleDateString(locale, options);
+};
+
 const Detailsjoboffer = () => {
 
 
