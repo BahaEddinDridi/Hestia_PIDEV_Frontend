@@ -45,7 +45,7 @@ function UpdateProfileWithResume() {
                 );
                 if (response.ok) {
                     const result = await response.json();
-                    window.location.reload();
+                    
                     localStorage.setItem(
                         `userImage_${currentUser.username}`,
                         result.secure_url,
