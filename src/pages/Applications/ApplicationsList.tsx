@@ -219,7 +219,7 @@ const currentApplications = applications.slice(indexOfFirstApp,indexOfLastApp)
                           items-center rounded-sm text-center text-sm text-white bg-blue-800"
                         >
                           <div className="rounded-sm bg-blue-600 py-1 px-2">
-                            <p className="whitespace-nowrap">View/Edit this application</p>
+                            <p className="whitespace-nowrap">View this application</p>
                           </div>
                           <div
                             className="h-0 w-fit border-l-8 border-r-8 border-t-8 border-transparent border-t-blue-600"
