@@ -13,6 +13,8 @@ import axios from 'axios';
 import { useGoogleCallbackTeacherMutation } from '../../ApiSlices/authApiSlice';
 import SigninBreadcrumbs from "../../components/Breadcrumbs/SigninBreadcrumbs";
 import LegalModal from '../../components/Footer/LegalModal';
+import './Recaptcha.css';
+
 
 
 
@@ -719,18 +721,17 @@ const SignUpCompany: React.FC = () => {
                     )}
                   </div>
                   {/* ******************************************************* RECAPTCHA*********************************************************************** */}
-                  <div className=" mr-4 ml-4">
-                    <div>
-                    <ReCAPTCHA
-                      className='mb-1'
-                      sitekey="6LdiZpIpAAAAAJarzPVB1PsQzvBD8zmz1v-u2hYs"
-                      onChange={onChangeRE}
-                    />
-                    </div>
-                    {recaptchaError && recaptchaChecked == false ? (
-                      <label className='text-esprit'>Please check the ReCaptcha Box</label>
-                    ) : null}
-                  </div>
+                  <div className="mr-4 ml-4">
+            <div className="recaptcha-container">
+                <ReCAPTCHA
+                    sitekey="6LdiZpIpAAAAAJarzPVB1PsQzvBD8zmz1v-u2hYs"
+                    onChange={onChangeRE}
+                />
+            </div>
+            {recaptchaError && !recaptchaChecked ? (
+                <label className="text-esprit">Please check the ReCaptcha Box</label>
+            ) : null}
+        </div>
                   {/* ********************************************************************************************************************************* */}
 
                   <button onClick={handleShowFirstForm} className=' ml-4  relative inline-flex items-center justify-start py-3 pl-12 pr-4 overflow-hidden font-semibold shadow text-esprit transition-all duration-150 ease-in-out rounded hover:pr-10 hover:pl-6 bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:text-gray-200 dark:shadow-none group'>

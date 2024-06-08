@@ -236,7 +236,7 @@ export default function Messenger() {
                     </div>
                 </div>
             )}
-            <div className='messenger rounded-lg dark:bg-black'>
+            <div className='messenger rounded-lg dark:bg-black '>
 
                 <div className="chatMenu">
                     <nav className='navbarConversation my-3'>

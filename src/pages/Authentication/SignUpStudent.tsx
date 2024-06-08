@@ -13,6 +13,8 @@ import axios from 'axios';
 import { useGoogleCallbackTeacherMutation } from '../../ApiSlices/authApiSlice';
 import SigninBreadcrumbs from '../../components/Breadcrumbs/SigninBreadcrumbs';
 import LegalModal from '../../components/Footer/LegalModal';
+import './Recaptcha.css';
+
 
 const SignUpStudent: React.FC = () => {
   const [googleCallback, { isLoading }] = useGoogleCallbackTeacherMutation();
@@ -783,20 +785,17 @@ const SignUpStudent: React.FC = () => {
                   </div>
                   {/* ******************************************************* RECAPTCHA*********************************************************************** */}
 
-                  <div className=" mr-4 ml-4">
-                    <div>
-                      <ReCAPTCHA
-                        className="mb-1"
-                        sitekey="6LdiZpIpAAAAAJarzPVB1PsQzvBD8zmz1v-u2hYs"
-                        onChange={onChangeRE}
-                      />
-                    </div>
-                    {recaptchaError && recaptchaChecked == false ? (
-                      <label className="text-esprit">
-                        Please check the ReCaptcha Box
-                      </label>
-                    ) : null}
-                  </div>
+                  <div className="mr-4 ml-4">
+            <div className="recaptcha-container">
+                <ReCAPTCHA
+                    sitekey="6LdiZpIpAAAAAJarzPVB1PsQzvBD8zmz1v-u2hYs"
+                    onChange={onChangeRE}
+                />
+            </div>
+            {recaptchaError && !recaptchaChecked ? (
+                <label className="text-esprit">Please check the ReCaptcha Box</label>
+            ) : null}
+        </div>
                   {/* ********************************************************************************************************************************* */}
 
                   <button

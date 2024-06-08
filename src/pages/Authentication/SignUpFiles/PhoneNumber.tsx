@@ -1,49 +1,47 @@
-import { useState } from "react";
+import React, { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import PhoneNumberValidation from '../SignUpFiles/PhoneNumber';
+import './PhoneNumber.css'; // Import your custom CSS file
 
 interface PhoneNumberProps {
   onChange: (value: string, isValid: boolean) => void;
 }
+
 const PhoneNumber: React.FC<PhoneNumberProps> = ({ onChange }) => {
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [isValid, setIsValid] = useState(true);
 
-  const [PhoneNumber, setPhoneNumber] = useState('');
-  const [valid, setValid] = useState(true);
-
-
-  const handlechange = (value: string) => {
+  const handleChange = (value: string) => {
     setPhoneNumber(value);
-    const isValid = validationPhoneNumber(value);
-    setValid(isValid);
-    onChange(value, isValid); // Pass the phone number and validity to the parent
+    const valid = validatePhoneNumber(value);
+    setIsValid(valid);
+    onChange(value, valid); // Pass the phone number and validity to the parent
   };
 
-  const validationPhoneNumber = (phonenumber: any) => {
-    const phonenumberPatern = /^\d{10,}$/;
-    return phonenumberPatern.test(phonenumber);
-  }
+  const validatePhoneNumber = (phone: string) => {
+    const phoneNumberPattern = /^\d{10,}$/;
+    return phoneNumberPattern.test(phone);
+  };
+
   return (
-    <div>
-      <label className="mb-2.5 block font-medium text-black dark:text-white">
+    <div className="w-full max-w-lg mx-auto p-4">
+      <label className="block mb-2 font-medium text-black dark:text-white">
         Phone Number
-
-        <div className=""><PhoneInput
-          country={'tn'}
-          value={PhoneNumber}
-          inputProps={{
-            required: true
-          }}
-
-          onChange={handlechange}
-          placeholder="Enter your phone number"
-          className="py-2" />
-        </div>
       </label>
-      {!valid && <p className="text-esprit">Please enter a valid phone number</p>}
-
+      <div className="w-full">
+        <PhoneInput
+          country={'tn'}
+          value={phoneNumber}
+          inputProps={{ required: true }}
+          onChange={handleChange}
+          placeholder="Enter your phone number"
+          containerClass="phone-input-container w-full"
+          inputClass="phone-input w-full px-4 py-2 border rounded-md"
+        />
+      </div>
+      {!isValid && <p className="text-red-500 mt-2">Please enter a valid phone number</p>}
     </div>
-  )
-
+  );
 }
+
 export default PhoneNumber;

@@ -1,0 +1,31 @@
+/* ReCaptcha.css */
+.recaptcha-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 1rem 1rem; /* Ajoutez le padding ici pour correspondre aux autres composants */
+}
+
+.recaptcha-container iframe {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 300px; /* default size */
+    transform: scale(0.9); /* default scale */
+    transform-origin: 0 0;
+}
+
+@media (max-width: 768px) {
+    .recaptcha-container iframe {
+        max-width: 100%;
+        transform: scale(0.8);
+        transform-origin: 0 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .recaptcha-container iframe {
+        max-width: 100%;
+        transform: scale(0.7);
+        transform-origin: 0 0;
+    }
+}

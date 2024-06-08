@@ -1,0 +1,15 @@
+/* PhoneNumber.css */
+.phone-input-container {
+    width: 100% !important;
+  }
+  
+  .phone-input {
+    width: 107% !important;
+    padding-left: 3.5rem !important; /* Adjust padding as necessary */
+    box-sizing: border-box;
+  }
+  
+  .phone-input input {
+    width: 100% !important;
+  }
+  
