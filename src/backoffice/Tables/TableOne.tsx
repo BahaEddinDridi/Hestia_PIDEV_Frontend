@@ -388,7 +388,7 @@ const handleUpdateStatus = async (userId: string, status: string,customDeactivat
               Users
             </h5>
           </div>
-          <div className="p-2.5 text-center xl:p-5">
+          <div className="hidden p-2.5 text-center sm:block xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
               Email
             </h5>
@@ -403,7 +403,7 @@ const handleUpdateStatus = async (userId: string, status: string,customDeactivat
             phoneNumber
             </h5>
           </div>
-          <div className="hidden p-2.5 text-center sm:block xl:p-5">
+          <div className="p-2.5 text-center xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
               Status
             </h5>
@@ -420,7 +420,7 @@ const handleUpdateStatus = async (userId: string, status: string,customDeactivat
             }`}
             key={key}
           >
-            <div className="flex items-center gap-3 p-2.5 xl:p-5">
+            <div className=" flex items-center gap-3 p-2.5 xl:p-5">
             <div className="h-12.5 w-15 rounded-md">
               {user.image ? (
                    <img src={`${user.image}`} alt="User" />
@@ -437,13 +437,13 @@ const handleUpdateStatus = async (userId: string, status: string,customDeactivat
      
 
 
-            <div className="flex items-center justify-center p-2.5 xl:p-5">
+            <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
               <p className="text-black dark:text-white">{user.email}</p>
             </div>
 
             {editingUserId === user._id ? (
             <select
-              className="border border-gray-300 rounded-md"
+              className="border border-gray-300 rounded-md w-full sm:w-auto "
               value={newUserRole}
               onChange={(e) => setNewUserRole(e.target.value)}
             >
@@ -472,16 +472,16 @@ const handleUpdateStatus = async (userId: string, status: string,customDeactivat
 
 
             {editingUserId === user._id  ? (
-              <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+              <div className="flex items-center justify-center p-2.5 xl:p-5">
               <div className="flex items-center space-x-3.5">
                 <button
-                  className="bg-transparent hover:bg-success text-success font-semibold hover:text-white py-2 px-4 border border-success hover:border-transparent rounded"
+                  className="bg-transparent hover:bg-success text-success font-semibold hover:text-white sm:py-2 sm:px- py-1 px-2 text-base border border-success hover:border-transparent rounded"
                   onClick={() => updateUserRole()}
                 >
                   modify
                 </button>
                 <button
-                  className="bg-transparent hover:bg-danger text-danger font-semibold hover:text-white py-2 px-4 border border-danger hover:border-transparent rounded"
+                  className="bg-transparent hover:bg-danger text-danger font-semibold hover:text-white sm:py-2 sm:px-4 py-1 px-2 border border-danger hover:border-transparent rounded"
                   onClick={() => {
                     setEditingUserId(null);
                     setNewUserRole('');
@@ -492,7 +492,7 @@ const handleUpdateStatus = async (userId: string, status: string,customDeactivat
               </div>
               </div>
             ) : (
-            <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+            <div className="flex items-center justify-center p-2.5 xl:p-5">
               <p className="text-black dark:text-white"> 
               <div className="flex items-center space-x-3.5">
               <Link to={`/userDetails/${user._id}`}>
