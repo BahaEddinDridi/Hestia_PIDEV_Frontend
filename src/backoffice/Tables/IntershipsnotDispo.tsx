@@ -164,19 +164,19 @@ className="px-3 py-2 my-5 border border-gray-300 rounded-md focus:outline-none f
         <table className="w-full table-auto">
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
-              <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-               User Name 
+              <th className="hidden lg:table-cell min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+               Company Name 
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                  Intership Title
               </th>
-              <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+              <th className="hidden lg:table-cell min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                 Application deadline
               </th>
-              <th className="py-4 px-4 font-medium text-black dark:text-white">
+              <th className="hidden lg:table-cell py-4 px-4 font-medium text-black dark:text-white">
                 Intershipfiled
               </th>
-              <th className="py-4 px-4 font-medium text-black dark:text-white">
+              <th className="hidden lg:table-cell py-4 px-4 font-medium text-black dark:text-white">
                 Location
               </th>
               <th className="py-4 px-4 font-medium text-black dark:text-white">
@@ -187,7 +187,7 @@ className="px-3 py-2 my-5 border border-gray-300 rounded-md focus:outline-none f
           <tbody>
           {currentInterships.map((item, index) => (
               <tr key={index}>
-                <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                <td className="hidden lg:table-cell border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
                     {item.username}
                   </h5>
@@ -199,21 +199,21 @@ className="px-3 py-2 my-5 border border-gray-300 rounded-md focus:outline-none f
                     </p>
                   ))}
                 </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                <td className="hidden lg:table-cell border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   {item.interships.map((intership, intershipIndex) => (
                     <p key={intershipIndex} className="text-esprit dark:text-esprit py-2">
                       {new Date(intership.interApplicationDeadline).toLocaleDateString('fr-FR')}
                     </p>
                   ))}
                 </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                <td className="hidden lg:table-cell border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   {item.interships.map((intership, intershipIndex) => (
                     <p key={intershipIndex} className="text-black dark:text-white py-2">
                       {intership.interfield}
                     </p>
                   ))}
                 </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                <td className="hidden lg:table-cell border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   {item.interships.map((intership, intershipIndex) => (
                     <p key={intershipIndex} className="text-black dark:text-white py-2">
                       {intership.interLocation}

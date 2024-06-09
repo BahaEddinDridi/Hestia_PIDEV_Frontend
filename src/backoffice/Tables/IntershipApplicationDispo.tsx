@@ -177,20 +177,20 @@ const closeModal = () => {
        
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
-              <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+              <th className="hidden lg:table-cell min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                Company Name 
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                  Inttership Title
               </th>
-              <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+              <th className="hidden lg:table-cell min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                 Intership deadline
               </th>
-              <th className="py-4 px-4 font-medium text-black dark:text-white">
+              <th className="hidden lg:table-cell py-4 px-4 font-medium text-black dark:text-white">
                 Users Applicated
               </th>
               <th className="py-4 px-4 font-medium text-black dark:text-white">
-                Status
+                Status User
               </th>
               <th className="py-4 px-4 font-medium text-black dark:text-white">
                 Status
@@ -200,7 +200,7 @@ const closeModal = () => {
           <tbody>
           {currentInterships.map((item, index) => (
               <tr key={index}>
-                <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                <td className="hidden lg:table-cell border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
                     {item.interCommpanyName}
                   </h5>
@@ -212,14 +212,14 @@ const closeModal = () => {
                     </p>
                   
                 </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                <td className="hidden lg:table-cell border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                 
                     <p key={index} className="text-greenadd dark:text-greenadd py-2">
                       {new Date(item.interApplicationDeadline).toLocaleDateString('fr-FR')}
                     </p>
                
                 </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                <td className="hidden lg:table-cell border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                 {item.internshipApplications.map((application, index) => (
                     <p key={index} className="text-black dark:text-white py-2">
                       {application.email}

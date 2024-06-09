@@ -215,19 +215,19 @@ const closeModal = () => {
        
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
-              <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+              <th className="hidden lg:table-cell min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                Company Name 
               </th>
               <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
                  Job Title
               </th>
-              <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+              <th className="hidden lg:table-cell min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                 Application deadline
               </th>
-              <th className="py-4 px-4 font-medium text-black dark:text-white">
+              <th className="hidden lg:table-cell py-4 px-4 font-medium text-black dark:text-white">
                 Users Applicated
               </th>
-              <th className="py-4 px-4 font-medium text-black dark:text-white">
+              <th className="hidden lg:table-cell py-4 px-4 font-medium text-black dark:text-white">
                 Status User
               </th>
               <th className="py-4 px-4 font-medium text-black dark:text-white">
@@ -238,7 +238,7 @@ const closeModal = () => {
           <tbody>
          {currentJobs.map((item, index) => (
               <tr key={index}>
-                <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                <td className="hidden lg:table-cell border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
                     {item.jobCommpanyName}
                   </h5>
@@ -250,14 +250,14 @@ const closeModal = () => {
                     </p>
                 
                 </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                <td className="hidden lg:table-cell border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                  
                     <p key={index} className="text-greenadd dark:text-greenadd py-2">
                       {new Date(item.jobApplicationDeadline).toLocaleDateString('fr-FR')}
                     </p>
                 
                 </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                <td className="hidden lg:table-cell border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                 {item.jobApplications.map((application, index) => (
                     <p key={index} className="text-black dark:text-white py-2">
                       {application.email}
@@ -265,7 +265,7 @@ const closeModal = () => {
                      ))}
                  
                 </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                <td className="hidden lg:table-cell border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                 {item.jobApplications.map((application, index) => (
                     <p key={index} className="text-black dark:text-white py-2">
                       {application.status}
@@ -298,7 +298,7 @@ const closeModal = () => {
                     </button>
                     {/* modal View Details */}
           {selectedJob === application._id && (
-            <div className="fixed inset-0 flex items-center justify-center">
+            <div className="fixed inset-0 flex items-center justify-center ">
              <div className="relative p-0 w-full max-w-xl h-full md:h-auto">
              {/* <!-- Modal content --> */}
              <div className="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5  "style={{ maxHeight: '80vh', overflowY: 'auto' }}>
@@ -311,6 +311,8 @@ const closeModal = () => {
                              <p className="font-semibold  text-esprit dark:text-esprit">
                                  {item.jobTitle}
                              </p>
+
+                             
                          </div>
                          <div>
                              <button onClick={closeModal} type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="readProductModal">

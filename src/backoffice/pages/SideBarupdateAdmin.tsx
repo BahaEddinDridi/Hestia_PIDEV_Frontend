@@ -1,13 +1,21 @@
+import React, { useState } from 'react';
+
 interface SidebarprofilProps {
     activeSection: string;
     setActiveSection: React.Dispatch<React.SetStateAction<string>>;
   }
   
   const Sidebarprofil: React.FC<SidebarprofilProps> = ({ activeSection, setActiveSection }) => {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
     return (
       <div className="">
   
         <button
+         onClick={toggleSidebar}
           data-drawer-target="separator-sidebar"
           data-drawer-toggle="separator-sidebar"
           aria-controls="separator-sidebar"
@@ -33,7 +41,9 @@ interface SidebarprofilProps {
   
         <aside
           id="separator-sidebar"
-          className="fixed top-30sm:translate-x-0"
+          className={`fixed top-30sm:translate-x-0' ${
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } sm:translate-x-0`}
           aria-label="Sidebar"
         >
           <div className="h-full px-5  py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">

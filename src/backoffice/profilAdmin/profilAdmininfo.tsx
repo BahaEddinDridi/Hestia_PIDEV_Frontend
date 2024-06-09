@@ -237,7 +237,7 @@ useEffect(() => {
     <>
      <div className={`mb-10 ${isModalOpen ? 'bg-opacity-50' : ''} mt-2 mr-7 ml-7 rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark`}>
 
-<div className="grid grid-cols-2  rounded-lg  md:grid-cols-2 gap-8">
+<div className="grid grid-cols-1  rounded-lg  md:grid-cols-2 gap-8">
   <div className="relative overflow-hidden rounded-3xl w-full h-100  cursor-pointer text-2xl font-bold bg-gradient-to-r from-red-500 to-red-700">
     <div className="z-10 absolute w-full h-full peer"></div>
 
