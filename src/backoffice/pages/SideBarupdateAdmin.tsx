@@ -46,7 +46,7 @@ interface SidebarprofilProps {
           } sm:translate-x-0`}
           aria-label="Sidebar"
         >
-          <div className="h-full px-5  py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+          <div className="h-full px-5  py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 bg-gray dark:bg-gray">
             
             <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
               <li>
